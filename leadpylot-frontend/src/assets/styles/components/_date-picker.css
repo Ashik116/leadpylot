@@ -1,0 +1,160 @@
+@layer components {
+  .date-picker {
+    @apply z-40 max-w-xs rounded-lg bg-white p-4 shadow-xl;
+  }
+
+  .date-picker-panel {
+    @apply rounded-lg;
+  }
+
+  .date-picker-header-label {
+    /* @apply mx-0.5 cursor-pointer text-gray-900 select-none; */
+  }
+
+  .date-picker-current-month {
+    @apply text-gray-700;
+  }
+
+  .date-picker-other-month {
+    @apply text-gray-400;
+  }
+
+  .date-picker-selected-date {
+    @apply text-white;
+  }
+
+  .date-picker-available {
+    @apply hover:text-white;
+  }
+
+  .date-picker-today {
+    @apply border;
+  }
+
+  .date-picker-month-cell {
+    @apply py-6 text-center font-semibold;
+  }
+
+  .date-picker-month-cell-disabled {
+    @apply cursor-not-allowed bg-gray-300 opacity-30;
+  }
+
+  .date-picker-month-cell-inner {
+    @apply cursor-pointer rounded-lg px-4 py-2 select-none;
+  }
+
+  .date-picker-year-cell {
+    @apply py-6 text-center;
+  }
+
+  .date-picker-year-cell-inner {
+    @apply cursor-pointer rounded-lg px-4 py-2 font-semibold select-none;
+  }
+
+  .date-picker-year-cell-disabled {
+    @apply cursor-not-allowed bg-gray-300 opacity-30;
+  }
+
+  .picker {
+    @apply z-40;
+  }
+
+  .picker-panel {
+    @apply rounded-2xl bg-white p-4 shadow-xl;
+  }
+
+  .picker-view {
+    @apply flex w-full min-w-[280px] gap-6;
+  }
+
+  .picker-table {
+    @apply w-full border-separate border-spacing-y-1.5;
+  }
+
+  .picker-header-arrow {
+    @apply flex h-10 cursor-pointer items-center px-2 text-lg select-none rtl:rotate-180;
+  }
+
+  .picker-direction-button {
+    @apply hover:bg-sand-2 flex h-10 w-10 items-center justify-center rounded-full text-2xl hover:text-gray-800;
+  }
+
+  .picker-header-label {
+    @apply mx-0.5 cursor-pointer text-lg font-semibold text-gray-900 select-none;
+  }
+
+  .year-table,
+  .month-table {
+    @apply grid grid-cols-3 gap-4;
+  }
+
+  .date-picker-cell {
+    @apply h-10 w-10 p-0 text-center;
+  }
+
+  .date-picker-cell-selected {
+    @apply text-gray-100;
+  }
+
+  .date-picker-cell-selected-start {
+    @apply before:bg-sand-1/20 relative rounded-full before:absolute before:top-0 before:left-0 before:h-full before:w-full before:content-[''] ltr:before:rounded-tl-full ltr:before:rounded-bl-full rtl:before:rounded-tr-full rtl:before:rounded-br-full -z-10 bg-sand-1;
+  }
+
+
+  .date-picker-cell-selected-end {
+    @apply before:bg-sand-1/20 relative rounded-full before:absolute before:top-0 before:left-0 before:h-full before:w-full before:content-[''] ltr:before:rounded-tr-full ltr:before:rounded-br-full rtl:before:rounded-tl-full rtl:before:rounded-bl-full;
+  }
+
+  .date-picker-cell-inrange-today {
+    @apply before:bg-sand-1/20 relative rounded-full before:absolute before:top-0 before:left-0 before:h-full before:w-full before:content-[''];
+  }
+
+  .date-picker-cell-content {
+    @apply h-full w-full;
+  }
+
+  .date-picker-cell-current-month {
+    @apply text-sand-2;
+  }
+
+  .date-picker-cell-hoverable {
+    @apply hover:bg-sand-2;
+  }
+
+  .date-picker-cell-disabled {
+    @apply bg-sand-3 cursor-not-allowed opacity-30;
+  }
+
+  .date-picker-week-cell {
+    @apply font-semibold;
+  }
+
+  .week-day-cell {
+    @apply h-7;
+  }
+
+  .week-day-cell-content {
+    @apply text-xs;
+  }
+
+  .day-picker,
+  .month-picker,
+  .year-picker {
+    @apply w-full;
+  }
+
+  .month-picker-cell,
+  .year-picker-cell {
+    @apply rounded-lg py-2 text-center font-semibold text-gray-800;
+  }
+
+  .month-picker-cell-active,
+  .year-picker-cell-active {
+    @apply text-white;
+  }
+
+  .month-picker-cell-disabled,
+  .year-picker-cell-disabled {
+    @apply bg-sand-3 cursor-not-allowed opacity-30;
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "name": "LeadPylot CRM",
+  "short_name": "LeadPylot",
+  "description": "LeadPylot - Customer Relationship Management Platform",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3b82f6",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/img/icon-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "/img/icon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "gcm_sender_id": "471197457341",
+  "gcm_user_visible_only": true
+}

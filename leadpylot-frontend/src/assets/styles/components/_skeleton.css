@@ -1,0 +1,13 @@
+@layer components {
+  .skeleton {
+    @apply flex bg-gray-200;
+  }
+
+  .skeleton-circle {
+    @apply h-10 w-10 rounded-full;
+  }
+
+  .skeleton-block {
+    @apply h-2.5 w-full rounded;
+  }
+}

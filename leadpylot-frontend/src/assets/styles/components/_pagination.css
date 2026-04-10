@@ -1,0 +1,29 @@
+@layer components {
+  .pagination {
+    @apply relative z-0 inline-flex items-center rounded-lg;
+  }
+
+  .pagination-pager {
+    @apply relative mx-1 inline-flex h-6 min-w-6 cursor-pointer items-center justify-center rounded-md px-2 text-sm font-semibold select-none;
+  }
+
+  .pagination-pager-inactive {
+    @apply text-sand-2 hover:bg-sand-4;
+  }
+
+  .pagination-pager-disabled {
+    @apply !text-sand-3 cursor-not-allowed;
+  }
+
+  .pagination-total {
+    @apply text-sand-2 mr-3 font-semibold;
+  }
+
+  .pagination-pager-next {
+    @apply text-sand-2 mr-1 rtl:rotate-180;
+  }
+
+  .pagination-pager-prev {
+    @apply text-sand-2 ml-1 rtl:rotate-180;
+  }
+}

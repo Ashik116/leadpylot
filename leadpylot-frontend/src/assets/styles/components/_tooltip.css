@@ -1,0 +1,5 @@
+@layer components {
+  .tooltip {
+    @apply text-sand-1 relative z-50 max-w-[250px] rounded-lg px-2 py-0.5;
+  }
+}

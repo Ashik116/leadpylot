@@ -1,0 +1,426 @@
+.kanban-scope,
+.kanban-theme {
+  --kb-bg: #f6f7f9;
+  --kb-surface: #ffffff;
+  --kb-surface-2: #f8fafc;
+  --kb-card: #f3f4f6;
+  --kb-border: rgba(15, 23, 42, 0.12);
+  --kb-text: #0f172a;
+  --kb-text-muted: #64748b;
+  --kb-text-muted-2: #94a3b8;
+  --kb-hover: #eef2f7;
+  --kb-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+}
+
+.kanban-scope.kanban-dark,
+.kanban-theme.kanban-dark {
+  --kb-bg: #0d1117;
+  --kb-surface: #121826;
+  --kb-surface-2: #0f1420;
+  --kb-card: #151b2b;
+  --kb-border: rgba(148, 163, 184, 0.18);
+  --kb-text: #e5e7eb;
+  --kb-text-muted: #9ca3af;
+  --kb-text-muted-2: #6b7280;
+  --kb-hover: #1b2232;
+  --kb-shadow: 0 6px 16px rgba(0, 0, 0, 0.35);
+}
+
+.kanban-scope.kanban-dark,
+.kanban-theme.kanban-dark {
+  background-color: var(--kb-bg);
+  color: var(--kb-text);
+  color-scheme: dark;
+}
+
+/* Header (global top bar) overrides */
+.kanban-scope.kanban-dark .header,
+.kanban-theme.kanban-dark .header {
+  background-color: var(--kb-surface) !important;
+  border-bottom: 1px solid var(--kb-border) !important;
+}
+
+.kanban-scope.kanban-dark .header-action-item-hoverable:hover,
+.kanban-theme.kanban-dark .header-action-item-hoverable:hover {
+  background-color: var(--kb-hover) !important;
+  color: var(--kb-text) !important;
+}
+
+/* Background overrides */
+.kanban-scope.kanban-dark .bg-white,
+.kanban-theme.kanban-dark .bg-white {
+  background-color: var(--kb-surface) !important;
+}
+
+.kanban-scope.kanban-dark .bg-white\/50,
+.kanban-scope.kanban-dark .bg-white\/80,
+.kanban-theme.kanban-dark .bg-white\/50,
+.kanban-theme.kanban-dark .bg-white\/80 {
+  background-color: var(--kb-surface) !important;
+}
+
+.kanban-scope.kanban-dark .bg-gray-50,
+.kanban-scope.kanban-dark .bg-gray-50\/50,
+.kanban-theme.kanban-dark .bg-gray-50,
+.kanban-theme.kanban-dark .bg-gray-50\/50 {
+  background-color: var(--kb-surface-2) !important;
+}
+
+.kanban-scope.kanban-dark .bg-gray-100,
+.kanban-scope.kanban-dark .bg-gray-100\/50,
+.kanban-theme.kanban-dark .bg-gray-100,
+.kanban-theme.kanban-dark .bg-gray-100\/50 {
+  background-color: var(--kb-card) !important;
+}
+
+.kanban-scope.kanban-dark .bg-gray-200,
+.kanban-theme.kanban-dark .bg-gray-200 {
+  background-color: #1f2937 !important;
+}
+
+/* Dialog overrides */
+.kanban-scope.kanban-dark .dialog-content,
+.kanban-theme.kanban-dark .dialog-content {
+  background-color: var(--kb-surface) !important;
+  color: var(--kb-text) !important;
+  border: 1px solid var(--kb-border);
+  box-shadow: var(--kb-shadow) !important;
+}
+
+/* Sand palette overrides (tooltips, etc.) */
+.kanban-scope.kanban-dark .bg-sand-4,
+.kanban-theme.kanban-dark .bg-sand-4 {
+  background-color: var(--kb-surface) !important;
+}
+
+.kanban-scope.kanban-dark .text-sand-4,
+.kanban-theme.kanban-dark .text-sand-4 {
+  color: var(--kb-surface) !important;
+}
+
+/* Text overrides */
+.kanban-scope.kanban-dark .text-black,
+.kanban-scope.kanban-dark .text-gray-900,
+.kanban-theme.kanban-dark .text-black,
+.kanban-theme.kanban-dark .text-gray-900 {
+  color: var(--kb-text) !important;
+}
+
+.kanban-scope.kanban-dark .text-black\/80,
+.kanban-theme.kanban-dark .text-black\/80 {
+  color: var(--kb-text) !important;
+  opacity: 0.8;
+}
+
+.kanban-scope.kanban-dark .text-black\/60,
+.kanban-theme.kanban-dark .text-black\/60 {
+  color: var(--kb-text-muted) !important;
+}
+
+.kanban-scope.kanban-dark .text-black\/70,
+.kanban-theme.kanban-dark .text-black\/70 {
+  color: var(--kb-text-muted) !important;
+}
+
+.kanban-scope.kanban-dark .text-black\/30,
+.kanban-theme.kanban-dark .text-black\/30 {
+  color: var(--kb-text-muted-2) !important;
+}
+
+.kanban-scope.kanban-dark .text-gray-700,
+.kanban-scope.kanban-dark .text-gray-600,
+.kanban-scope.kanban-dark .text-gray-500,
+.kanban-theme.kanban-dark .text-gray-700,
+.kanban-theme.kanban-dark .text-gray-600,
+.kanban-theme.kanban-dark .text-gray-500 {
+  color: var(--kb-text-muted) !important;
+}
+
+.kanban-scope.kanban-dark .text-gray-400,
+.kanban-theme.kanban-dark .text-gray-400 {
+  color: var(--kb-text-muted-2) !important;
+}
+
+.kanban-scope.kanban-dark .text-sand-1,
+.kanban-theme.kanban-dark .text-sand-1 {
+  color: var(--kb-text) !important;
+}
+
+/* Yellow buttons: force black text for contrast */
+.kanban-scope.kanban-dark .bg-sunbeam-1,
+.kanban-scope.kanban-dark .bg-sunbeam-2,
+.kanban-scope.kanban-dark .bg-sunbeam-3,
+.kanban-scope.kanban-dark .bg-sunbeam-4,
+.kanban-theme.kanban-dark .bg-sunbeam-1,
+.kanban-theme.kanban-dark .bg-sunbeam-2,
+.kanban-theme.kanban-dark .bg-sunbeam-3,
+.kanban-theme.kanban-dark .bg-sunbeam-4 {
+  color: #000 !important;
+}
+
+/* Yellow backgrounds: force black text for contrast */
+.kanban-scope.kanban-dark .bg-yellow-300,
+.kanban-scope.kanban-dark .bg-yellow-400,
+.kanban-scope.kanban-dark .bg-yellow-500,
+.kanban-scope.kanban-dark .bg-yellow-600,
+.kanban-scope.kanban-dark .bg-amber-300,
+.kanban-scope.kanban-dark .bg-amber-400,
+.kanban-scope.kanban-dark .bg-amber-500,
+.kanban-scope.kanban-dark .bg-amber-600,
+.kanban-theme.kanban-dark .bg-yellow-300,
+.kanban-theme.kanban-dark .bg-yellow-400,
+.kanban-theme.kanban-dark .bg-yellow-500,
+.kanban-theme.kanban-dark .bg-yellow-600,
+.kanban-theme.kanban-dark .bg-amber-300,
+.kanban-theme.kanban-dark .bg-amber-400,
+.kanban-theme.kanban-dark .bg-amber-500,
+.kanban-theme.kanban-dark .bg-amber-600 {
+  color: #000 !important;
+}
+
+.kanban-scope.kanban-dark .bg-yellow-300 .text-white,
+.kanban-scope.kanban-dark .bg-yellow-400 .text-white,
+.kanban-scope.kanban-dark .bg-yellow-500 .text-white,
+.kanban-scope.kanban-dark .bg-yellow-600 .text-white,
+.kanban-scope.kanban-dark .bg-amber-300 .text-white,
+.kanban-scope.kanban-dark .bg-amber-400 .text-white,
+.kanban-scope.kanban-dark .bg-amber-500 .text-white,
+.kanban-scope.kanban-dark .bg-amber-600 .text-white,
+.kanban-theme.kanban-dark .bg-yellow-300 .text-white,
+.kanban-theme.kanban-dark .bg-yellow-400 .text-white,
+.kanban-theme.kanban-dark .bg-yellow-500 .text-white,
+.kanban-theme.kanban-dark .bg-yellow-600 .text-white,
+.kanban-theme.kanban-dark .bg-amber-300 .text-white,
+.kanban-theme.kanban-dark .bg-amber-400 .text-white,
+.kanban-theme.kanban-dark .bg-amber-500 .text-white,
+.kanban-theme.kanban-dark .bg-amber-600 .text-white {
+  color: #000 !important;
+}
+
+/* Checkboxes */
+.kanban-scope.kanban-dark input[type='checkbox'],
+.kanban-theme.kanban-dark input[type='checkbox'] {
+  background-color: var(--kb-surface-2) !important;
+  border-color: var(--kb-border) !important;
+  accent-color: #eab308 !important;
+  box-shadow: inset 0 0 0 1px var(--kb-border);
+}
+
+.kanban-scope.kanban-dark input[type='checkbox']:checked,
+.kanban-theme.kanban-dark input[type='checkbox']:checked {
+  box-shadow: inset 0 0 0 1px rgba(234, 179, 8, 0.7);
+}
+
+/* Border overrides */
+.kanban-scope.kanban-dark .border,
+.kanban-scope.kanban-dark .border-gray-200,
+.kanban-scope.kanban-dark .border-gray-300,
+.kanban-scope.kanban-dark .border-gray-100,
+.kanban-scope.kanban-dark .border-ocean-2\/50,
+.kanban-scope.kanban-dark .border-ocean-2\/30,
+.kanban-scope.kanban-dark .border-ocean-2\/20,
+.kanban-theme.kanban-dark .border,
+.kanban-theme.kanban-dark .border-gray-200,
+.kanban-theme.kanban-dark .border-gray-300,
+.kanban-theme.kanban-dark .border-gray-100,
+.kanban-theme.kanban-dark .border-ocean-2\/50,
+.kanban-theme.kanban-dark .border-ocean-2\/30,
+.kanban-theme.kanban-dark .border-ocean-2\/20 {
+  border-color: var(--kb-border) !important;
+}
+
+/* Hover overrides */
+.kanban-scope.kanban-dark .hover\:bg-gray-100:hover,
+.kanban-scope.kanban-dark .hover\:bg-gray-200:hover,
+.kanban-theme.kanban-dark .hover\:bg-gray-100:hover,
+.kanban-theme.kanban-dark .hover\:bg-gray-200:hover {
+  background-color: var(--kb-hover) !important;
+}
+
+.kanban-scope.kanban-dark .hover\:bg-gray-50:hover,
+.kanban-theme.kanban-dark .hover\:bg-gray-50:hover {
+  background-color: var(--kb-hover) !important;
+}
+
+.kanban-scope.kanban-dark .hover\:text-black:hover,
+.kanban-theme.kanban-dark .hover\:text-black:hover {
+  color: var(--kb-text) !important;
+}
+
+/* Border hover overrides */
+.kanban-scope.kanban-dark .hover\:border-black:hover,
+.kanban-theme.kanban-dark .hover\:border-black:hover {
+  border-color: rgba(148, 163, 184, 0.6) !important;
+}
+
+/* Shadow overrides */
+.kanban-scope.kanban-dark .shadow-sm,
+.kanban-scope.kanban-dark .shadow-md,
+.kanban-scope.kanban-dark .shadow-lg,
+.kanban-scope.kanban-dark .shadow-xl,
+.kanban-theme.kanban-dark .shadow-sm,
+.kanban-theme.kanban-dark .shadow-md,
+.kanban-theme.kanban-dark .shadow-lg,
+.kanban-theme.kanban-dark .shadow-xl {
+  box-shadow: var(--kb-shadow) !important;
+}
+
+/* Divider overrides */
+.kanban-scope.kanban-dark .divide-gray-100 > :not([hidden]) ~ :not([hidden]),
+.kanban-theme.kanban-dark .divide-gray-100 > :not([hidden]) ~ :not([hidden]) {
+  border-color: var(--kb-border) !important;
+}
+
+/* Tooltip overrides */
+.kanban-scope.kanban-dark .tooltip,
+.kanban-theme.kanban-dark .tooltip {
+  background-color: var(--kb-surface) !important;
+  color: var(--kb-text) !important;
+  border-color: var(--kb-border) !important;
+}
+
+/* Dropdown menu + items */
+.kanban-scope.kanban-dark .dropdown-menu,
+.kanban-theme.kanban-dark .dropdown-menu {
+  background-color: var(--kb-surface) !important;
+  border-color: var(--kb-border) !important;
+  box-shadow: var(--kb-shadow) !important;
+}
+
+.kanban-scope.kanban-dark .menu-item,
+.kanban-theme.kanban-dark .menu-item {
+  color: var(--kb-text) !important;
+}
+
+.kanban-scope.kanban-dark .menu-item-hoverable:hover,
+.kanban-theme.kanban-dark .menu-item-hoverable:hover {
+  background-color: var(--kb-hover) !important;
+  color: var(--kb-text) !important;
+}
+
+.kanban-scope.kanban-dark .menu-item-active,
+.kanban-theme.kanban-dark .menu-item-active {
+  background-color: var(--kb-hover) !important;
+  color: var(--kb-text) !important;
+}
+
+.kanban-scope.kanban-dark .menu-item-divider,
+.kanban-theme.kanban-dark .menu-item-divider {
+  border-color: var(--kb-border) !important;
+}
+
+.kanban-scope.kanban-dark .menu-item-disabled,
+.kanban-theme.kanban-dark .menu-item-disabled {
+  color: var(--kb-text-muted-2) !important;
+}
+
+/* Badge readability (dates + task type tags) */
+.kanban-scope.kanban-dark .text-yellow-700,
+.kanban-scope.kanban-dark .text-yellow-800,
+.kanban-theme.kanban-dark .text-yellow-700,
+.kanban-theme.kanban-dark .text-yellow-800 {
+  color: #fde047 !important;
+}
+
+.kanban-scope.kanban-dark .text-orange-700,
+.kanban-scope.kanban-dark .text-orange-800,
+.kanban-theme.kanban-dark .text-orange-700,
+.kanban-theme.kanban-dark .text-orange-800 {
+  color: #fdba74 !important;
+}
+
+.kanban-scope.kanban-dark .text-red-700,
+.kanban-scope.kanban-dark .text-red-800,
+.kanban-theme.kanban-dark .text-red-700,
+.kanban-theme.kanban-dark .text-red-800 {
+  color: #fca5a5 !important;
+}
+
+.kanban-scope.kanban-dark .text-green-700,
+.kanban-theme.kanban-dark .text-green-700 {
+  color: #86efac !important;
+}
+
+.kanban-scope.kanban-dark .text-blue-700,
+.kanban-theme.kanban-dark .text-blue-700 {
+  color: #93c5fd !important;
+}
+
+.kanban-scope.kanban-dark .text-purple-700,
+.kanban-theme.kanban-dark .text-purple-700 {
+  color: #d8b4fe !important;
+}
+
+.kanban-scope.kanban-dark .bg-yellow-500\/20,
+.kanban-theme.kanban-dark .bg-yellow-500\/20 {
+  background-color: rgba(250, 204, 21, 0.25) !important;
+}
+
+.kanban-scope.kanban-dark .bg-orange-500\/20,
+.kanban-theme.kanban-dark .bg-orange-500\/20 {
+  background-color: rgba(249, 115, 22, 0.22) !important;
+}
+
+.kanban-scope.kanban-dark .bg-red-500\/20,
+.kanban-theme.kanban-dark .bg-red-500\/20 {
+  background-color: rgba(239, 68, 68, 0.22) !important;
+}
+
+.kanban-scope.kanban-dark .bg-purple-500\/10,
+.kanban-theme.kanban-dark .bg-purple-500\/10 {
+  background-color: rgba(168, 85, 247, 0.22) !important;
+}
+
+.kanban-scope.kanban-dark .bg-red-500\/10,
+.kanban-theme.kanban-dark .bg-red-500\/10 {
+  background-color: rgba(239, 68, 68, 0.22) !important;
+}
+
+.kanban-scope.kanban-dark .bg-orange-500\/10,
+.kanban-theme.kanban-dark .bg-orange-500\/10 {
+  background-color: rgba(249, 115, 22, 0.22) !important;
+}
+
+.kanban-scope.kanban-dark .bg-blue-500\/10,
+.kanban-theme.kanban-dark .bg-blue-500\/10 {
+  background-color: rgba(59, 130, 246, 0.22) !important;
+}
+
+.kanban-scope.kanban-dark .bg-green-500\/10,
+.kanban-theme.kanban-dark .bg-green-500\/10 {
+  background-color: rgba(34, 197, 94, 0.2) !important;
+}
+
+/* Gradients & placeholders */
+.kanban-scope.kanban-dark .bg-gradient-to-r,
+.kanban-theme.kanban-dark .bg-gradient-to-r {
+  background-image: none !important;
+  background-color: var(--kb-surface-2) !important;
+}
+
+.kanban-scope.kanban-dark input::placeholder,
+.kanban-scope.kanban-dark textarea::placeholder,
+.kanban-theme.kanban-dark input::placeholder,
+.kanban-theme.kanban-dark textarea::placeholder {
+  color: var(--kb-text-muted-2);
+}
+
+/* Input component overrides (global header search, etc.) */
+.kanban-scope.kanban-dark .input,
+.kanban-theme.kanban-dark .input {
+  background-color: var(--kb-surface) !important;
+  color: var(--kb-text) !important;
+  border-color: var(--kb-border) !important;
+}
+
+.kanban-scope.kanban-dark .input::placeholder,
+.kanban-theme.kanban-dark .input::placeholder {
+  color: var(--kb-text-muted-2) !important;
+}
+
+.kanban-scope.kanban-dark .input-addon,
+.kanban-theme.kanban-dark .input-addon {
+  background-color: var(--kb-card) !important;
+  border-color: var(--kb-border) !important;
+  color: var(--kb-text-muted) !important;
+}

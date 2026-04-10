@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>FCM Test - LeadPylot</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .container {
+      background: white;
+      border-radius: 8px;
+      padding: 30px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      color: #333;
+      border-bottom: 2px solid #3b82f6;
+      padding-bottom: 10px;
+    }
+    .section {
+      margin: 20px 0;
+      padding: 15px;
+      background: #f9fafb;
+      border-radius: 6px;
+      border-left: 4px solid #3b82f6;
+    }
+    .section h3 {
+      margin-top: 0;
+      color: #1f2937;
+    }
+    .status {
+      padding: 8px 12px;
+      border-radius: 4px;
+      margin: 5px 0;
+      font-size: 14px;
+    }
+    .status.success {
+      background: #d1fae5;
+      color: #065f46;
+      border: 1px solid #6ee7b7;
+    }
+    .status.error {
+      background: #fee2e2;
+      color: #991b1b;
+      border: 1px solid #fca5a5;
+    }
+    .status.info {
+      background: #dbeafe;
+      color: #1e40af;
+      border: 1px solid #93c5fd;
+    }
+    .status.warning {
+      background: #fef3c7;
+      color: #92400e;
+      border: 1px solid #fcd34d;
+    }
+    button {
+      background: #3b82f6;
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 16px;
+      margin: 5px 5px 5px 0;
+    }
+    button:hover {
+      background: #2563eb;
+    }
+    button:disabled {
+      background: #9ca3af;
+      cursor: not-allowed;
+    }
+    pre {
+      background: #1f2937;
+      color: #f3f4f6;
+      padding: 15px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+    .token-display {
+      word-break: break-all;
+      background: #ecfdf5;
+      padding: 15px;
+      border-radius: 6px;
+      border: 2px solid #10b981;
+      margin-top: 10px;
+      font-family: monospace;
+      font-size: 12px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🔔 Firebase Cloud Messaging (FCM) Test</h1>
+
+    <div class="section">
+      <h3>1. Browser Support Check</h3>
+      <div id="support-status"></div>
+    </div>
+
+    <div class="section">
+      <h3>2. Firebase Configuration</h3>
+      <div id="config-status"></div>
+    </div>
+
+    <div class="section">
+      <h3>3. Notification Permission</h3>
+      <div id="permission-status"></div>
+      <button id="request-permission-btn" style="display:none;">Request Permission</button>
+    </div>
+
+    <div class="section">
+      <h3>4. Service Worker Registration</h3>
+      <div id="sw-status"></div>
+      <button id="register-sw-btn">Register Service Worker</button>
+    </div>
+
+    <div class="section">
+      <h3>5. Firebase Initialization</h3>
+      <div id="firebase-status"></div>
+      <button id="init-firebase-btn" disabled>Initialize Firebase</button>
+    </div>
+
+    <div class="section">
+      <h3>6. FCM Token Request</h3>
+      <div id="token-status"></div>
+      <button id="get-token-btn" disabled>Get FCM Token</button>
+      <div id="token-display" style="display:none;"></div>
+    </div>
+
+    <div class="section">
+      <h3>Console Logs</h3>
+      <div id="console-logs"></div>
+      <button onclick="clearLogs()">Clear Logs</button>
+    </div>
+  </div>
+
+  <script type="module">
+    // Firebase SDK from CDN
+    import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-app.js';
+    import { getMessaging, getToken, isSupported } from 'https://www.gstatic.com/firebasejs/11.0.2/firebase-messaging.js';
+
+    // Firebase Configuration
+    const firebaseConfig = {
+      apiKey: "AIzaSyBcPVKvhZoElCd-a12cHcnPQ8JC3HUo93M",
+      authDomain: "leadpylot.firebaseapp.com",
+      projectId: "leadpylot",
+      storageBucket: "leadpylot.firebasestorage.app",
+      messagingSenderId: "471197457341",
+      appId: "1:471197457341:web:072ca1e4c01e3f9ab210d4",
+      measurementId: "G-4MYGQR6HZ7"
+    };
+
+    const VAPID_KEY = "BCZ--mnY9GSMv4bQ9KgXLCW1HG2Pq3NMR0GMCqLH03AlXLK67NMEghMZg6pPjJzNyh3rcmcqfacJqClywNdnEt8";
+
+    let app = null;
+    let messaging = null;
+    let swRegistration = null;
+
+    // Logging utility
+    function log(type, message) {
+      const consoleDiv = document.getElementById('console-logs');
+      const timestamp = new Date().toLocaleTimeString();
+      const statusClass = type.toLowerCase();
+      consoleDiv.innerHTML += `<div class="status ${statusClass}">[${timestamp}] ${message}</div>`;
+      consoleDiv.scrollTop = consoleDiv.scrollHeight;
+      console[type === 'ERROR' ? 'error' : type === 'WARN' ? 'warn' : 'log'](`[FCM Test] ${message}`);
+    }
+
+    window.clearLogs = function() {
+      document.getElementById('console-logs').innerHTML = '';
+    };
+
+    // 1. Check browser support
+    function checkSupport() {
+      const supportDiv = document.getElementById('support-status');
+      const checks = [];
+
+      checks.push({
+        name: 'Service Worker',
+        supported: 'serviceWorker' in navigator
+      });
+      checks.push({
+        name: 'Push Manager',
+        supported: 'PushManager' in window
+      });
+      checks.push({
+        name: 'Notifications',
+        supported: 'Notification' in window
+      });
+
+      let html = '';
+      checks.forEach(check => {
+        const status = check.supported ? '✓ Supported' : '✗ Not Supported';
+        const statusClass = check.supported ? 'success' : 'error';
+        html += `<div class="status ${statusClass}">${check.name}: ${status}</div>`;
+      });
+
+      supportDiv.innerHTML = html;
+
+      const allSupported = checks.every(c => c.supported);
+      if (allSupported) {
+        log('INFO', 'All required browser features are supported');
+      } else {
+        log('ERROR', 'Some required features are not supported in this browser');
+      }
+
+      return allSupported;
+    }
+
+    // 2. Display Firebase config
+    function displayConfig() {
+      const configDiv = document.getElementById('config-status');
+      configDiv.innerHTML = `
+        <div class="status info">Project ID: ${firebaseConfig.projectId}</div>
+        <div class="status info">Sender ID: ${firebaseConfig.messagingSenderId}</div>
+        <div class="status info">App ID: ${firebaseConfig.appId.substring(0, 20)}...</div>
+        <div class="status info">VAPID Key: ${VAPID_KEY.substring(0, 20)}... (length: ${VAPID_KEY.length})</div>
+      `;
+    }
+
+    // 3. Check notification permission
+    function checkPermission() {
+      const permissionDiv = document.getElementById('permission-status');
+      const btn = document.getElementById('request-permission-btn');
+
+      const permission = Notification.permission;
+      let statusClass, statusText;
+
+      switch(permission) {
+        case 'granted':
+          statusClass = 'success';
+          statusText = '✓ Permission Granted';
+          break;
+        case 'denied':
+          statusClass = 'error';
+          statusText = '✗ Permission Denied';
+          break;
+        default:
+          statusClass = 'warning';
+          statusText = '⚠ Permission Not Requested';
+      }
+
+      permissionDiv.innerHTML = `<div class="status ${statusClass}">${statusText}</div>`;
+
+      if (permission === 'default') {
+        btn.style.display = 'inline-block';
+      } else {
+        btn.style.display = 'none';
+      }
+
+      return permission === 'granted';
+    }
+
+    // Request permission
+    document.getElementById('request-permission-btn').addEventListener('click', async () => {
+      log('INFO', 'Requesting notification permission...');
+      try {
+        const permission = await Notification.requestPermission();
+        if (permission === 'granted') {
+          log('INFO', '✓ Notification permission granted');
+          checkPermission();
+        } else {
+          log('ERROR', '✗ Notification permission denied');
+        }
+      } catch (error) {
+        log('ERROR', `Error requesting permission: ${error.message}`);
+      }
+    });
+
+    // 4. Register service worker
+    document.getElementById('register-sw-btn').addEventListener('click', async () => {
+      log('INFO', 'Registering service worker...');
+      try {
+        swRegistration = await navigator.serviceWorker.register('/firebase-messaging-sw.js', {
+          scope: '/'
+        });
+
+        log('INFO', '✓ Service worker registered successfully');
+
+        if (swRegistration.installing) {
+          log('INFO', 'Service worker is installing...');
+          const sw = swRegistration.installing;
+          sw.addEventListener('statechange', (e) => {
+            log('INFO', `Service worker state: ${e.target.state}`);
+          });
+        } else if (swRegistration.active) {
+          log('INFO', 'Service worker is active');
+        } else if (swRegistration.waiting) {
+          log('INFO', 'Service worker is waiting');
+        }
+
+        document.getElementById('init-firebase-btn').disabled = false;
+      } catch (error) {
+        log('ERROR', `Service worker registration failed: ${error.message}`);
+      }
+    });
+
+    // 5. Initialize Firebase
+    document.getElementById('init-firebase-btn').addEventListener('click', async () => {
+      log('INFO', 'Initializing Firebase...');
+      try {
+        // Check if Firebase Messaging is supported
+        const supported = await isSupported();
+        if (!supported) {
+          log('ERROR', 'Firebase Messaging is not supported in this browser');
+          return;
+        }
+
+        log('INFO', '✓ Firebase Messaging is supported');
+
+        // Initialize Firebase app
+        app = initializeApp(firebaseConfig);
+        log('INFO', '✓ Firebase app initialized');
+
+        // Get messaging instance
+        messaging = getMessaging(app);
+        log('INFO', '✓ Firebase Messaging instance created');
+
+        // Send config to service worker
+        if (swRegistration && swRegistration.active) {
+          swRegistration.active.postMessage({
+            type: 'FIREBASE_CONFIG',
+            config: firebaseConfig
+          });
+          log('INFO', '✓ Firebase config sent to service worker');
+        }
+
+        document.getElementById('get-token-btn').disabled = false;
+
+        // Update status
+        document.getElementById('firebase-status').innerHTML =
+          '<div class="status success">✓ Firebase initialized successfully</div>';
+      } catch (error) {
+        log('ERROR', `Firebase initialization failed: ${error.message}`);
+        document.getElementById('firebase-status').innerHTML =
+          `<div class="status error">✗ ${error.message}</div>`;
+      }
+    });
+
+    // 6. Get FCM token
+    document.getElementById('get-token-btn').addEventListener('click', async () => {
+      log('INFO', 'Requesting FCM token...');
+      document.getElementById('token-status').innerHTML = '<div class="status info">Requesting token...</div>';
+
+      try {
+        const token = await getToken(messaging, {
+          vapidKey: VAPID_KEY,
+          serviceWorkerRegistration: swRegistration
+        });
+
+        if (token) {
+          log('INFO', '✓ FCM token received successfully!');
+          document.getElementById('token-status').innerHTML =
+            '<div class="status success">✓ Token received successfully</div>';
+
+          const tokenDisplay = document.getElementById('token-display');
+          tokenDisplay.style.display = 'block';
+          tokenDisplay.innerHTML = `
+            <strong>FCM Token:</strong>
+            <div class="token-display">${token}</div>
+            <p style="margin-top:10px;color:#059669;">
+              ✓ Copy this token and use it to send test push notifications from Firebase Console.
+            </p>
+          `;
+        } else {
+          log('ERROR', 'No FCM token received (permission might be denied)');
+          document.getElementById('token-status').innerHTML =
+            '<div class="status error">✗ No token received</div>';
+        }
+      } catch (error) {
+        log('ERROR', `Failed to get FCM token: ${error.name} - ${error.message}`);
+
+        // Detailed error analysis
+        let errorDetail = error.message;
+        if (error.name === 'AbortError') {
+          errorDetail = 'Registration failed - push service error. Possible causes:<br>' +
+            '• VAPID key is invalid or from wrong Firebase project<br>' +
+            '• Service worker not properly registered<br>' +
+            '• Firebase Cloud Messaging API not enabled<br>' +
+            '• Browser blocked push subscription';
+        }
+
+        document.getElementById('token-status').innerHTML =
+          `<div class="status error">✗ ${error.name}<br>${errorDetail}</div>`;
+      }
+    });
+
+    // Initialize checks
+    checkSupport();
+    displayConfig();
+    checkPermission();
+
+    log('INFO', 'FCM Test page loaded. Follow the steps above.');
+  </script>
+</body>
+</html>

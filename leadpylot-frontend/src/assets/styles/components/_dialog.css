@@ -1,0 +1,47 @@
+@layer components {
+  .dialog {
+    outline: none;
+    @apply mx-auto;
+  }
+
+  @media (min-width: 640px) {
+    .dialog {
+      @apply max-w-xl;
+    }
+  }
+
+  @media (min-width: 768px) {
+    .dialog {
+      @apply max-w-2xl;
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .dialog {
+      @apply max-w-4xl;
+    }
+  }
+
+  @media (min-width: 1280px) {
+    .dialog {
+      @apply max-w-6xl;
+    }
+  }
+
+  .dialog-content {
+    @apply relative h-full rounded-lg bg-gray-50 p-2 py-2 shadow-xl sm:my-10;
+  }
+
+  .dialog-overlay {
+    transition: all 0.15s ease-in-out;
+    @apply fixed inset-0 z-50 bg-black/60 backdrop-blur-md;
+  }
+
+  .dialog-overlay-after-open {
+    opacity: 1;
+  }
+
+  .dialog-overlay-before-close {
+    opacity: 0;
+  }
+}

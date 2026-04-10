@@ -1,0 +1,13 @@
+@layer components {
+  .time-input-field {
+    @apply w-6 bg-transparent text-center ring-0 outline-none;
+  }
+
+  .time-input-wrapper {
+    @apply flex h-full items-center rtl:flex-row-reverse rtl:justify-end;
+  }
+
+  .time-input-separator {
+    @apply mx-2;
+  }
+}

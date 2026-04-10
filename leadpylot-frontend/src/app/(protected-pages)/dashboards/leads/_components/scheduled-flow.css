@@ -1,0 +1,47 @@
+.scheduled-expanded {
+  position: relative;
+}
+
+/* Connector overlay that aligns under the checkbox (35px) + expander (30px) columns */
+.scheduled-flow-connector {
+  position: absolute;
+  left: 65px; /* 35 + 30; keep in sync with DataTable select+expander sizes */
+  top: -8px; /* start slightly above card */
+  height: 28px; /* only until the card's top edge */
+  width: 24px;
+}
+
+.scheduled-flow-connector .rail {
+  position: absolute;
+  left: -25;
+  top: -10;
+  height: 50px; /* matches connector height minus elbow */
+  width: 2px;
+  background: #2d2827; /* gray-200 */
+}
+
+/* Small elbow into the first child row */
+.scheduled-flow-connector .elbow {
+  position: absolute;
+  left: -25;
+  top: 40; /* meet card top border */
+  height: 2px;
+  width: 18px;
+  background: #2d2827;
+}
+
+/* Arrow head at the end of the elbow */
+.scheduled-flow-connector .elbow::after {
+  content: '';
+  position: absolute;
+  right: -3px; /* place the triangle after the elbow */
+  top: 50%;
+  transform: translateY(-50%);
+  width: 0;
+  height: 0;
+  border-left: 10px solid #2d2827; /* arrow color */
+  border-top: 8px solid transparent;
+  border-bottom: 8px solid transparent;
+}
+
+

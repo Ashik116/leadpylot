@@ -1,0 +1,132 @@
+@layer components {
+  .notification {
+    @apply relative w-full rounded-lg border border-gray-100 bg-white font-semibold shadow-xl;
+  }
+
+  .notification-content {
+    @apply flex px-6 py-5;
+
+    &.no-child {
+      @apply items-center;
+    }
+  }
+
+  .notification-title {
+    @apply text-sand-1 font-bold;
+  }
+
+  .notification-description {
+    @apply text-sand-2 text-sm font-normal;
+  }
+
+  .notification-close {
+    @apply top-5 ltr:right-4 rtl:left-4;
+  }
+
+  /* Premium Scrollbar Utilities */
+  .scrollbar-premium {
+    scrollbar-width: none; /* Firefox: hide by default */
+    -ms-overflow-style: none; /* IE/Edge: hide by default */
+  }
+
+  .scrollbar-premium:hover {
+    scrollbar-width: thin;
+    scrollbar-color: theme('colors.gray.300') transparent;
+  }
+
+  /* Webkit support */
+  .scrollbar-premium::-webkit-scrollbar {
+    width: 0; /* Initially hidden */
+    height: 0;
+  }
+
+  .scrollbar-premium:hover::-webkit-scrollbar {
+    width: 5px;
+    height: 5px;
+  }
+
+  .scrollbar-premium::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-premium::-webkit-scrollbar-thumb {
+    background: transparent;
+    border-radius: 10px;
+  }
+
+  .scrollbar-premium:hover::-webkit-scrollbar-thumb {
+    background: theme('colors.gray.300');
+  }
+
+  .scrollbar-premium::-webkit-scrollbar-thumb:hover {
+    background: theme('colors.gray.400');
+  }
+
+  /* Scrollbar Hide - Show on Hover Utility */
+  .scrollbar-hide {
+    scrollbar-width: none !important; /* Firefox: hide by default */
+    -ms-overflow-style: none !important; /* IE/Edge: hide by default */
+  }
+
+  .scrollbar-hide:hover {
+    scrollbar-width: thin !important; /* Firefox: show on hover */
+    scrollbar-color: theme('colors.gray.300') transparent !important;
+  }
+
+  /* Webkit support for scrollbar-hide - hide by default */
+  .scrollbar-hide::-webkit-scrollbar {
+    width: 0 !important;
+    height: 0 !important;
+    background: transparent !important;
+  }
+
+  /* Webkit support - show on hover */
+  .scrollbar-hide:hover::-webkit-scrollbar {
+    width: 4px !important;
+    height: 4px !important;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar-track {
+    background: transparent !important;
+  }
+
+  .scrollbar-hide:hover::-webkit-scrollbar-track {
+    background: transparent !important;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar-thumb {
+    background-color: transparent !important;
+    border-radius: 9999px !important;
+  }
+
+  .scrollbar-hide:hover::-webkit-scrollbar-thumb {
+    background-color: theme('colors.gray.300') !important;
+  }
+
+  .scrollbar-hide:hover::-webkit-scrollbar-thumb:hover {
+    background-color: theme('colors.gray.400') !important;
+  }
+
+  /* Scrollbar Completely Hidden - No scrollbar at all, even on hover */
+  .scrollbar-none {
+    scrollbar-width: none !important; /* Firefox */
+    -ms-overflow-style: none !important; /* IE/Edge */
+  }
+
+  .scrollbar-none::-webkit-scrollbar {
+    display: none !important;
+    width: 0 !important;
+    height: 0 !important;
+    background: transparent !important;
+  }
+
+  .scrollbar-none::-webkit-scrollbar-track {
+    display: none !important;
+    background: transparent !important;
+  }
+
+  .scrollbar-none::-webkit-scrollbar-thumb {
+    display: none !important;
+    background: transparent !important;
+  }
+}

@@ -1,0 +1,791 @@
+================================================================================
+GROUPING IMPLEMENTATION GUIDE FOR OTHER MODELS
+================================================================================
+
+This guide explains how to implement grouping functionality for other models
+(like User, Team, Opening, etc.) based on the implementation in:
+- CommonLeadsDashboard.tsx (for Leads)
+- UnifiedDashboard.tsx (for Offers)
+
+================================================================================
+TABLE OF CONTENTS
+================================================================================
+
+1. Overview
+2. Prerequisites
+3. Step-by-Step Implementation
+4. Key Components and Hooks
+5. Store Configuration
+6. API Requirements
+7. Common Patterns and Examples
+8. Troubleshooting
+
+================================================================================
+1. OVERVIEW
+================================================================================
+
+The grouping system allows users to:
+- Group data by one or more fields (e.g., by team, by agent, by status)
+- View grouped summaries with expandable rows
+- Navigate through grouped data with pagination
+- Apply filters while maintaining grouping
+- Support multi-level grouping (e.g., by project, then by agent)
+
+The system consists of:
+- Frontend hooks (useFilterChainLeads, useGroupedSummary)
+- Stores (universalGroupingFilterStore, filterChainStore)
+- Components (BaseTable, GroupSummary)
+- Backend API endpoints
+
+================================================================================
+2. PREREQUISITES
+================================================================================
+
+Before implementing grouping for a new model, ensure:
+
+1. Backend API supports:
+   - GET /api/metadata/options/{EntityType} - Returns filter and group options
+   - GET /api/grouped-summary - Returns grouped summary data
+   - GET /api/group-details - Returns details for a specific group
+
+2. Entity type is registered in:
+   - universalGroupingFilterStore.ts (EntityType type)
+   - Backend metadata API
+
+3. Model has fields that can be used for grouping (e.g., team_id, user_id, status)
+
+================================================================================
+3. STEP-BY-STEP IMPLEMENTATION
+================================================================================
+
+STEP 1: Update Entity Type in Store
+------------------------------------
+
+File: leadpylot-frontend/src/stores/universalGroupingFilterStore.ts
+
+Add your entity type to the EntityType union:
+
+  export type EntityType = 'Lead' | 'Offer' | 'User' | 'Team' | 'Opening' | 'YourNewModel';
+
+STEP 2: Set Entity Type in Your Dashboard Component
+----------------------------------------------------
+
+In your dashboard component (similar to UnifiedDashboard.tsx):
+
+  import { useUniversalGroupingFilterStore } from '@/stores/universalGroupingFilterStore';
+
+  const { setEntityType } = useUniversalGroupingFilterStore();
+
+  // Set entity type when component mounts
+  React.useEffect(() => {
+    setEntityType('YourNewModel'); // Set to your model name
+  }, [setEntityType]);
+
+STEP 3: Integrate useFilterChainLeads Hook
+-------------------------------------------
+
+File: YourDashboardComponent.tsx
+
+  import { useFilterChainLeads } from '@/hooks/useFilterChainLeads';
+
+  const filterChain = useFilterChainLeads({
+    onClearSelections: () => clearSelectedItems(),
+    currentTab: dashboardType, // or your current tab/page identifier
+    hasManuallyClearedGroupFilter,
+  });
+
+  const {
+    selectedGroupBy,
+    buildApiFilters,
+    buildGroupedLeadsFilters,
+    handleGroupByArrayChange,
+    handleClearGroupByFilter: chainHandleClearGroupByFilter,
+    hasSelectedGroupBy,
+    hasUserAddedGroupBy,
+  } = filterChain;
+
+STEP 4: Sync Store with useFilterChainLeads
+-------------------------------------------
+
+Add sync logic to keep store and hook in sync (prevent infinite loops):
+
+  const storeGroupBy = useUniversalGroupingFilterStore((state) => state.groupBy);
+  const isSyncingRef = React.useRef(false);
+  const lastSyncedStoreValueRef = React.useRef<string>('');
+
+  // Helper to compare arrays (order-independent)
+  const arraysEqual = React.useCallback((a: string[], b: string[]): boolean => {
+    if (!Array.isArray(a) || !Array.isArray(b)) return false;
+    if (a.length !== b.length) return false;
+    const sortedA = [...a].sort();
+    const sortedB = [...b].sort();
+    return sortedA.every((val, idx) => val === sortedB[idx]);
+  }, []);
+
+  const getArrayKey = React.useCallback((arr: string[]): string => {
+    if (!Array.isArray(arr)) return '';
+    return [...arr].sort().join(',');
+  }, []);
+
+  // Sync store -> useFilterChainLeads (one-way)
+  React.useEffect(() => {
+    if (isSyncingRef.current) return;
+    if (!Array.isArray(storeGroupBy)) return;
+
+    const storeKey = getArrayKey(storeGroupBy);
+    const lastSyncedKey = lastSyncedStoreValueRef.current;
+
+    // Only sync when store has values (non-empty)
+    if (
+      storeGroupBy.length > 0 &&
+      !arraysEqual(storeGroupBy, selectedGroupBy) &&
+      storeKey !== lastSyncedKey
+    ) {
+      isSyncingRef.current = true;
+      lastSyncedStoreValueRef.current = storeKey;
+
+      setTimeout(() => {
+        handleGroupByArrayChange(storeGroupBy);
+        setTimeout(() => {
+          isSyncingRef.current = false;
+        }, 50);
+      }, 0);
+    }
+  }, [storeGroupBy, handleGroupByArrayChange, selectedGroupBy, arraysEqual, getArrayKey]);
+
+  // Sync useFilterChainLeads -> store (one-way)
+  const { setGroupBy: setStoreGroupBy } = useUniversalGroupingFilterStore();
+  React.useEffect(() => {
+    if (isSyncingRef.current) return;
+    if (Array.isArray(selectedGroupBy)) {
+      const selectedKey = getArrayKey(selectedGroupBy);
+      const lastSyncedKey = lastSyncedStoreValueRef.current;
+
+      if (!arraysEqual(selectedGroupBy, storeGroupBy) && selectedKey !== lastSyncedKey) {
+        isSyncingRef.current = true;
+        lastSyncedStoreValueRef.current = selectedKey;
+
+        setTimeout(() => {
+          setStoreGroupBy(selectedGroupBy);
+          setTimeout(() => {
+            isSyncingRef.current = false;
+          }, 50);
+        }, 0);
+      }
+    }
+  }, [selectedGroupBy, setStoreGroupBy, storeGroupBy, arraysEqual, getArrayKey]);
+
+STEP 5: Build Domain Filters
+-----------------------------
+
+Convert filter chain filters to domain format for API:
+
+  import { useUniversalGroupingFilterStore } from '@/stores/universalGroupingFilterStore';
+
+  const {
+    userDomainFilters,
+    entityType: storeEntityType,
+    pagination: storePagination,
+    subgroupPagination: storeSubgroupPagination,
+    sorting: storeSorting,
+  } = useUniversalGroupingFilterStore();
+
+  // Build domain filters
+  const domainFilters = React.useMemo(() => {
+    // For your model page, use userDomainFilters from CustomFilterOption
+    if (dashboardType === 'yourModel') {
+      return userDomainFilters || [];
+    }
+
+    // For other pages, build from filter chain + userDomainFilters
+    const baseGroupedFilters = buildGroupedLeadsFilters();
+
+    // Convert filter chain format to domain format
+    const operatorMap: Record<string, string> = {
+      equals: '=',
+      not_equals: '!=',
+      greater_than: '>',
+      less_than: '<',
+      greater_than_or_equal: '>=',
+      less_than_or_equal: '<=',
+      contains: 'ilike',
+      not_contains: 'not ilike',
+      in: 'in',
+      not_in: 'not in',
+    };
+
+    const filterChainDomainFilters = baseGroupedFilters.map((filter) => {
+      return [filter.field, operatorMap[filter.operator] || filter.operator, filter.value] as [
+        string,
+        string,
+        any,
+      ];
+    });
+
+    // Combine filter chain filters with userDomainFilters
+    return [...(userDomainFilters || []), ...filterChainDomainFilters];
+  }, [dashboardType, buildGroupedLeadsFilters, userDomainFilters]);
+
+STEP 6: Fetch Grouped Data
+---------------------------
+
+Use useGroupedSummary hook to fetch grouped data:
+
+  import { useGroupedSummary } from '@/services/hooks/useLeads';
+
+  // Determine effective group by (disable in multi-table mode if needed)
+  const effectiveGroupBy = React.useMemo(() => {
+    if (isMultiTableMode) {
+      return [];
+    }
+    return selectedGroupBy.length > 0 ? selectedGroupBy : [];
+  }, [selectedGroupBy, isMultiTableMode]);
+
+  // Build default filters as query params
+  const defaultFiltersAsQueryParams = React.useMemo(() => {
+    const queryParams: Record<string, string | number | boolean> = {};
+
+    if (!buildApiFilters) {
+      return queryParams;
+    }
+
+    const defaultFilters = buildApiFilters();
+    defaultFilters.forEach((filter) => {
+      if (
+        filter.operator === '=' &&
+        filter.field &&
+        filter.value !== undefined &&
+        filter.value !== null
+      ) {
+        queryParams[filter.field] = filter.value;
+      }
+    });
+
+    // Add project_id for Agent role if needed
+    if (session?.user?.role === Role.AGENT && effectiveProjectId) {
+      queryParams.project_id = effectiveProjectId;
+    }
+
+    return queryParams;
+  }, [buildApiFilters, session?.user?.role, effectiveProjectId]);
+
+  // Fetch grouped summary
+  const { data: groupedSummaryData, isLoading: groupedDataLoading } = useGroupedSummary({
+    entityType: 'YourNewModel', // Your entity type
+    domain: domainFilters,
+    groupBy: effectiveGroupBy,
+    page: storePagination?.page || 1,
+    limit: storePagination?.limit || 50,
+    subPage: storeSubgroupPagination?.subPage || null,
+    subLimit: storeSubgroupPagination?.subLimit || null,
+    groupId: storeSubgroupPagination?.groupId || null,
+    sortBy: storeSorting?.sortBy || 'count',
+    sortOrder: (storeSorting?.sortOrder as 'asc' | 'desc') || 'desc',
+    enabled: effectiveGroupBy.length > 0 && !isMultiTableMode,
+    defaultFilters: defaultFiltersAsQueryParams,
+    hasProgress: hasProgressForGrouping, // If applicable
+  });
+
+STEP 7: Disable Regular API When Grouping is Active
+----------------------------------------------------
+
+When grouping is active, disable the regular data fetching hook:
+
+  const shouldDisableHook = selectedGroupBy.length > 0 || isMultiTableMode;
+
+  const hookParamsWithEnabled = {
+    ...hookParams,
+    ...(shouldDisableHook && { enabled: false }),
+  };
+
+  const { data: apiData, isLoading, refetch } = useDataHook(hookParamsWithEnabled);
+
+STEP 8: Configure BaseTable for Grouping
+------------------------------------------
+
+Pass grouping props to BaseTable:
+
+  const tableConfig = useBaseTable({
+    // ... other config
+    selectedGroupBy: isMultiTableMode ? [] : selectedGroupBy,
+    onGroupByChange: isMultiTableMode ? undefined : handleGroupByArrayChangeWithReset,
+    onClearGroupBy: isMultiTableMode ? undefined : handleClearGroupByFilter,
+    hasSelectedGroupBy: isMultiTableMode ? false : hasSelectedGroupBy,
+    hasUserAddedGroupBy: isMultiTableMode ? false : hasUserAddedGroupBy,
+    // Grouped mode props
+    groupedMode: effectiveGroupBy.length > 0 && !isMultiTableMode,
+    groupedData: groupedSummaryData?.data || [],
+    entityType: 'YourNewModel',
+    groupByFields: effectiveGroupBy,
+    buildApiFilters: buildApiFilters,
+  });
+
+STEP 9: Update Page Info for Grouped View
+------------------------------------------
+
+Keep page header totals in sync for both grouped and flat views:
+
+  useEffect(() => {
+    const isGroupedView = effectiveGroupBy.length > 0;
+    if (isGroupedView) {
+      if (groupedDataLoading) return;
+      const total = (groupedSummaryData?.meta?.total ?? 0) as number;
+      setPageInfo({
+        title: getDynamicTitle(),
+        total,
+        subtitle: getDynamicSubtitle(total),
+      } as any);
+    } else {
+      if (isLoading) return;
+      const total = (apiData?.meta?.total ?? 0) as number;
+      setPageInfo({
+        title: getDynamicTitle(),
+        total,
+        subtitle: getDynamicSubtitle(total),
+      } as any);
+    }
+  }, [
+    effectiveGroupBy.length,
+    groupedDataLoading,
+    groupedSummaryData?.meta?.total,
+    isLoading,
+    apiData?.meta?.total,
+    setPageInfo,
+    getDynamicTitle,
+    getDynamicSubtitle,
+  ]);
+
+STEP 10: Register Handlers in filterChainStore
+-----------------------------------------------
+
+Register handlers so FilterTags component can use them:
+
+  import { useFilterChainStore } from '@/stores/filterChainStore';
+
+  const {
+    setHandleClearGroupByFilter: setStoreHandleClearGroupByFilter,
+    setHandleGroupByArrayChangeWithReset: setStoreHandleGroupByArrayChangeWithReset,
+    setBuildApiFilters: setStoreBuildApiFilters,
+  } = useFilterChainStore();
+
+  // Use refs to store latest handlers and prevent infinite loops
+  const handleClearGroupByFilterRef = React.useRef(handleClearGroupByFilter);
+  const handleGroupByArrayChangeWithResetRef = React.useRef(handleGroupByArrayChangeWithReset);
+  const buildApiFiltersRef = React.useRef(buildApiFilters);
+
+  // Update refs when handlers change
+  React.useEffect(() => {
+    handleClearGroupByFilterRef.current = handleClearGroupByFilter;
+    handleGroupByArrayChangeWithResetRef.current = handleGroupByArrayChangeWithReset;
+    buildApiFiltersRef.current = buildApiFilters;
+  }, [handleClearGroupByFilter, handleGroupByArrayChangeWithReset, buildApiFilters]);
+
+  // Register handlers in filterChainStore (only once on mount)
+  React.useEffect(() => {
+    const stableHandleClearGroupByFilter = () => {
+      handleClearGroupByFilterRef.current();
+    };
+    const stableHandleGroupByArrayChangeWithReset = (newGroupBy: string[]) => {
+      handleGroupByArrayChangeWithResetRef.current(newGroupBy);
+    };
+
+    setStoreHandleClearGroupByFilter(stableHandleClearGroupByFilter);
+    setStoreHandleGroupByArrayChangeWithReset(stableHandleGroupByArrayChangeWithReset);
+    if (buildApiFiltersRef.current) {
+      setStoreBuildApiFilters(buildApiFiltersRef.current);
+    }
+
+    return () => {
+      setStoreHandleClearGroupByFilter(null);
+      setStoreHandleGroupByArrayChangeWithReset(null);
+      setStoreBuildApiFilters(null);
+    };
+  }, []); // Only run once on mount
+
+STEP 11: Clear Selections When Filters Change
+---------------------------------------------
+
+Clear selections when domain filters or grouping changes:
+
+  React.useEffect(() => {
+    clearSelectedItems();
+  }, [clearSelectedItems, domainFilters]);
+
+  const handleClearGroupByFilter = useCallback(() => {
+    clearSelectedItems();
+    chainHandleClearGroupByFilter();
+  }, [clearSelectedItems, chainHandleClearGroupByFilter]);
+
+STEP 12: Invalidate Grouped Summary on Mutations
+-------------------------------------------------
+
+After mutations (create, update, delete), invalidate grouped summary:
+
+  import { useQueryClient } from '@tanstack/react-query';
+
+  const queryClient = useQueryClient();
+
+  const invalidateGroupedSummary = useCallback(() => {
+    queryClient.invalidateQueries({ queryKey: ['grouped-summary'] });
+  }, [queryClient]);
+
+  // After successful mutation:
+  invalidateGroupedSummary();
+  refetch?.();
+
+================================================================================
+4. KEY COMPONENTS AND HOOKS
+================================================================================
+
+useFilterChainLeads Hook
+-------------------------
+Location: leadpylot-frontend/src/hooks/useFilterChainLeads.ts
+
+Purpose: Manages filter chain state and provides filter builders
+
+Key exports:
+  - selectedGroupBy: string[] - Current grouping fields
+  - buildApiFilters(): FilterRule[] - Builds filters for API
+  - buildGroupedLeadsFilters(): FilterRule[] - Builds filters for grouped view
+  - handleGroupByArrayChange(groupBy: string[]) - Updates grouping
+  - handleClearGroupByFilter() - Clears grouping
+  - hasSelectedGroupBy: boolean - Whether grouping is active
+  - hasUserAddedGroupBy: boolean - Whether user added custom grouping
+
+useGroupedSummary Hook
+----------------------
+Location: leadpylot-frontend/src/services/hooks/useLeads.ts
+
+Purpose: Fetches grouped summary data from API
+
+Parameters:
+  - entityType: string - Model name (e.g., 'Lead', 'Offer', 'User')
+  - domain: DomainFilter[] - Domain filters in format [field, operator, value][]
+  - groupBy: string[] - Fields to group by
+  - page: number - Page number for pagination
+  - limit: number - Items per page
+  - subPage: number | null - Subgroup page number
+  - subLimit: number | null - Subgroup items per page
+  - groupId: string | null - Parent group ID for subgroup pagination
+  - sortBy: string - Field to sort by
+  - sortOrder: 'asc' | 'desc' - Sort order
+  - enabled: boolean - Whether to fetch (should be false when no grouping)
+  - defaultFilters: Record<string, any> - Default filters as query params
+  - hasProgress: string | undefined - Progress filter (for openings, etc.)
+
+Returns:
+  - data: GroupedSummaryResponse - Grouped summary data
+  - isLoading: boolean - Loading state
+
+universalGroupingFilterStore
+----------------------------
+Location: leadpylot-frontend/src/stores/universalGroupingFilterStore.ts
+
+Purpose: Global store for grouping and filtering state
+
+Key state:
+  - entityType: EntityType - Current entity type
+  - userDomainFilters: DomainFilter[] - User-added filters
+  - domainFilters: DomainFilter[] - Combined filters (defaults + user)
+  - groupBy: string[] - Current grouping fields
+  - pagination: { page, limit } - Pagination state
+  - subgroupPagination: { subPage, subLimit, groupId } - Subgroup pagination
+  - sorting: { sortBy, sortOrder } - Sorting state
+
+Key actions:
+  - setEntityType(type: EntityType) - Set entity type
+  - setUserDomainFilters(filters: DomainFilter[]) - Set user filters
+  - setGroupBy(fields: string[]) - Set grouping fields
+  - setPagination(pagination) - Set pagination
+  - setSorting(sorting) - Set sorting
+
+BaseTable Component
+-------------------
+Location: leadpylot-frontend/src/components/shared/BaseTable/BaseTable.tsx
+
+Purpose: Main table component that supports grouped mode
+
+Key props for grouping:
+  - groupedMode: boolean - Enable grouped rendering
+  - groupedData: GroupSummary[] - Grouped data to display
+  - entityType: string - Entity type for metadata
+  - groupByFields: string[] - Fields used for grouping
+  - selectedGroupBy: string[] - Current grouping selection
+  - onGroupByChange: (groupBy: string[]) => void - Handler for grouping changes
+  - onClearGroupBy: () => void - Handler to clear grouping
+  - hasSelectedGroupBy: boolean - Whether grouping is active
+  - buildApiFilters: () => FilterRule[] - Function to build default filters
+
+================================================================================
+5. STORE CONFIGURATION
+================================================================================
+
+filterChainStore
+----------------
+Location: leadpylot-frontend/src/stores/filterChainStore.ts
+
+Purpose: Stores filter chain state (import, status, dynamic filters)
+
+Key state:
+  - importFilter: FilterRule | null - Import filter
+  - statusFilter: FilterRule | null - Status filter
+  - dynamicFilters: FilterRule[] | null - Dynamic filters
+
+Key actions:
+  - setStatusFilter(filter: FilterRule | null) - Set status filter
+  - clearFilterByType(type: 'import' | 'status' | 'dynamic' | 'groupBy') - Clear filter
+
+Handler registration (for FilterTags):
+  - setHandleClearGroupByFilter(fn: () => void | null) - Register clear handler
+  - setHandleGroupByArrayChangeWithReset(fn: (groupBy: string[]) => void | null) - Register change handler
+  - setBuildApiFilters(fn: () => FilterRule[] | null) - Register filter builder
+
+================================================================================
+6. API REQUIREMENTS
+================================================================================
+
+Backend must support these endpoints:
+
+GET /api/metadata/options/{EntityType}
+--------------------------------------
+Returns available filter and group options for the entity type.
+
+Response format:
+  {
+    success: boolean,
+    model: string,
+    filterOptions: MetadataFilterOption[],
+    groupOptions: MetadataGroupOption[],
+    availableOperators: AvailableOperator[]
+  }
+
+GET /api/grouped-summary
+------------------------
+Returns grouped summary data.
+
+Query parameters:
+  - entityType: string - Model name
+  - domain: string - JSON stringified DomainFilter[]
+  - groupBy: string[] - Fields to group by (comma-separated or array)
+  - page: number - Page number
+  - limit: number - Items per page
+  - subPage: number | null - Subgroup page
+  - subLimit: number | null - Subgroup limit
+  - groupId: string | null - Parent group ID
+  - sortBy: string - Sort field
+  - sortOrder: 'asc' | 'desc' - Sort order
+  - {field}: value - Default filters as query params
+
+Response format:
+  {
+    success: boolean,
+    data: GroupSummary[],
+    meta: {
+      total: number,
+      page: number,
+      limit: number,
+      pages: number
+    }
+  }
+
+GET /api/group-details
+----------------------
+Returns details for a specific group.
+
+Query parameters:
+  - entityType: string - Model name
+  - groupPath: string[] - Path to the group (array of group IDs)
+  - domain: string - JSON stringified DomainFilter[]
+  - page: number - Page number
+  - limit: number - Items per page
+
+Response format:
+  {
+    success: boolean,
+    data: Entity[],
+    meta: {
+      total: number,
+      page: number,
+      limit: number,
+      pages: number
+    }
+  }
+
+================================================================================
+7. COMMON PATTERNS AND EXAMPLES
+================================================================================
+
+Pattern 1: Simple Dashboard with Grouping
+------------------------------------------
+
+  import { useFilterChainLeads } from '@/hooks/useFilterChainLeads';
+  import { useGroupedSummary } from '@/services/hooks/useLeads';
+  import { useUniversalGroupingFilterStore } from '@/stores/universalGroupingFilterStore';
+
+  function MyDashboard() {
+    // Set entity type
+    const { setEntityType } = useUniversalGroupingFilterStore();
+    React.useEffect(() => {
+      setEntityType('MyModel');
+    }, [setEntityType]);
+
+    // Get filter chain
+    const filterChain = useFilterChainLeads({
+      onClearSelections: () => clearSelectedItems(),
+    });
+
+    const { selectedGroupBy, buildGroupedLeadsFilters } = filterChain;
+
+    // Build domain filters
+    const domainFilters = React.useMemo(() => {
+      const filters = buildGroupedLeadsFilters();
+      return filters.map(f => [f.field, f.operator, f.value]);
+    }, [buildGroupedLeadsFilters]);
+
+    // Fetch grouped data
+    const { data: groupedData } = useGroupedSummary({
+      entityType: 'MyModel',
+      domain: domainFilters,
+      groupBy: selectedGroupBy,
+      enabled: selectedGroupBy.length > 0,
+    });
+
+    // Render table
+    return (
+      <BaseTable
+        groupedMode={selectedGroupBy.length > 0}
+        groupedData={groupedData?.data || []}
+        entityType="MyModel"
+        groupByFields={selectedGroupBy}
+        // ... other props
+      />
+    );
+  }
+
+Pattern 2: Multi-Table Mode (Disable Grouping)
+-----------------------------------------------
+
+  const isMultiTableMode = !!tableProgressFilter;
+
+  const effectiveGroupBy = React.useMemo(() => {
+    if (isMultiTableMode) {
+      return []; // Disable grouping in multi-table mode
+    }
+    return selectedGroupBy;
+  }, [selectedGroupBy, isMultiTableMode]);
+
+Pattern 3: Agent Role with Default Grouping
+--------------------------------------------
+
+  // In useFilterChainLeads hook, add default grouping for Agent role:
+  const getDefaultGroupBy = useCallback((): string[] => {
+    if (!isAgent) return [];
+    if (isMyModelPage) {
+      return ['status']; // Default grouping for Agent on this page
+    }
+    return [];
+  }, [isAgent, isMyModelPage]);
+
+  // Apply default grouping
+  useEffect(() => {
+    if (isAgent && !hasManuallyClearedGroupFilter) {
+      const newDefaultGroupBy = getDefaultGroupBy();
+      if (selectedGroupBy.length === 0 && newDefaultGroupBy.length > 0) {
+        setSelectedGroupBy(newDefaultGroupBy);
+      }
+    }
+  }, [isAgent, getDefaultGroupBy, selectedGroupBy.length, hasManuallyClearedGroupFilter]);
+
+Pattern 4: Clear Selections on Filter Changes
+-----------------------------------------------
+
+  // Clear selections when domain filters change
+  React.useEffect(() => {
+    clearSelectedItems();
+  }, [clearSelectedItems, domainFilters]);
+
+  // Clear selections when grouping changes
+  const handleGroupByArrayChangeWithReset = useCallback(
+    (newGroupBy: string[]) => {
+      clearSelectedItems();
+      handleGroupByArrayChange(newGroupBy);
+    },
+    [clearSelectedItems, handleGroupByArrayChange]
+  );
+
+Pattern 5: Invalidate Grouped Summary After Mutations
+-------------------------------------------------------
+
+  const queryClient = useQueryClient();
+
+  const invalidateGroupedSummary = useCallback(() => {
+    queryClient.invalidateQueries({ queryKey: ['grouped-summary'] });
+  }, [queryClient]);
+
+  // After successful mutation:
+  const handleCreate = async () => {
+    await createMutation.mutateAsync(data);
+    invalidateGroupedSummary();
+    refetch?.();
+  };
+
+================================================================================
+8. TROUBLESHOOTING
+================================================================================
+
+Issue: Infinite loop when syncing store and hook
+-------------------------------------------------
+Solution: Use refs to track syncing state and prevent circular updates:
+  - Use isSyncingRef to prevent simultaneous syncs
+  - Use lastSyncedStoreValueRef to track last synced value
+  - Use order-independent array comparison (sort arrays before comparing)
+
+Issue: Grouping disappears when filters change
+-----------------------------------------------
+Solution: Only sync from store to hook when store has values (non-empty):
+  - Check storeGroupBy.length > 0 before syncing
+  - Don't clear selectedGroupBy when store is empty (might be temporary)
+
+Issue: Grouped data not updating after mutations
+-------------------------------------------------
+Solution: Invalidate grouped summary query after mutations:
+  - Call queryClient.invalidateQueries({ queryKey: ['grouped-summary'] })
+  - Also call refetch() on regular data hook if needed
+
+Issue: Selections not clearing when grouping changes
+----------------------------------------------------
+Solution: Clear selections in grouping change handlers:
+  - Call clearSelectedItems() in handleGroupByArrayChange
+  - Call clearSelectedItems() in handleClearGroupByFilter
+
+Issue: Page info not updating for grouped view
+-----------------------------------------------
+Solution: Update page info in useEffect that watches grouped data:
+  - Check isGroupedView = effectiveGroupBy.length > 0
+  - Use groupedSummaryData?.meta?.total for grouped view
+  - Use apiData?.meta?.total for flat view
+
+Issue: Multi-level grouping not working
+----------------------------------------
+Solution: Ensure groupPath is correctly passed to group-details API:
+  - Store selectedGroupPath in universalGroupingFilterStore
+  - Pass groupPath as array to API
+  - Handle nested group expansion correctly
+
+Issue: Default filters not applied in grouped view
+--------------------------------------------------
+Solution: Pass default filters as query params, not in domain:
+  - Build defaultFiltersAsQueryParams from buildApiFilters()
+  - Pass as defaultFilters prop to useGroupedSummary
+  - Keep user filters in domain parameter
+
+================================================================================
+END OF DOCUMENTATION
+================================================================================
+
+For questions or issues, refer to:
+- CommonLeadsDashboard.tsx for Leads implementation
+- UnifiedDashboard.tsx for Offers implementation
+- useFilterChainLeads.ts for filter chain logic
+- universalGroupingFilterStore.ts for store structure
+

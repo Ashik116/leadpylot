@@ -1,0 +1,26 @@
+@layer components {
+  .stacked-side-nav {
+    @apply sticky top-0 z-20 flex h-screen flex-auto shrink-0 overflow-y-hidden transition-all duration-200 ease-in-out print:hidden;
+  }
+
+  .stacked-side-nav-content {
+    height: calc(100vh - theme('spacing.16'));
+    @apply overflow-y-auto;
+  }
+
+  .stacked-side-nav-mini {
+    @apply z-10;
+  }
+
+  .stacked-side-nav-secondary {
+    @apply transition-all duration-200 ease-in-out;
+  }
+
+  .stacked-side-nav-mini-light {
+    @apply border-gray-200 bg-white ltr:border-r rtl:border-l;
+  }
+
+  .stacked-side-nav-secondary-light {
+    @apply border-gray-200 bg-white ltr:border-r rtl:border-l;
+  }
+}

@@ -1,0 +1,44 @@
+@layer components {
+  .header {
+    @apply sticky top-0 z-30 flex w-full bg-white print:hidden;
+  }
+
+  .header-wrapper {
+    @apply relative flex w-full items-center justify-between p-0 px-2 sm:px-4;
+  }
+
+  .header-action {
+    @apply flex items-center gap-1 sm:gap-2;
+  }
+
+  .header-action-start {
+    @apply flex min-w-0 flex-1 items-center gap-1 sm:gap-2;
+  }
+
+  .header-action-middle {
+    @apply flex min-w-0 flex-1 items-center gap-1 sm:gap-2;
+  }
+
+  .header-action-end {
+    @apply flex shrink-0 items-center gap-1 sm:gap-2;
+  }
+
+  .header-action-item {
+    @apply cursor-pointer rounded-full p-2;
+  }
+
+  .header-action-item-hoverable {
+    @apply transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-gray-900;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+    .header-wrapper {
+      @apply px-2;
+    }
+
+    .header-action {
+      @apply gap-1;
+    }
+  }
+}

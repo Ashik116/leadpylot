@@ -1,0 +1,126 @@
+/* Override for DatePicker dropdown to appear above form elements but not above async select menus */
+.dropdown-menu:has(.date-picker-cell) {
+  z-index: 50 !important;
+}
+
+/* Ensure async select menus (react-select) have higher z-index than datepicker */
+.select__menu-portal {
+  z-index: 9999 !important;
+}
+
+/* Force the floating container wrapper */
+[data-floating-ui-portal]>div {
+  z-index: 9999 !important;
+}
+
+/* Override any inline z-index on dropdown wrappers */
+.dropdown-menu,
+.dropdown-menu * {
+  position: relative;
+  z-index: 9999 !important;
+}
+
+/* Ensure parent of dropdown menu has high z-index */
+div:has(> .dropdown-menu) {
+  z-index: 9999 !important;
+}
+
+/* Global override for any element with class containing z- */
+[class*='z-30'],
+[class*='z-40'],
+[class*='z-50'] {
+  z-index: 9999 !important;
+}
+
+/* Fix for selected date styling */
+.date-picker-cell-selected {
+  background-color: #10b981 !important;
+  color: white !important;
+  font-weight: 600;
+}
+
+.date-picker-cell-selected:hover {
+  background-color: #059669 !important;
+  color: white !important;
+}
+
+/* Ensure active/selected dates are visible */
+.year-picker-cell-active,
+.month-picker-cell-active {
+  background-color: #10b981 !important;
+  color: white !important;
+  font-weight: 600;
+}
+
+/* Fix hover effect for calendar cells with rounded-full */
+.date-picker-cell-hoverable:hover {
+  background-color: #6b7280 !important;
+  color: white !important;
+  border-radius: 9999px !important;
+}
+
+/* Ensure date text is visible on hover */
+.date-picker-cell:hover {
+  background-color: #6b7280 !important;
+}
+
+.date-picker-cell:not(.date-picker-cell-selected):hover {
+  color: white !important;
+  border-radius: 9999px !important;
+}
+
+/* Fix for date picker cell content to have rounded-full on hover */
+.date-picker-cell-content:not(.date-picker-cell-selected):hover {
+  color: white !important;
+  border-radius: 9999px !important;
+}
+
+/* Fix left/right navigation icon hover color visibility */
+.picker-direction-button {
+  transition: all 0.15s ease-in-out !important;
+}
+
+.picker-direction-button:hover:not(:disabled) {
+  background-color: #e5e7eb !important;
+  color: #111827 !important;
+}
+
+.picker-direction-button:disabled {
+  opacity: 0.3 !important;
+  cursor: not-allowed !important;
+}
+
+/* Date range styling - Start date */
+.date-picker-cell-selected-start {
+  background-color: #10b981 !important;
+  color: white !important;
+  font-weight: 600;
+}
+
+.date-picker-cell-selected-start:hover {
+  background-color: #059669 !important;
+  color: white !important;
+}
+
+/* Date range styling - End date */
+.date-picker-cell-selected-end {
+  background-color: #10b981 !important;
+  color: white !important;
+  font-weight: 600;
+}
+
+.date-picker-cell-selected-end:hover {
+  background-color: #059669 !important;
+  color: white !important;
+}
+
+/* Date range styling - Dates in between (middle of range) */
+.date-picker-cell-content.bg-sand-2 {
+  background-color: #d1fae5 !important;
+  color: #065f46 !important;
+}
+
+.date-picker-cell-content.bg-sand-2:hover {
+  background-color: #a7f3d0 !important;
+  color: #064e3b !important;
+}

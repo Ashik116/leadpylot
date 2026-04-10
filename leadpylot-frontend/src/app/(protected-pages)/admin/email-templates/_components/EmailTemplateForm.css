@@ -1,0 +1,29 @@
+/* Remove all focus borders and outlines from the rich text editor */
+.no-focus-border .ProseMirror,
+.no-focus-border .ProseMirror:focus,
+.no-focus-border .ProseMirror:focus-within,
+.no-focus-border .border-border,
+.no-focus-border .ring-border,
+.no-focus-border .border-border.ring-border,
+.no-focus-border .border-border.ring-border:focus-within,
+.no-focus-border .ring-sand-3,
+.no-focus-border .border-sand-3,
+.no-focus-border .ring-sand-3.border-sand-3,
+.no-focus-border div[contenteditable='true'],
+.no-focus-border div[contenteditable='true']:focus,
+.no-focus-border div[contenteditable='true']:focus-within {
+  /* border: 1px solid #e2e8f0 !important; */
+  box-shadow: none !important;
+  outline: none !important;
+  /* Removed Tailwind-specific properties */
+}
+
+/* Override any Tailwind focus styles */
+.no-focus-border *:focus {
+  outline: none !important;
+  box-shadow: none !important;
+  /* border-color: #e2e8f0 !important; */
+}
+.no-focus-border > div {
+  min-height: 300px;
+}

@@ -1,0 +1,21 @@
+@layer components {
+  .menu-title {
+    @apply mt-4 mb-2 px-3 font-semibold uppercase;
+
+    &.menu-title-light {
+      @apply text-gray-500;
+    }
+
+    &.menu-title-themed {
+      @apply text-gray-100/50;
+    }
+  }
+
+  .menu-light {
+    @apply bg-white;
+  }
+
+  .menu-transparent {
+    @apply bg-transparent;
+  }
+}

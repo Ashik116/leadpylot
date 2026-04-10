@@ -1,0 +1,29 @@
+@layer components {
+  .tab-list {
+    @apply flex items-center overflow-x-auto overflow-y-hidden;
+  }
+
+  .tab-list-underline {
+    @apply border-b border-gray-200;
+  }
+
+  .tab-nav {
+    @apply flex cursor-pointer items-center justify-center px-2 font-bold text-gray-600 transition duration-200 ease-in-out;
+
+    &.tab-nav-disabled {
+      @apply cursor-not-allowed opacity-60;
+    }
+  }
+
+  .tab-nav-underline {
+    @apply border-b-2 border-transparent py-1;
+  }
+
+  .tab-nav-pill {
+    @apply mr-1 rounded-full px-2 py-1 rtl:ml-1;
+  }
+
+  .tab-nav-icon {
+    @apply text-lg ltr:mr-1.5 rtl:ml-1.5;
+  }
+}

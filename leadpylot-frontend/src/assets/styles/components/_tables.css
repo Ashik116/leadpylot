@@ -1,0 +1,145 @@
+@layer components {
+  .table-default {
+    @apply min-w-full table-auto;
+
+    > thead {
+      > tr {
+        > th {
+          @apply border-b border-gray-400 px-0 py-1 text-left text-xs font-semibold tracking-wider text-gray-500 uppercase rtl:text-right;
+        }
+      }
+    }
+
+    > tbody {
+      > tr {
+        > td {
+          @apply border-b border-gray-400 px-0 py-4;
+        }
+      }
+    }
+
+    > tfoot {
+      > tr {
+        > td {
+          @apply border-t border-gray-400 px-0 py-1;
+        }
+      }
+    }
+  }
+
+  .table-flex {
+    @apply min-w-full;
+
+    .thead {
+      @apply bg-gray-50;
+
+      .tr {
+        .th {
+          @apply border border-gray-400 px-0 py-1 text-left text-xs font-semibold tracking-wider text-gray-500 uppercase;
+        }
+      }
+    }
+
+    .tbody {
+      .tr {
+        .td {
+          @apply border border-gray-400 px-0 py-4;
+        }
+      }
+    }
+
+    .tfoot {
+      .tr {
+        .td {
+          @apply border-t border-gray-400 px-0 py-1;
+        }
+      }
+    }
+  }
+
+  .table-border {
+    > thead {
+      > tr {
+        > th {
+          @apply border border-gray-400;
+        }
+      }
+    }
+
+    > tbody {
+      > tr {
+        > td {
+          @apply border border-gray-400;
+        }
+      }
+    }
+
+    > tfoot {
+      > tr {
+        > td {
+          @apply border border-gray-400;
+        }
+      }
+    }
+  }
+
+  .table-virtual {
+    > div {
+      @apply divide-y divide-gray-200;
+    }
+  }
+
+  .table-compact {
+    thead {
+      > tr {
+        > th {
+          @apply px-0 py-2 text-xs;
+        }
+      }
+    }
+
+    tbody {
+      > tr {
+        > td {
+          @apply px-0 py-2;
+        }
+      }
+    }
+
+    .thead {
+      > .tr {
+        > .th {
+          @apply px-0 py-2 text-xs;
+        }
+      }
+    }
+
+    .tbody {
+      > .tr {
+        > .td {
+          @apply px-0 py-2;
+        }
+      }
+    }
+  }
+
+  .table-hover {
+    > tbody {
+      > tr:hover {
+        > * {
+          @apply bg-black/[.03];
+        }
+      }
+    }
+  }
+
+  .table-resizer {
+    @apply absolute top-0 right-0 z-10 h-full w-2 border-r-2 border-gray-400;
+    touch-action: none;
+  }
+
+  th,
+  td {
+    word-wrap: break-word;
+  }
+}

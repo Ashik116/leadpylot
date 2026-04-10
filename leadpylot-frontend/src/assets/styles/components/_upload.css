@@ -1,0 +1,51 @@
+@layer components {
+  .upload {
+    @apply relative inline-block;
+
+    &.disabled {
+      @apply cursor-not-allowed opacity-60;
+
+      .upload-input {
+        @apply cursor-not-allowed;
+      }
+    }
+  }
+
+  .upload-input {
+    @apply absolute inset-0 hidden;
+
+    &.draggable {
+      @apply block w-full cursor-pointer opacity-0;
+    }
+  }
+
+  .upload-draggable {
+    min-height: 7rem;
+    @apply flex cursor-pointer items-center justify-center rounded-lg border-2 border-dashed border-gray-300;
+  }
+
+  .upload-file-list {
+    @apply mt-4;
+  }
+
+  .upload-file-info {
+    min-height: 4rem;
+    @apply flex flex-col justify-center ltr:ml-3 rtl:mr-3;
+  }
+
+  .upload-file {
+    @apply mb-2 flex items-center justify-between rounded-lg bg-gray-100;
+  }
+
+  .upload-file-thumbnail {
+    @apply flex min-h-16 w-16 items-center justify-center p-2;
+  }
+
+  .upload-file-image {
+    @apply max-w-full;
+  }
+
+  .upload-file-remove {
+    @apply mx-2 p-3;
+  }
+}

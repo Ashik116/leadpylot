@@ -1,0 +1,65 @@
+@layer components {
+  .dropdown {
+    @apply relative inline-block;
+  }
+
+  .dropdown-menu {
+    @apply z-30 rounded-sm border border-gray-100 bg-white p-1.5 shadow-[0px_48px_64px_-16px_rgba(0,0,0,0.25)] ring-0 outline-none focus:outline-none;
+
+    &.top-start {
+      @apply bottom-full origin-bottom ltr:left-0 rtl:right-0;
+    }
+
+    &.top-center {
+      @apply bottom-full left-1/2 origin-bottom;
+    }
+
+    &.top-end {
+      @apply bottom-full origin-bottom ltr:right-0 rtl:left-0;
+    }
+
+    &.bottom-start {
+      @apply top-full origin-top ltr:left-0 rtl:right-0;
+    }
+
+    &.bottom-center {
+      @apply top-full left-1/2 origin-top;
+    }
+
+    &.bottom-end {
+      @apply top-full origin-top ltr:right-0 rtl:left-0;
+    }
+
+    &.middle-start-top {
+      @apply top-0 left-full origin-top;
+    }
+
+    &.middle-start-bottom {
+      @apply bottom-0 left-full origin-bottom;
+    }
+
+    &.middle-end-top {
+      @apply top-0 right-full origin-top;
+    }
+
+    &.middle-end-bottom {
+      @apply right-full bottom-0 origin-bottom;
+    }
+  }
+
+  .dropdown-toggle-default {
+    @apply inline-block cursor-pointer p-2 font-semibold;
+
+    &.dropdown-toggle-disabled {
+      @apply opacity-60;
+    }
+  }
+
+  .dropdown-submenu-item {
+    @apply justify-between;
+  }
+
+  .dropdown-toggle-disabled {
+    @apply cursor-not-allowed;
+  }
+}

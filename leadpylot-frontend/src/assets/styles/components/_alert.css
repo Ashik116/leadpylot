@@ -1,0 +1,5 @@
+@layer components {
+  .alert {
+    @apply relative flex p-4;
+  }
+}

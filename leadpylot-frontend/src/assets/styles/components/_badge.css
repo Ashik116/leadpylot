@@ -1,0 +1,5 @@
+@layer components {
+  .badge-inner {
+    @apply absolute top-0 z-10 -translate-y-2/4 transform ltr:right-0 ltr:translate-x-2/4 rtl:left-0 rtl:-translate-x-2/4;
+  }
+}

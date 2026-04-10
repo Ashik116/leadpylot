@@ -1,0 +1,6 @@
+.agentsReportingTable :global(.point.cursor-pointer.select-none.line-clamp-1) {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+

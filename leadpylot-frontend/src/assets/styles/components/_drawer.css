@@ -1,0 +1,119 @@
+@layer components {
+  .drawer-content {
+    @apply absolute flex flex-col bg-white shadow-xl;
+
+    &.vertical {
+      @apply h-full;
+    }
+
+    &.horizontal {
+      @apply w-full;
+    }
+  }
+
+  .drawer-header {
+    @apply flex items-center justify-between border-b border-gray-200 px-4 py-3;
+  }
+
+  .drawer-body {
+    @apply h-full overflow-y-auto p-6;
+  }
+
+  .drawer-footer {
+    @apply flex items-center justify-between border-t border-gray-200 px-6 py-4;
+  }
+
+  .drawer-open {
+    &.drawer-lock-scroll {
+      @apply overflow-hidden;
+    }
+  }
+
+  .drawer-overlay {
+    transition: all 0.3s ease-in-out;
+    @apply fixed inset-0 z-30 bg-black/60;
+  }
+
+  .drawer-overlay-after-open {
+    opacity: 1;
+  }
+
+  .drawer-overlay-before-close {
+    opacity: 0;
+  }
+
+  /* Notification Drawer Overlay - Allow clicks through, stack above Applied Filters (z 100000) */
+  .notification-drawer-overlay {
+    pointer-events: none !important;
+    background: transparent !important;
+    z-index: 100001 !important;
+  }
+
+  /* Notification Drawer Portal - Allow clicks through, stack above Applied Filters */
+  .notification-drawer-portal {
+    pointer-events: none !important;
+    z-index: 100001 !important;
+    
+    & > div {
+      pointer-events: none !important;
+    }
+  }
+
+  /* Notification Drawer Styles - Floating */
+  .notification-drawer {
+    pointer-events: none !important;
+    
+    .drawer-content {
+      pointer-events: auto !important;
+      animation: drawerSlideIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      
+      /* Fixed height to prevent UI moving when switching loading/content */
+      margin: 16px;
+      margin-top: 50px;
+      height: 85vh !important;
+      max-height: calc(100vh - 100px) !important;
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex !important;
+      flex-direction: column !important;
+      
+      /* Strong shadow for no-backdrop mode */
+      box-shadow: 
+        0 25px 50px -12px rgba(0, 0, 0, 0.25),
+        0 0 0 1px rgba(0, 0, 0, 0.05);
+    }
+
+    .drawer-header {
+      @apply bg-white px-2 py-1;
+      border-radius: 8px 8px 0 0;
+      flex-shrink: 0;
+    }
+
+    .drawer-body {
+      @apply p-0;
+      overflow: hidden !important;
+      display: flex !important;
+      flex-direction: column !important;
+      flex: 1 1 0;
+      min-height: 0;
+    }
+
+    .drawer-footer {
+      border-radius: 0 0 8px 8px;
+      flex-shrink: 0;
+    }
+  }
+
+  /* Drawer slide-in animation */
+  @keyframes drawerSlideIn {
+    0% {
+      transform: translateX(100%) scale(0.95);
+      opacity: 0;
+    }
+    100% {
+      transform: translateX(0) scale(1);
+      opacity: 1;
+    }
+  }
+
+}

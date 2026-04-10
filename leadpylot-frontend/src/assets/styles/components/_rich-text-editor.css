@@ -1,0 +1,206 @@
+/* TipTap Rich Text Editor Styles */
+
+/* Placeholder styles - shows when editor is completely empty */
+.tiptap p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  float: left;
+  height: 0;
+  pointer-events: none;
+  color: var(--color-sand-1);
+}
+
+/* Focus outline styles */
+.tiptap:focus {
+  outline: none;
+}
+
+/* Ensure proper spacing for prose content */
+.tiptap {
+  outline: none;
+}
+
+/* Custom styles for better placeholder visibility (only when editor is totally empty) */
+.tiptap .is-editor-empty:first-child::before {
+  opacity: 0.6;
+  font-style: italic;
+}
+
+/* Ensure p tags have proper height and are clickable */
+.tiptap p {
+  line-height: 1.5;
+  margin: 0.3em 0;
+  cursor: text;
+  padding: 0;
+  /* keep padding minimal to avoid big gaps between lines */
+}
+
+/* Make empty paragraphs more clickable */
+.tiptap p.is-editor-empty:first-child {
+  min-height: 1.75em;
+  /* small click area when editor is empty */
+  padding: 0;
+}
+
+/* List styles */
+.tiptap ul {
+  list-style-type: disc;
+  margin: 0.5em 0;
+  padding-left: 1.5em;
+}
+
+.tiptap ol {
+  list-style-type: decimal;
+  margin: 0.5em 0;
+  padding-left: 1.5em;
+}
+
+.tiptap li {
+  margin: 0.25em 0;
+  line-height: 1.5;
+}
+
+.tiptap ul ul,
+.tiptap ol ol,
+.tiptap ul ol,
+.tiptap ol ul {
+  margin: 0.25em 0;
+}
+
+/* Nested list styles */
+.tiptap ul ul {
+  list-style-type: circle;
+}
+
+.tiptap ul ul ul {
+  list-style-type: square;
+}
+
+/* Ensure lists are properly spaced */
+.tiptap ul + p,
+.tiptap ol + p,
+.tiptap p + ul,
+.tiptap p + ol {
+  margin-top: 0.5em;
+}
+
+/* Table styles - elegant borders that always work, even with inline styles */
+.tiptap table {
+  border-collapse: collapse;
+  margin: 0.75em 0;
+  width: 100%;
+  border: 1px solid black;
+  font-size: 0.95em;
+}
+
+/* Ensure ALL table cells have borders - works even with inline styles on table */
+/* Using !important ensures borders are applied even when inline styles are present */
+.tiptap th,
+.tiptap td {
+  border: 1px solid black;
+  padding: 4px 8px;
+  text-align: left;
+  vertical-align: top;
+}
+
+/* Table column resizing - cursor and border feedback for column resize handles */
+/* Tiptap's resizable: true adds column resize handles automatically */
+.tiptap table th,
+.tiptap table td {
+  position: relative;
+}
+
+/* Column resize handle styling - Tiptap adds resize handles as div elements */
+/* Target the resize handle elements that Tiptap creates */
+.tiptap table th > div[style*='cursor'],
+.tiptap table td > div[style*='cursor'],
+.tiptap table th::after,
+.tiptap table td::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: -2px;
+  bottom: 0;
+  width: 4px;
+  cursor: col-resize;
+  z-index: 10;
+  background: transparent;
+  transition:
+    background-color 0.2s ease,
+    border-color 0.2s ease;
+  pointer-events: auto;
+}
+
+/* Highlight border when hovering over column border area */
+.tiptap table th:hover,
+.tiptap table td:hover {
+  border-right-color: rgba(59, 130, 246, 0.5);
+}
+
+/* Show resize indicator on hover near right edge */
+.tiptap table th:hover::after,
+.tiptap table td:hover::after {
+  background: rgba(59, 130, 246, 0.3);
+  border-right: 2px solid rgba(59, 130, 246, 0.8);
+}
+
+/* Active state when dragging column - highlight entire column */
+.tiptap table[data-resizing='true'] th,
+.tiptap table[data-resizing='true'] td {
+  border-right: 2px solid rgba(59, 130, 246, 1) !important;
+}
+
+/* Change cursor to col-resize when near column border */
+.tiptap table th,
+.tiptap table td {
+  cursor: text;
+}
+
+.tiptap table th:hover,
+.tiptap table td:hover {
+  cursor: col-resize;
+}
+
+/* Optional: Header row background for tables without inline styles */
+.tiptap table:not([style]) thead tr {
+  background: #f3f4f6;
+  color: #111827;
+}
+
+/* Optional: Zebra striping for tables without inline styles */
+.tiptap table:not([style]) tbody tr:nth-child(even) {
+  background: rgba(249, 250, 251, 0.7);
+}
+
+/* Ensure paragraph and other block elements preserve inline styles */
+/* Inline styles on block elements are preserved automatically */
+
+/* Additional list item styles for better visibility */
+.tiptap-bullet-list,
+.tiptap-ordered-list {
+  margin: 0.5em 0;
+  padding-left: 1.5em;
+}
+
+.tiptap-list-item {
+  margin: 0.25em 0;
+  line-height: 1.5;
+  display: list-item;
+}
+
+/* Ensure list markers are visible */
+.tiptap-bullet-list .tiptap-list-item {
+  list-style-type: disc;
+}
+
+.tiptap-ordered-list .tiptap-list-item {
+  list-style-type: decimal;
+}
+
+/* Fix for nested lists */
+.tiptap-bullet-list .tiptap-bullet-list .tiptap-list-item {
+  list-style-type: circle;
+}
+
+.tiptap-bullet-list .tiptap-bullet-list .tiptap-bullet-list .tiptap-list-item {
+  list-style-type: square;
+}

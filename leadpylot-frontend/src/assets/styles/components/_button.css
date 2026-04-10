@@ -1,0 +1,51 @@
+@layer components {
+  .button {
+    @apply content-center font-bold whitespace-nowrap transition-colors duration-500 outline-none;
+  }
+
+  .button-press-feedback {
+    @apply transition-all duration-150 active:scale-[0.98];
+  }
+
+  /* Triangle indicator for active filter buttons */
+  .filter-triangle-indicator::after {
+    content: '';
+    position: absolute;
+    bottom: -5px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 6px solid;
+    z-index: 10;
+    /* Triangle color matches the button background color */
+    border-top-color: inherit;
+  }
+
+  /* Special cases for different button colors */
+  .bg-black.filter-triangle-indicator::after,
+  .bg-sky-500.filter-triangle-indicator::after {
+    border-top-color: #000000;
+  }
+
+  /* Ensure triangle is visible on colored buttons */
+  .bg-btn-opening.filter-triangle-indicator::after,
+  .bg-btn-confirmation.filter-triangle-indicator::after,
+  .bg-btn-payment.filter-triangle-indicator::after,
+  .bg-btn-netto1.filter-triangle-indicator::after,
+  .bg-btn-netto2.filter-triangle-indicator::after,
+  .bg-btn-lost.filter-triangle-indicator::after,
+  .bg-btn-servers.filter-triangle-indicator::after,
+  .bg-btn-trunks.filter-triangle-indicator::after,
+  .bg-btn-extensions.filter-triangle-indicator::after,
+  .bg-btn-done.filter-triangle-indicator::after,
+  .bg-btn-from-me.filter-triangle-indicator::after,
+  .bg-btn-for-me.filter-triangle-indicator::after,
+  .bg-btn-all-todo.filter-triangle-indicator::after,
+  .bg-btn-cards.filter-triangle-indicator::after,
+  .bg-btn-table.filter-triangle-indicator::after {
+    border-top-color: #000000; /* Black triangle for better visibility */
+  }
+}

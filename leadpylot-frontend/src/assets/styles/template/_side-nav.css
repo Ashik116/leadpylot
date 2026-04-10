@@ -1,0 +1,18 @@
+@layer components {
+  .side-nav {
+    @apply sticky top-0 z-20 h-screen flex-auto shrink-0 flex-col transition-all duration-200 ease-in-out print:hidden;
+  }
+
+  .side-nav-content {
+    height: calc(100vh - theme('spacing.16'));
+    @apply overflow-y-auto;
+  }
+
+  .side-nav-light {
+    @apply border-r border-gray-200 bg-white;
+  }
+
+  .side-nav-bg {
+    @apply border-r border-gray-200 bg-white;
+  }
+}

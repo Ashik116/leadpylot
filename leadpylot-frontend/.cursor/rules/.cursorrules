@@ -1,0 +1,867 @@
+# Cursor Rules for leadpylot/frontend
+
+These rules align with the existing codebase and should be followed for all upcoming code updates, features, and refactors. They are optimized to avoid breaking structure, respect current architecture, and uphold clean code best practices.
+
+## Tech Stack & Versions
+
+- Next.js 15 (App Router)
+- React 19, React DOM 19
+- TypeScript (strict: true)
+- next-intl v4 for i18n
+- @tanstack/react-query v5 for data fetching/caching
+- Axios with centralized interceptors
+- Tailwind CSS v4
+- Zustand for local state stores
+
+## Core Architecture Principles
+
+### Clean Architecture & SOLID Principles
+
+The frontend follows **layered clean architecture** with clear separation of concerns:
+
+```
+┌─────────────────────────────────────┐
+│   Presentation Layer (Components)   │
+├─────────────────────────────────────┤
+│  Business Logic Layer (Hooks/Stores)│
+├─────────────────────────────────────┤
+│  Data Access Layer (Services/API)   │
+├─────────────────────────────────────┤
+│  External APIs & Databases          │
+└─────────────────────────────────────┘
+```
+
+**Apply these SOLID principles:**
+
+- **Single Responsibility Principle (SRP)**: Each component, hook, and service has ONE clear purpose
+
+  - Components: Render UI only
+  - Hooks: Manage ONE concern (data, form state, effects)
+  - Services: Handle ONE domain entity
+  - Example: `LeadDetails` component → delegates to `useLeadForm`, `useLeadNavigation`, `useLeadActions` hooks
+
+- **Open/Closed Principle (OCP)**: Code should be open for extension, closed for modification
+
+  - Use composition over inheritance
+  - Create configurable/prop-driven components
+  - Use render props, slots, and configuration objects
+  - Avoid hardcoding logic; parameterize behavior
+
+- **Liskov Substitution Principle (LSP)**: Components and services are substitutable
+
+  - Maintain consistent interfaces
+  - Don't break contracts when extending
+  - Use abstract patterns (service interfaces)
+
+- **Interface Segregation Principle (ISP)**: Depend on specific, focused interfaces
+
+  - Don't pass large monolithic prop objects; break into smaller interfaces
+  - Create task-specific props for components
+  - Example: Instead of `<Form fullConfig>`, use `<Form submitConfig> <Form validationConfig>`
+
+- **Dependency Inversion Principle (DIP)**: High-level modules don't depend on low-level details
+  - Inject services into components/hooks (don't import directly in many places)
+  - Use React Query for API abstraction
+  - Pass callbacks instead of importing global functions
+
+## Core Architecture
+
+- App directory routing. Keep `src/app/layout.tsx` as the single root layout. Do not change the font setup, `<html>` classes, or provider order here.
+- Use segments `(auth-pages)` and `(protected-pages)` for auth and post-login areas respectively. Keep this segmentation consistent.
+- Providers order (do not reorder):
+  1. `AuthProvider` (server-provided session)
+  2. `GlobalProviders` → `QueryProvider` → `SocketProvider` → `NotificationSyncProvider` → `SIPProviderComponent`
+  3. `LocaleProvider` (next-intl)
+  4. `ThemeProvider`
+  5. `NavigationProvider`
+
+## Folder Structure & Modularity
+
+### Recommended Organization
+
+```
+src/
+├── app/                      # Route pages & layouts
+├── components/               # UI components (shared & domain-specific)
+│   ├── shared/              # Reusable UI components (BaseTable, DataTable, etc)
+│   ├── admin/               # Admin-specific components
+│   ├── providers/           # Context/provider wrappers
+│   ├── layouts/             # Layout components
+│   ├── ui/                  # Low-level UI primitives (Button, Input, etc)
+│   └── template/            # High-level UI templates
+├── services/                 # API & business logic layer
+│   ├── axios/               # Axios configuration & interceptors
+│   ├── hooks/               # React Query hooks & mutations
+│   ├── *Service.ts          # Domain-specific services (LeadsService, ProjectsService)
+│   └── emailSystem/         # Microservice interfaces
+├── hooks/                    # Custom React hooks (local state, effects, side effects)
+├── stores/                   # Zustand stores (global client state)
+├── utils/                    # Utility functions & helpers
+├── configs/                  # Configuration objects (routes, navigation, theme)
+├── constants/                # Application constants
+├── types/                    # TypeScript types & interfaces
+├── middleware.ts            # Next.js middleware
+└── i18n/                    # Internationalization
+```
+
+### Component Organization Pattern
+
+For complex features, use **feature folders** with clear separation:
+
+```
+feature/
+├── components/              # Feature-specific UI components
+│   ├── FeatureHeader.tsx    # Focused, single-responsibility component
+│   ├── FeatureItem.tsx      # Item renderer (no business logic)
+│   ├── FeatureForm.tsx      # Form UI only
+│   ├── FeatureFilters.tsx   # Filter UI only
+│   └── index.ts             # Barrel export
+├── hooks/                   # Feature-specific custom hooks
+│   ├── useFeatureData.ts    # Data fetching & caching
+│   ├── useFeatureForm.ts    # Form state & validation
+│   ├── useFeatureActions.ts # Business logic & side effects
+│   └── index.ts             # Barrel export
+├── services/                # Feature-specific services
+│   └── FeatureService.ts    # API calls for this feature
+├── types/                   # Feature-specific types
+│   └── feature.types.ts
+├── utils/                   # Feature-specific utilities
+│   └── feature.utils.ts
+├── FeatureWrapper.tsx       # Main orchestrator component (minimal logic)
+└── README.md               # Documentation
+```
+
+**Example: Lead Details (Best Practice Pattern)**
+
+```
+LeadDetails/
+├── components/
+│   ├── LeadHeader.tsx       # Header with navigation
+│   ├── LeadEditForm.tsx     # Form UI
+│   ├── OfferForm.tsx        # Offer submission
+│   └── ReclamationForm.tsx  # Reclamation UI
+├── hooks/
+│   ├── useLeadForm.ts       # Edit state & validation
+│   ├── useOfferForm.ts      # Offer state
+│   ├── useReclamation.ts    # Reclamation logic
+│   ├── useLeadNavigation.ts # Navigate between leads
+│   └── useLeadActions.ts    # Delete, admin actions
+├── LeadDetails.tsx          # Orchestrator (imports & composes above)
+└── README.md
+```
+
+## Component Guidelines
+
+### Component Design Principles
+
+**1. Minimize Component Size & Responsibility**
+
+- Target: 100-300 lines per component
+- One purpose per component
+- Extract sub-components early to avoid monoliths
+- Use composition instead of conditional rendering in one component
+
+**2. Presentational vs Container Pattern**
+
+```tsx
+// ❌ BAD: Mixed concerns
+export const ItemList = ({ items, onItemClick, loading, onFilter }) => {
+  const [filtered, setFiltered] = useState([])
+  const handleApiCall = async () => {
+    /* logic */
+  }
+  return <div>...</div>
+}
+
+// ✅ GOOD: Separated concerns
+// Container (BusinessLogic)
+export const ItemListContainer = () => {
+  const { data, isLoading } = useItems()
+  const [filtered, setFiltered] = useState([])
+  return <ItemList items={filtered} loading={isLoading} />
+}
+
+// Presentational (UI only)
+export const ItemList = ({ items, loading }) => <div>{/* pure UI */}</div>
+```
+
+**3. Props Design (ISP - Interface Segregation)**
+
+```tsx
+// ❌ BAD: Large monolithic prop object
+interface TableProps {
+  data: any;
+  loading: boolean;
+  error?: Error;
+  onSort?: () => void;
+  onFilter?: () => void;
+  onDelete?: () => void;
+  onEdit?: () => void;
+  onExport?: () => void;
+  [20 more props...]
+}
+
+// ✅ GOOD: Focused, segregated interfaces
+interface BaseTableProps {
+  data: T[];
+  columns: ColumnDef<T>[];
+  loading?: boolean;
+}
+
+interface SelectableTableProps extends BaseTableProps {
+  selectable: boolean;
+  onRowSelect?: (rows: T[]) => void;
+}
+
+interface ActionableTableProps extends BaseTableProps {
+  actions?: TableAction[];
+  onAction?: (action: string, id: string) => void;
+}
+```
+
+**4. Avoid Prop Drilling**
+
+- Use Context for theme, locale, auth state
+- Use React Query for server data
+- Use Zustand for complex local state
+- Pass only essential props to child components
+
+**5. TypeScript Best Practices**
+
+```tsx
+// ❌ BAD: any types
+const Component = ({ data }: any) => <div>{data}</div>
+
+// ✅ GOOD: Explicit types
+interface ComponentProps {
+  data: Lead[]
+  onSelect: (lead: Lead) => void
+  loading?: boolean
+}
+
+export const Component: React.FC<ComponentProps> = ({
+  data,
+  onSelect,
+  loading = false,
+}) => <div>{/*...*/}</div>
+```
+
+**6. Component Reusability Patterns**
+
+- Create multiple versions: `List`, `Card`, `Grid`, `Compact` for same data
+- Use configuration objects for flexibility
+- Leverage composition: wrap components to add features
+- Export component variants via barrel exports
+
+## Hook Guidelines (Business Logic Layer)
+
+### Custom Hook Design
+
+**1. Single Concern per Hook**
+
+```tsx
+// ❌ BAD: Multiple concerns in one hook
+const useLeadPage = () => {
+  const [leads, setLeads] = useState([])
+  const [form, setForm] = useState({})
+  const [filters, setFilters] = useState({})
+  const [sidebar, setSidebar] = useState(false)
+  // 20+ state variables and effects...
+}
+
+// ✅ GOOD: Separated concerns
+const useLeadData = () => {
+  /* data fetching */
+}
+const useLeadForm = () => {
+  /* form state */
+}
+const useLeadFilters = () => {
+  /* filter logic */
+}
+const useLeadNavigation = () => {
+  /* sidebar state */
+}
+```
+
+**2. Hook Naming Convention**
+
+```tsx
+// Always start with 'use'
+// Pattern: use[Domain][Concern]
+
+// ✅ GOOD examples:
+const useLeadForm = () => {} // Form state for leads
+const useLeadFilters = () => {} // Filter logic for leads
+const useLeadData = () => {} // Data fetching
+const useNotificationActions = () => {} // Action handlers
+const useActiveRow = () => {} // UI state
+```
+
+**3. Hook Return Structure**
+
+```tsx
+// ✅ GOOD: Clear, organized return object
+const useLeadForm = (leadId: string) => {
+  // State
+  const [formData, setFormData] = useState<LeadFormData>({})
+  const [errors, setErrors] = useState<Record<string, string>>({})
+
+  // Handlers
+  const handleChange = (field: string, value: any) => {}
+  const handleSubmit = async () => {}
+  const handleReset = () => {}
+
+  // Computed values
+  const isValid = useMemo(() => Object.keys(errors).length === 0, [errors])
+  const isDirty = useMemo(() => hasChanges(formData, original), [formData])
+
+  return {
+    // Organized by category
+    formData,
+    errors,
+    isValid,
+    isDirty,
+    handlers: {
+      handleChange,
+      handleSubmit,
+      handleReset,
+    },
+  }
+}
+
+// Usage
+const {
+  formData,
+  handlers: { handleChange },
+} = useLeadForm()
+```
+
+**4. Effect Management**
+
+```tsx
+// ✅ GOOD: Clear, focused effects
+useEffect(() => {
+  // One responsibility per effect
+  if (leadId) {
+    fetchLeadData(leadId)
+  }
+}, [leadId])
+
+useEffect(() => {
+  // Another responsibility in separate effect
+  if (form.isDirty) {
+    saveToLocalStorage(form)
+  }
+}, [form])
+
+// ✅ GOOD: Cleanup functions
+useEffect(() => {
+  const handler = () => {
+    /* logic */
+  }
+  element.addEventListener('click', handler)
+
+  return () => {
+    element.removeEventListener('click', handler)
+  }
+}, [])
+```
+
+**5. Data Fetching Hooks (React Query)**
+
+```tsx
+// ✅ GOOD: Wrapper around useQuery
+const useLeadData = (leadId: string) => {
+  return useQuery({
+    queryKey: ['lead', leadId],
+    queryFn: () => LeadsService.getLeadById(leadId),
+    enabled: !!leadId,
+    staleTime: 1000 * 60 * 5, // 5 minutes
+    retry: (count, error: any) =>
+      !(error?.response?.status >= 400 && error?.response?.status < 500) &&
+      count < 1,
+  })
+}
+
+// Usage
+const { data: lead, isLoading, error } = useLeadData(leadId)
+```
+
+## Service Layer (Data Access & Business Logic)
+
+### Service Architecture Pattern
+
+**1. Single Domain Service Pattern**
+
+```tsx
+// ✅ GOOD: Focused service for one domain
+// src/services/LeadsService.ts
+
+export interface LeadFilters {
+  search?: string
+  status?: string
+  assignedAgent?: string
+}
+
+export interface CreateLeadRequest {
+  email: string
+  firstName: string
+  lastName: string
+  phone?: string
+}
+
+// Pure data fetching functions
+export async function apiGetLeads(filters: LeadFilters) {
+  return ApiService.fetchDataWithAxios<Lead[]>({
+    url: '/leads',
+    method: 'get',
+    params: filters,
+  })
+}
+
+export async function apiCreateLead(data: CreateLeadRequest) {
+  return ApiService.fetchDataWithAxios<Lead>({
+    url: '/leads',
+    method: 'post',
+    data,
+  })
+}
+
+export async function apiUpdateLead(leadId: string, data: Partial<Lead>) {
+  return ApiService.fetchDataWithAxios<Lead>({
+    url: `/leads/${leadId}`,
+    method: 'patch',
+    data,
+  })
+}
+
+export async function apiDeleteLead(leadId: string) {
+  return ApiService.fetchDataWithAxios<void>({
+    url: `/leads/${leadId}`,
+    method: 'delete',
+  })
+}
+```
+
+**2. Naming Convention for Service Functions**
+
+```tsx
+// Pattern: api[Action][Entity]
+
+// ✅ GOOD examples:
+apiGetLeads() // Fetch list
+apiGetLeadById() // Fetch one
+apiCreateLead() // Create
+apiUpdateLead() // Update
+apiDeleteLead() // Delete
+apiAssignLeadToAgent() // Complex action
+apiGenerateLeadReport() // Export/generate
+
+// ❌ BAD: Vague names
+fetchData()
+postRequest()
+updateThing()
+```
+
+**3. Service Composition & DIP**
+
+```tsx
+// ✅ GOOD: Abstract service interface
+interface ILeadService {
+  getLeads(filters: LeadFilters): Promise<Lead[]>
+  createLead(data: CreateLeadRequest): Promise<Lead>
+}
+
+// Implementation can be swapped
+export const LeadService: ILeadService = {
+  getLeads: async (filters) => {
+    /* API call */
+  },
+  createLead: async (data) => {
+    /* API call */
+  },
+}
+
+// Use in components
+const leads = await LeadService.getLeads(filters)
+```
+
+**4. API Service Consistency**
+
+```tsx
+// ✅ GOOD: Always use ApiService with proper config
+export async function apiGetLeads(params: any) {
+  return ApiService.fetchDataWithAxios<Lead[]>({
+    url: '/leads',
+    method: 'get',
+    params,
+    timeout: 5000,
+  })
+}
+
+// ❌ BAD: Direct axios or inconsistent usage
+const response = await axios.get('/leads')
+const data = AxiosBase.get('/leads') // Bypassing ApiService
+```
+
+## State Management (Zustand & React Query)
+
+### Guidelines for Local State (Zustand)
+
+**1. Store Design - Separation of Concerns**
+
+```tsx
+// ✅ GOOD: Focused stores
+// src/stores/tableZoomStore.ts - Table zoom level only
+export const useTableZoomStore = create((set) => ({
+  zoom: 1,
+  setZoom: (level: number) => set({ zoom: level }),
+}))
+
+// src/stores/selectedItemsStore.ts - Selected rows only
+export const useSelectedItemsStore = create((set) => ({
+  selected: [],
+  addSelected: (id: string) =>
+    set((state) => ({
+      selected: [...state.selected, id],
+    })),
+}))
+
+// Compose in components instead of creating mega-stores
+const { zoom } = useTableZoomStore()
+const { selected } = useSelectedItemsStore()
+```
+
+**2. Store Return Organization**
+
+```tsx
+// ✅ GOOD: Clear, organized return
+export const usePageInfoStore = create((set) => ({
+  // State
+  title: '',
+  subtitle: '',
+  total: 0,
+
+  // Actions - grouped by concern
+  setPageInfo: (info: PageInfo) => set(info),
+  clearPageInfo: () => set({ title: '', subtitle: '', total: 0 }),
+
+  // Computed (optional - use selectors instead)
+}))
+
+// Access via selectors to avoid unnecessary re-renders
+const title = usePageInfoStore((state) => state.title)
+const setPageInfo = usePageInfoStore((state) => state.setPageInfo)
+```
+
+**3. Selector Pattern (Prevent Re-renders)**
+
+```tsx
+// ✅ GOOD: Selectors for specific values
+const usePageTitle = () => usePageInfoStore((state) => state.title)
+const usePageSubtitle = () => usePageInfoStore((state) => state.subtitle)
+
+// Usage - only re-renders when title changes
+const title = usePageTitle()
+
+// ❌ BAD: Whole store (triggers re-render on any change)
+const { title } = usePageInfoStore()
+```
+
+### React Query for Server Data
+
+**1. Query Key Conventions**
+
+```tsx
+// ✅ GOOD: Hierarchical, stable keys
+const leadKeys = {
+  all: ['leads'] as const,
+  lists: () => [...leadKeys.all, 'list'] as const,
+  list: (filters: LeadFilters) => [...leadKeys.lists(), filters] as const,
+  details: () => [...leadKeys.all, 'detail'] as const,
+  detail: (id: string) => [...leadKeys.details(), id] as const,
+}
+
+// Usage
+useQuery({
+  queryKey: leadKeys.detail(leadId),
+  queryFn: () => apiGetLead(leadId),
+})
+```
+
+**2. Mutation Patterns**
+
+```tsx
+// ✅ GOOD: Mutation with invalidation
+const useCreateLeadMutation = () => {
+  const queryClient = useQueryClient()
+
+  return useMutation({
+    mutationFn: (data: CreateLeadRequest) => apiCreateLead(data),
+    onSuccess: (newLead) => {
+      // Invalidate lists to refetch
+      queryClient.invalidateQueries({ queryKey: leadKeys.lists() })
+      // Optionally add to cache directly
+      queryClient.setQueryData(leadKeys.detail(newLead._id), newLead)
+    },
+    onError: (error) => {
+      console.error('Lead creation failed:', error)
+    },
+  })
+}
+```
+
+## UI Components - BaseTable, Forms, etc
+
+### BaseTable Component
+
+**Pattern: Accept Configuration, Minimize Internal Logic**
+
+```tsx
+// ✅ GOOD: Configuration-driven
+interface BaseTableProps<T> {
+  // Data
+  data: T[]
+  columns: ColumnDef<T>[]
+  loading?: boolean
+
+  // Pagination
+  pageIndex: number
+  pageSize: number
+  totalItems: number
+  onPaginationChange?: (page: number, size: number) => void
+
+  // Selection
+  selectable?: boolean
+  onSelectChange?: (selected: T[]) => void
+
+  // Actions
+  onRowClick?: (row: T) => void
+  customActions?: React.ReactNode
+
+  // UI
+  title?: string
+  description?: string
+  showPagination?: boolean
+}
+
+export const BaseTable = <T extends Record<string, any> = any>(
+  props: BaseTableProps<T>
+) => {
+  // Minimal logic - delegates to parent
+  return <div>{/* render table */}</div>
+}
+```
+
+### BaseFormComponent
+
+**Pattern: Props-Driven, Field-Based Configuration**
+
+```tsx
+// ✅ GOOD: Configuration over code
+interface BaseFormProps<T extends z.ZodType> {
+  schema: T // Zod schema for validation
+  fields: FieldDefinition[] // Array of field configs
+  onSubmit?: (data: z.infer<T>) => void
+  onChange?: (state: FormState<z.infer<T>>) => void
+  actionButtons?: ActionButtonConfig
+  defaultValues?: DefaultValues<z.infer<T>>
+}
+
+// Field config example
+const leadFormFields: FieldDefinition[] = [
+  {
+    name: 'email',
+    label: 'Email',
+    type: 'email',
+    required: true,
+  },
+  {
+    name: 'status',
+    label: 'Status',
+    type: 'select',
+    options: STATUS_OPTIONS,
+  },
+]
+
+// Usage
+;<BaseFormComponent
+  schema={leadSchema}
+  fields={leadFormFields}
+  onSubmit={handleCreateLead}
+/>
+```
+
+## Routing, Access Control, Middleware
+
+- All route access is governed by `src/middleware.ts` + `src/configs/routes.config/*` + `src/utils/roleBasedRouting.ts`.
+- When adding new protected pages:
+  - Add the path to `protectedRoutes` with `authority` roles.
+  - Use `Role` from `@/configs/navigation.config/auth.route.config` for role constants.
+- When adding new public or auth pages, update `publicRoutes` or `authRoutes` accordingly.
+- Never hardcode role redirects; use `getRoleBasedEntryPath(role)` when redirecting the root path or post-auth.
+
+## Authentication
+
+- Server: Use `auth` from `@/auth` (NextAuth v5). Root layout passes `session` to `AuthProvider`.
+- Client: Prefer our session context/hook over raw `useSession` unless you explicitly need NextAuth's client hooks. Do not implement custom cookie/session readers.
+- Do not manually sign the user out in components on 401. Rely on Axios response interceptor logic.
+
+## API & Data Fetching
+
+- Base URL and timeouts are defined in `src/services/axios/AxiosBase.ts` using `app.config.ts`. Never create ad-hoc axios instances.
+- Use `ApiService.fetchDataWithAxios<TResponse, TRequest>(config)` or `AxiosBase(config)`; do not bypass interceptors.
+- Interceptor rules (do not break):
+  - Request interceptor adds `Authorization: Bearer <accessToken>` from NextAuth session. It intentionally skips session fetches on auth pages.
+  - Response interceptor handles 401s carefully: validates session, throttles sign-out, and calls `signOut` only when needed.
+- Prefer React Query for client-side fetching and caching. Define:
+  - Stable `queryKey` arrays.
+  - Conservative retries: server/network only, avoid 4xx.
+  - Use `enabled` flags to gate queries on auth status and route context.
+- For server components/actions, prefer server actions (`'use server'`) or `next-intl/server` helpers as already used.
+
+## Internationalization (next-intl)
+
+- Locale is determined via server action `src/server/actions/locale.ts` and `src/i18n/request.ts`.
+- Wrap UI in `LocaleProvider` at root. Load messages from `messages/<locale>.json`.
+- When adding new messages, update `messages/en.json` and keep keys stable, hierarchical, and kebab-or-dot cased.
+
+## Styling
+
+- Tailwind v4 via `@tailwindcss/postcss` only. Keep global `@/assets/styles/app.css` import in root layout.
+- Prefer utility classes. Introduce component-scoped CSS only if utility classes become unwieldy.
+- For complex component styles, use CSS modules as a fallback (not preferred).
+
+## File & Module Conventions
+
+- Path alias: `@/*` → `./src/*`. Always use absolute alias imports inside `src/`.
+- Components: PascalCase filenames. Export default for single-component files; group re-exports with `index.ts`.
+- Services: Place domain APIs in `src/services/<Domain>Service.ts`. Name functions `apiGetX`, `apiCreateX`, `apiUpdateX`, `apiDeleteX`.
+- Hooks: `src/hooks` or `src/utils/hooks` according to existing patterns. Start with `use` and keep side effects isolated to `useEffect`.
+- Do not move or rename `src/app/layout.tsx`, `src/middleware.ts`, or providers without explicit need.
+
+## TypeScript & Code Style
+
+- `strict: true`. Exported functions and component props must have explicit types. Avoid `any` unless absolutely necessary.
+- Naming: descriptive, full words. No cryptic abbreviations. Reflect intent (Clean Code principles).
+- Control flow: use guard clauses and early returns; avoid deep nesting.
+- Error handling: handle edge cases first; surface domain-meaningful errors.
+- Comments: add only when non-obvious; explain "why", not "what". No inline comment noise.
+- Formatting: follow Prettier and ESLint rules. Avoid unrelated reformatting.
+
+## Next.js Guidelines
+
+- Use server components by default. Opt into client components with `'use client'` only when needed (state, effects, context).
+- Do not import server-only modules (e.g., `next-intl/server`, server actions) into client components.
+- Images: Next `images.remotePatterns` allows any host; still prefer explicit `width`/`height` or `fill`.
+
+## Safety & Backwards Compatibility
+
+- Do not alter provider order or remove providers in `src/app/layout.tsx`.
+- Do not modify Axios interceptors' core behavior around session usage and 401 handling.
+- Do not hardcode API URLs. Always use `app.config.ts` (`NEXT_PUBLIC_API_BASE_URL` is required at runtime).
+- Do not introduce session reads on auth pages (sign-in/forgot/reset); this is intentional to avoid noisy errors.
+- When adding routes, update `routes.config` and respect middleware expectations.
+
+## Code Organization Checklist
+
+- [ ] **SRP**: Each file has one clear responsibility
+- [ ] **Modularity**: Components/hooks/services are under 300 lines
+- [ ] **Composition**: Complex features broken into focused sub-components
+- [ ] **Typing**: All exported functions have explicit types; no `any`
+- [ ] **DRY**: No duplicate logic; extracted to services/hooks/utils
+- [ ] **Testability**: Each piece can be tested in isolation
+- [ ] **Reusability**: Components accept configuration; not hardcoded
+- [ ] **Performance**: No prop drilling; used Context/Query/Zustand as appropriate
+- [ ] **Documentation**: Complex logic has explanatory comments
+- [ ] **Error Handling**: All async operations have error paths
+
+## PR-Ready Checklist
+
+- Typecheck: `pnpm|npm|yarn run typecheck`
+- Lint: `npm run lint` (respect warnings; avoid new errors)
+- Format: `npm run format`
+- Build: `npm run build`
+
+## Examples
+
+### ✅ Clean Component Example
+
+```tsx
+// containers/LeadDetailsContainer.tsx
+export const LeadDetailsContainer = ({ leadId }: { leadId: string }) => {
+  const { data: lead, isLoading } = useLeadData(leadId)
+  const { formData, handlers } = useLeadForm(lead)
+
+  if (isLoading) return <LoadingSpinner />
+
+  return <LeadDetailsView lead={lead} onFormChange={handlers.handleChange} />
+}
+
+// components/LeadDetailsView.tsx
+interface LeadDetailsViewProps {
+  lead: Lead
+  onFormChange: (field: string, value: any) => void
+}
+
+export const LeadDetailsView: React.FC<LeadDetailsViewProps> = ({
+  lead,
+  onFormChange,
+}) => (
+  <div>
+    <LeadHeader lead={lead} />
+    <LeadForm lead={lead} onChange={onFormChange} />
+  </div>
+)
+```
+
+### ✅ Clean Service Example
+
+```tsx
+// services/OffersService.ts
+export async function apiGetOffers(filters: OfferFilters) {
+  return ApiService.fetchDataWithAxios<Offer[]>({
+    url: '/offers',
+    method: 'get',
+    params: filters,
+  })
+}
+
+export async function apiCreateOffer(data: CreateOfferRequest) {
+  return ApiService.fetchDataWithAxios<Offer>({
+    url: '/offers',
+    method: 'post',
+    data,
+  })
+}
+
+// Usage in hooks
+const useCreateOfferMutation = () => {
+  const queryClient = useQueryClient()
+  return useMutation({
+    mutationFn: apiCreateOffer,
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['offers'] }),
+  })
+}
+```
+
+## Things to Avoid
+
+- Creating new axios instances or bypassing interceptors
+- Fetching session on auth pages or in tight loops
+- Reordering providers, fonts, or root `<html>` attributes
+- Importing server-only modules into client components
+- Adding global state where a local state or query cache suffices
+- Monolithic components over 300 lines without sub-components
+- Mixing business logic with UI rendering in same component
+- Hardcoding API URLs or configuration
+- Props drilling more than 2 levels deep
+- Inconsistent naming conventions across services
+
+## Notes
+
+- ESLint is allowed to be ignored during production builds, but aim to keep a clean lint state locally.
+- Console usage is warned; keep it minimal and prefer domain-meaningful logs in dev only.
+- Actively refactor monolithic components into focused, reusable pieces (see Activity Log and LeadDetails examples).
+- When you notice code violating SRP or becoming monolithic, propose refactoring as a separate task.

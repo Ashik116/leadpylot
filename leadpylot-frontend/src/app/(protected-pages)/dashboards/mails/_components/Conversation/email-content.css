@@ -1,0 +1,215 @@
+/**
+ * Email Content Styles
+ * Isolated styles for rendering email HTML safely
+ */
+
+.email-content {
+  /* Reset and isolation */
+  all: revert;
+  display: block;
+
+  /* No border here - separator moved to From/To/Subject row in MessageBubble to avoid blink */
+  margin-top: 0;
+
+  /* Base typography */
+  font-size: 14px;
+  line-height: 1.5;
+  color: #000000;
+
+  /* Prevent overflow */
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+  word-break: break-word;
+}
+
+/* Scoped typography */
+.email-content p {
+  margin: 0.2em 0;
+}
+
+.email-content h1,
+.email-content h2,
+.email-content h3,
+.email-content h4,
+.email-content h5,
+.email-content h6 {
+  margin-top: 1em;
+  margin-bottom: 0.5em;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.email-content h1 {
+  font-size: 1.5em;
+}
+.email-content h2 {
+  font-size: 1.3em;
+}
+.email-content h3 {
+  font-size: 1.1em;
+}
+
+.email-content a {
+  color: #2563eb;
+  text-decoration: underline;
+}
+
+.email-content a:hover {
+  color: #1d4ed8;
+}
+
+.email-content img {
+  max-width: 100% !important;
+  height: auto !important;
+  display: block;
+  margin: 0.5em 0;
+}
+
+.email-content table {
+  max-width: 100% !important;
+  border-collapse: collapse;
+  margin: 1em 0;
+}
+
+.email-content table td,
+.email-content table th {
+  padding: 0.5em;
+}
+
+.email-content ul,
+.email-content ol {
+  margin: 0.75em 0;
+  padding-left: 2em;
+}
+
+.email-content li {
+  margin: 0.25em 0;
+}
+
+.email-content blockquote {
+  margin: 1em 0;
+  padding-left: 1em;
+  border-left: 3px solid #e5e7eb;
+  color: #6b7280;
+}
+
+.email-content pre {
+  background-color: #f3f4f6;
+  padding: 1em;
+  border-radius: 0.375rem;
+  overflow-x: auto;
+  margin: 1em 0;
+}
+
+.email-content code {
+  background-color: #f3f4f6;
+  padding: 0.2em 0.4em;
+  border-radius: 0.25rem;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.83853em;
+}
+
+/* Prevent common email CSS issues */
+.email-content * {
+  max-width: 100%;
+  box-sizing: border-box;
+  outline: none !important;
+}
+
+/*
+ * Layout tables (no border attribute, or border="0") – hide borders.
+ * Data tables (border="1" or higher) – preserve borders.
+ */
+.email-content table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+.email-content table:not([border]),
+.email-content table[border='0'] {
+  border: 0 !important;
+}
+
+.email-content table:not([border]) td,
+.email-content table:not([border]) th,
+.email-content table:not([border]) tr,
+.email-content table[border='0'] td,
+.email-content table[border='0'] th,
+.email-content table[border='0'] tr {
+  border: 0 !important;
+}
+
+/* Data tables – show cell borders (lighter, thinner) */
+.email-content table[border]:not([border='0']) {
+  border: 1px solid #e5e7eb !important;
+  border-collapse: collapse !important;
+}
+
+.email-content table[border]:not([border='0']) td,
+.email-content table[border]:not([border='0']) th {
+  border: 1px solid #e5e7eb !important;
+  padding: 0.35em;
+}
+
+/* Also respect inline border styles on any table */
+.email-content table[style*='border'],
+.email-content td[style*='border'],
+.email-content th[style*='border'] {
+  border-color: #e5e7eb;
+}
+
+/* Remove borders from non-table elements (divs, spans, p used for layout) */
+.email-content div,
+.email-content span,
+.email-content p {
+  border: 0 !important;
+}
+
+/* Normalize backgrounds on layout tables to prevent visual separation lines */
+.email-content table:not([border]) td[bgcolor],
+.email-content table:not([border]) th[bgcolor],
+.email-content table[border='0'] td[bgcolor],
+.email-content table[border='0'] th[bgcolor] {
+  background-color: transparent !important;
+}
+
+/* Remove narrow spacer cells in layout tables */
+.email-content table:not([border]) td[width='1'],
+.email-content table:not([border]) td[width='2'],
+.email-content table:not([border]) th[width='1'],
+.email-content table:not([border]) th[width='2'] {
+  display: none !important;
+}
+
+/* Only allow border on blockquote for visual hierarchy */
+.email-content blockquote {
+  border: 0 !important;
+  border-left: 3px solid #e5e7eb !important;
+}
+
+/* Horizontal rules can have a top border */
+.email-content hr {
+  border: 0 !important;
+  border-top: 1px solid #e5e7eb !important;
+  margin: 1em 0;
+}
+
+/* Gmail/Outlook specific fixes */
+.email-content [class*='gmail'] {
+  all: revert;
+}
+
+.email-content [class*='outlook'] {
+  all: revert;
+}
+
+/* Prevent position fixed/absolute from breaking layout */
+.email-content [style*='position: fixed'],
+.email-content [style*='position:fixed'] {
+  position: relative !important;
+}
+
+.email-content [style*='position: absolute'],
+.email-content [style*='position:absolute'] {
+  position: relative !important;
+}

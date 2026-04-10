@@ -1,0 +1,388 @@
+@import 'tailwindcss';
+@plugin '@tailwindcss/typography';
+
+@theme {
+  --font-sans: var(--font-abc-diatype), sans-serif;
+  --: var(--), sans-serif;
+  --font-mono: var(---mono), monospace;
+  --font-apollo-icon: var(--font-apollo-icon);
+
+  --breakpoint-xs: 576px;
+  --breakpoint-sm: 640px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1024px;
+  --breakpoint-xl: 1280px;
+  --breakpoint-2xl: 1536px;
+  --breakpoint-3xl: 1920px;
+
+  /* Color palette from Apollo.io */
+  --color-ember: #ce8446;
+  --color-rust: #e86f5f;
+  --color-evergreen: #62a266;
+  --color-border: #d8d6d4;
+
+  --color-sunbeam-1: #d5e103;
+  --color-sunbeam-2: #ebf211;
+  --color-sunbeam-3: #fbff5a;
+  --color-sunbeam-4: #ffffda;
+
+  --color-sand-1: #2d2827;
+  --color-sand-2: #78746e;
+  --color-sand-3: #c2c0bc;
+  --color-sand-4: #f4f2f0;
+  --color-sand-5: #ebebea;
+
+  --color-iris-1: #281d4a;
+  --color-iris-2: #7f62c5;
+  --color-iris-3: #c4b8f5;
+  --color-iris-4: #f5f1fd;
+
+  --color-pebble-1: #2e271b;
+  --color-pebble-2: #867350;
+  --color-pebble-3: #cdbea8;
+  --color-pebble-4: #f7f2ef;
+
+  --color-sakura-1: #3e1739;
+  --color-sakura-2: #bc44b1;
+  --color-sakura-3: #eaa9e6;
+  --color-sakura-4: #fbf0fb;
+
+  --color-moss-1: #1f2b19;
+  --color-moss-2: #6b7d43;
+  --color-moss-3: #b8c69a;
+  --color-moss-4: #f2f3ec;
+
+  --color-tropic-1: #192928;
+  --color-tropic-2: #487f81;
+  --color-tropic-3: #9acbcd;
+  --color-tropic-4: #ebf4f3;
+
+  --color-ocean-1: #142537;
+  --color-ocean-2: #427aae;
+  --color-ocean-3: #a8c4ea;
+  --color-ocean-4: #ecf3fe;
+
+  --color-red-1: #ffe58e;
+  --color-red-2: #ffdf61;
+  --color-red-3: #ffad3b;
+  --color-red-4: #f67403;
+
+  --color-ne1: #ffb8b2;
+  --color-ne1-border: #fc8e85;
+  --color-ne2: #ff9c93;
+  --color-ne2-border: #ff6152;
+  --color-ne3: #ff645a;
+  --color-ne3-border: #ff3326;
+  --color-ne4: #eb3327;
+  --color-ne4-border: #960900;
+  --color-out: #4b5563;
+  --color-out-border: #29384e;
+  --color-new: #4caf50;
+  --color-new-border: #00ff0a;
+  --color-opening: #fff001;
+  --color-opening-border: #011a6f;
+  --color-contract: #fff001;
+  --color-contract-border: #011a6f;
+  --color-confirmation: #99ceff;
+  --color-confirmation-border: #00ad71;
+  --color-payment: #c4f5d4;
+  --color-payment-border: #aa7700;
+  --color-netto1: #70e096;
+  --color-netto1-border: #5c6a82;
+  --color-netto2: #1ee20f;
+  --color-netto2-border: #414856;
+  --color-block: #6e6e6e;
+  --color-block-border: #434343;
+  --color-lost: #ff0000;
+  --color-lost-border: #4d2a2a;
+  --color-termin: #42a5f5;
+  --color-termin-border: #007fe5;
+  --color-angebot: #abcd84;
+  --color-angebot-border: #87b058;
+  --color-privat: #8b7e99;
+  --color-privat-border: #705f84;
+  --color-call: #5c6bc0;
+  --color-call-border: #304ae0;
+  --color-angabenflash: #a33f3b;
+  --color-angabenflash-border: #7d1e1a;
+  --color-nichtangefragt: #ffcf77;
+  --color-nichtangefragt-border: #e6ab40;
+  --color-blackbox: #1a2634;
+  --color-blackbox-border: #337cd1;
+  --color-muslim: #6b8e23;
+  --color-muslim-border: #5c830b;
+  --color-nie-erreicht: #a39887;
+  --color-nie-erreicht-border: #7c705d;
+  --color-duplicate: #ff7043;
+  --color-duplicate-border: #f3450f;
+
+  /* Liquid glass button colors */
+  --color-liquid-glass-bg: rgba(255, 255, 255, 0.08);
+  --color-liquid-glass-bg-hover: rgba(255, 255, 255, 0.18);
+  --color-liquid-glass-border: rgba(255, 255, 255, 0.35);
+  --color-liquid-glass-border-accent: rgba(255, 255, 255, 0.55);
+  --color-liquid-glass-sheen: rgba(255, 255, 255, 0.2);
+
+  /* Dashboard button colors */
+  --color-btn-opening: #fff001;
+  --color-btn-confirmation: #99ceff;
+  --color-btn-payment: #c4f5d4;
+  --color-btn-netto1: #70e096;
+  --color-btn-netto2: #1ee20f;
+  --color-btn-lost: #ff0000;
+
+  /* VOIP Dashboard button colors */
+  --color-btn-servers: #a7c7e7;
+  --color-btn-trunks: #b8e6b8;
+  --color-btn-extensions: #f9c4d2;
+
+  /* Todo Dashboard button colors */
+  --color-btn-done: #c4f5d4;
+  --color-btn-from-me: #99ceff;
+  --color-btn-for-me: #f9c4d2;
+  --color-btn-all-todo: #fff9c4;
+  --color-btn-cards: #dcd6f7;
+  --color-btn-table: #a7c7e7;
+
+  --text-xxs: 10px;
+}
+
+@layer base {
+  *,
+  ::after,
+  ::before,
+  ::backdrop,
+  ::file-selector-button {
+    border-color: var(--color-border, currentColor);
+  }
+
+  button,
+  [role='button'] {
+    cursor: pointer;
+  }
+
+  body {
+    @apply text-black bg-sand-4 text-base;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  .h1 {
+    @apply text-4xl font-bold;
+  }
+
+  h2,
+  .h2 {
+    @apply text-3xl font-bold;
+  }
+
+  h3,
+  .h3 {
+    @apply text-2xl font-bold;
+  }
+
+  h4,
+  .h4 {
+    @apply text-xl font-bold;
+  }
+
+  h5,
+  .h5 {
+    @apply text-lg font-bold;
+  }
+
+  h6,
+  .h6 {
+    @apply text-base font-bold;
+  }
+
+  hr {
+    @apply border-border;
+  }
+
+  video {
+    display: none;
+  }
+
+  .menu-icon-svg {
+    fill: none;
+    stroke: currentColor;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    stroke-width: 38;
+  }
+
+  /* Dashboard button color classes */
+  .bg-btn-opening {
+    background-color: var(--color-btn-opening);
+    color: #000; /* Black text for better contrast on yellow */
+  }
+
+  .bg-btn-confirmation {
+    background-color: var(--color-btn-confirmation);
+    color: #000; /* Black text for better contrast on light blue */
+  }
+
+  .bg-btn-payment {
+    background-color: var(--color-btn-payment);
+    color: #000; /* Black text for better contrast on light green */
+  }
+
+  .bg-btn-netto1 {
+    background-color: var(--color-btn-netto1);
+    color: #000; /* Black text for better contrast on green */
+  }
+
+  .bg-btn-netto2 {
+    background-color: var(--color-btn-netto2);
+    color: #000; /* Black text for better contrast on bright green */
+  }
+
+  .bg-btn-lost {
+    background-color: var(--color-btn-lost);
+    color: #fff; /* White text for better contrast on red */
+  }
+
+  /* Hover states for dashboard buttons */
+  .bg-btn-opening:hover {
+    background-color: var(--color-btn-opening);
+    opacity: 0.8;
+  }
+
+  .bg-btn-confirmation:hover {
+    background-color: var(--color-btn-confirmation);
+    opacity: 0.8;
+  }
+
+  .bg-btn-payment:hover {
+    background-color: var(--color-btn-payment);
+    opacity: 0.8;
+  }
+
+  .bg-btn-netto1:hover {
+    background-color: var(--color-btn-netto1);
+    opacity: 0.8;
+  }
+
+  .bg-btn-netto2:hover {
+    background-color: var(--color-btn-netto2);
+    opacity: 0.8;
+  }
+
+  .bg-btn-lost:hover {
+    background-color: var(--color-btn-lost);
+    opacity: 0.8;
+  }
+
+  /* VOIP Dashboard button color classes */
+  .bg-btn-servers {
+    background-color: var(--color-btn-servers);
+    color: #000;
+  }
+
+  .bg-btn-trunks {
+    background-color: var(--color-btn-trunks);
+    color: #000;
+  }
+
+  .bg-btn-extensions {
+    background-color: var(--color-btn-extensions);
+    color: #000;
+  }
+
+  .bg-btn-servers:hover {
+    background-color: var(--color-btn-servers);
+    opacity: 0.8;
+  }
+
+  .bg-btn-trunks:hover {
+    background-color: var(--color-btn-trunks);
+    opacity: 0.8;
+  }
+
+  .bg-btn-extensions:hover {
+    background-color: var(--color-btn-extensions);
+    opacity: 0.8;
+  }
+
+  /* Todo Dashboard button color classes */
+  .bg-btn-done {
+    background-color: var(--color-btn-done);
+    color: #000;
+  }
+
+  .bg-btn-from-me {
+    background-color: var(--color-btn-from-me);
+    color: #000;
+  }
+
+  .bg-btn-for-me {
+    background-color: var(--color-btn-for-me);
+    color: #000;
+  }
+
+  .bg-btn-all-todo {
+    background-color: var(--color-btn-all-todo);
+    color: #000;
+  }
+
+  .bg-btn-cards {
+    background-color: var(--color-btn-cards);
+    color: #000;
+  }
+
+  .bg-btn-table {
+    background-color: var(--color-btn-table);
+    color: #000;
+  }
+
+  .bg-btn-done:hover {
+    background-color: var(--color-btn-done);
+    opacity: 0.8;
+  }
+
+  .bg-btn-from-me:hover {
+    background-color: var(--color-btn-from-me);
+    opacity: 0.8;
+  }
+
+  .bg-btn-for-me:hover {
+    background-color: var(--color-btn-for-me);
+    opacity: 0.8;
+  }
+
+  .bg-btn-all-todo:hover {
+    background-color: var(--color-btn-all-todo);
+    opacity: 0.8;
+  }
+
+  .bg-btn-cards:hover {
+    background-color: var(--color-btn-cards);
+    opacity: 0.8;
+  }
+
+  .bg-btn-table:hover {
+    background-color: var(--color-btn-table);
+    opacity: 0.8;
+  }
+
+  /* Drag and drop styles - ensure dragged elements are always visible */
+  [data-rbd-drag-handle-dragging-id],
+  [data-rbd-draggable-id] {
+    /* Ensure dragged elements can escape containers */
+    will-change: transform;
+  }
+
+  /* Style for the drag preview (rendered by @hello-pangea/dnd) */
+  [data-rbd-drag-handle-dragging-id='true'],
+  [data-rbd-draggable-context-id] [data-rbd-draggable-id][style*='transform'] {
+    z-index: 99999 !important;
+    position: fixed !important; /* Use fixed to escape all parent stacking contexts */
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5) !important;
+    background-color: white !important;
+    border: 3px solid #3b82f6 !important;
+    border-radius: 8px !important;
+    opacity: 1 !important;
+    pointer-events: none !important;
+  }
+}

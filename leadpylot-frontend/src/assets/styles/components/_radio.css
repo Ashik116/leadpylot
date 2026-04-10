@@ -1,0 +1,37 @@
+@layer components {
+  .radio {
+    @apply inline-block h-5 w-5 shrink-0 cursor-pointer appearance-none rounded-full border border-gray-300 p-0 align-middle shadow-sm ring-1 ring-gray-300 transition-colors duration-150 ease-in-out;
+
+    &:checked {
+      @apply border-current bg-current ring-current;
+    }
+
+    &.disabled {
+      @apply cursor-not-allowed border-gray-200 bg-gray-200 text-gray-200 ring-gray-200;
+    }
+  }
+
+  .radio-label {
+    @apply inline-flex cursor-pointer items-center gap-2.5 font-semibold;
+
+    &:not(.disabled) {
+      &:hover {
+        .radio {
+          @apply border-current ring-current;
+        }
+      }
+    }
+
+    &.disabled {
+      @apply cursor-not-allowed;
+    }
+  }
+
+  .radio-group {
+    @apply inline-flex gap-4;
+
+    &.vertical {
+      @apply flex-col;
+    }
+  }
+}

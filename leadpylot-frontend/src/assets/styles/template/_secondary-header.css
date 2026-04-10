@@ -1,0 +1,9 @@
+@layer components {
+  .secondary-header-light {
+    @apply border-b border-gray-200 bg-white print:hidden;
+  }
+
+  .secondary-header-themed {
+    @apply print:hidden;
+  }
+}

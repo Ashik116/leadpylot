@@ -1,0 +1,66 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.js
+.yarn/install-state.gz
+.vscode/
+
+# testing
+/coverage
+bot_git_push.js
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# mock
+src/mock/db/mock-db.json
+
+# macOS
+.DS_Store
+
+#extra
+test.js
+test.json
+
+.env.local
+.env
+.env.prod.crm1
+.env.prod.crm2
+.env.prod.crm3
+.env.prod.crm4
+.env.prod.crm5
+.env.prod.crm6
+# .env
+test2.json
+.package-lock.json
+api-response.txt
+.package-lock.json
+.pnpm-lock.yaml
+
+package-lock.json
+
+pnpm-lock.yaml

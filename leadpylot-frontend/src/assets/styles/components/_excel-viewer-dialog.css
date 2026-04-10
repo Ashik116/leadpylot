@@ -1,0 +1,27 @@
+@layer components {
+  .excel-viewer-table table td,
+  .excel-viewer-table table td.text-lg,
+  .excel-viewer-table table td[class*="text-lg"],
+  .excel-viewer-table table td div {
+    font-size: 14px !important;
+  }
+  
+  .excel-viewer-table .pagination,
+  .excel-viewer-table .pagination button,
+  .excel-viewer-table .pagination span,
+  .excel-viewer-table .pagination-pager,
+  .excel-viewer-table .pagination-pager-prev,
+  .excel-viewer-table .pagination-pager-next,
+  .excel-viewer-table .pagination-total,
+  .excel-viewer-table .pagination-pager-active,
+  .excel-viewer-table .pagination-pager-inactive {
+    font-size: 14px !important;
+  }
+  
+  .excel-viewer-table .select-control,
+  .excel-viewer-table .select-control__single-value,
+  .excel-viewer-table .select-control__input {
+    font-size: 14px !important;
+  }
+}
+
