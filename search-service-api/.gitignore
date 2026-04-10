@@ -16,4 +16,4 @@ pdf/generated/*
 temp-uploads/*
 log.txt
 node_modules
-.env
+
