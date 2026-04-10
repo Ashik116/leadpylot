@@ -1,0 +1,130 @@
+{
+  "info": {
+    "name": "Configuration Service — Saved Filters",
+    "description": "User-scoped saved filter presets (`/saved-filters`). Set `baseUrl` and `accessToken` in the collection variables. After **Create**, copy `data._id` into `savedFilterId` for get/update/delete, or use the Tests tab script on Create to auto-save.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:4006" },
+    { "key": "accessToken", "value": "" },
+    { "key": "savedFilterId", "value": "" },
+    { "key": "pageContext", "value": "lead" }
+  ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [{ "key": "token", "value": "{{accessToken}}", "type": "string" }]
+  },
+  "item": [
+    {
+      "name": "1. Create saved filter",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Postman test preset\",\n  \"page\": \"{{pageContext}}\",\n  \"description\": \"Optional description\",\n  \"domain\": [\n    [\"team_id\", \"in\", [\"686e76249084eed90292b0e8\"]],\n    [\"status_id\", \"in\", [\"699d1f30c9f42bed49935bd8\"]]\n  ]\n}"
+        },
+        "url": "{{baseUrl}}/saved-filters",
+        "description": "Requires `title`, `page`, `domain`. Optional `description`."
+      },
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "if (pm.response.code === 201) {",
+              "  const j = pm.response.json();",
+              "  if (j.data && j.data._id) {",
+              "    pm.collectionVariables.set('savedFilterId', j.data._id);",
+              "    console.log('savedFilterId set to', j.data._id);",
+              "  }",
+              "}"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ]
+    },
+    {
+      "name": "2. List saved filters",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/saved-filters?pageNum=1&limit=20&page={{pageContext}}&search=&sortBy=createdAt&sortOrder=desc",
+          "host": ["{{baseUrl}}"],
+          "path": ["saved-filters"],
+          "query": [
+            { "key": "pageNum", "value": "1", "description": "Pagination page (1-based). Not the screen `page` field." },
+            { "key": "limit", "value": "20", "description": "Max 100" },
+            { "key": "page", "value": "{{pageContext}}", "description": "Exact match on stored `page` field (optional)" },
+            { "key": "search", "value": "", "description": "Substring on title OR page" },
+            { "key": "sortBy", "value": "createdAt", "description": "title | page | createdAt | updatedAt" },
+            { "key": "sortOrder", "value": "desc", "description": "asc | desc" }
+          ]
+        },
+        "description": "List current user's presets. Remove query params you don't need."
+      }
+    },
+    {
+      "name": "3. List by page (path)",
+      "request": {
+        "method": "GET",
+        "url": {
+          "raw": "{{baseUrl}}/saved-filters/by-page/{{pageContext}}?pageNum=1&limit=20&search=&sortBy=updatedAt&sortOrder=desc",
+          "host": ["{{baseUrl}}"],
+          "path": ["saved-filters", "by-page", "{{pageContext}}"],
+          "query": [
+            { "key": "pageNum", "value": "1" },
+            { "key": "limit", "value": "20" },
+            { "key": "search", "value": "" },
+            { "key": "sortBy", "value": "updatedAt" },
+            { "key": "sortOrder", "value": "desc" }
+          ]
+        },
+        "description": "Same as list but screen `page` is in the path (exact match). Encode special chars in path if needed."
+      }
+    },
+    {
+      "name": "4. Get saved filter by id",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/saved-filters/{{savedFilterId}}",
+        "description": "Set `savedFilterId` (or run Create first — Tests script sets it)."
+      }
+    },
+    {
+      "name": "5. Update saved filter",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Updated title\",\n  \"page\": \"{{pageContext}}\",\n  \"description\": \"\",\n  \"domain\": [\n    [\"team_id\", \"in\", [\"686e76249084eed90292b0e8\"]]\n  ]\n}"
+        },
+        "url": "{{baseUrl}}/saved-filters/{{savedFilterId}}",
+        "description": "`title` and `page` are required. `description` and `domain` optional."
+      }
+    },
+    {
+      "name": "6. Delete saved filter",
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/saved-filters/{{savedFilterId}}",
+        "description": "Removes the preset for the current user."
+      }
+    },
+    {
+      "name": "Validation — invalid domain (expect 400)",
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"title\": \"Bad domain\",\n  \"page\": \"lead\",\n  \"domain\": [[\"bad field!\", \"in\", []]]\n}"
+        },
+        "url": "{{baseUrl}}/saved-filters",
+        "description": "Field name must match server pattern; expect validation error."
+      }
+    }
+  ]
+}

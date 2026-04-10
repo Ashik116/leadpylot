@@ -1,0 +1,393 @@
+services:
+  user-auth-service-api:
+    build:
+      context: ./user-auth-service-api
+      dockerfile: Dockerfile
+    container_name: user-auth-service-api
+    image: leadpylot/user-auth-service-api:latest
+    ports:
+      - "4000:4000"
+    environment:
+      - NODE_ENV=development
+      - PORT=4000
+      - MONGODB_URI=mongodb://host.docker.internal:27017/leadpylot
+      - JWT_SECRET=${JWT_SECRET}
+      - SESSION_DURATION_HOURS=24
+      - LOG_LEVEL=info
+      - SEARCH_SERVICE_URL=http://host.docker.internal:3010
+    volumes:
+      - ./user-auth-service-api/src:/app/src
+      - ./user-auth-service-api/logs:/app/logs
+      - /app/node_modules
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:4000/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+  redis-stack:
+    image: redis/redis-stack:latest
+    container_name: redis-stack
+    ports:
+      - "6379:6379"
+      - "8003:8001"
+    volumes:
+      - redis-stack:/var/lib/redis-stack
+    environment:
+      - REDIS_ARGS=--save 900 1
+    restart: unless-stopped
+
+  configuration-service-api:
+    build:
+      context: ./configuration-service-api
+      dockerfile: Dockerfile
+    container_name: configuration-service-api
+    image: leadpylot/configuration-service-api:latest
+    ports:
+      - "4006:4006"
+    environment:
+      - NODE_ENV=development
+      - PORT=4006
+      - MONGODB_URI=mongodb://host.docker.internal:27017/leadpylot
+      - JWT_SECRET=${JWT_SECRET}
+      - AUTH_SERVICE_URL=http://host.docker.internal:4000
+      - DOCUMENT_SERVICE_URL=http://host.docker.internal:4001
+      - LEAD_SERVICE_URL=http://host.docker.internal:4003
+      - SEARCH_SERVICE_URL=http://host.docker.internal:3010
+      - CORS_ORIGIN=http://localhost:3001
+      - LOG_LEVEL=info
+    volumes:
+      - ./configuration-service-api/src:/app/src
+      - ./configuration-service-api/logs:/app/logs
+      - /app/node_modules
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:4006/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  document-service-api:
+    build:
+      context: ./document-service-api
+      dockerfile: Dockerfile
+    container_name: document-service-api
+    image: leadpylot/document-service-api:latest
+    ports:
+      - "4002:4002"
+    environment:
+      - NODE_ENV=development
+      - PORT=4002
+      - MONGODB_URI=mongodb://host.docker.internal:27017/leadpylot
+      - JWT_SECRET=${JWT_SECRET}
+      - STORAGE_TYPE=local
+      - STORAGE_PATH=/app/storage
+      - TEMP_UPLOAD_PATH=/app/temp-uploads
+      - CLOUD_STORAGE_ENABLED=${CLOUD_STORAGE_ENABLED:-true}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION:-eu-central-1}
+      - AWS_S3_BUCKET=${AWS_S3_BUCKET:-leadpylot}
+      - AWS_S3_ENDPOINT=${AWS_S3_ENDPOINT}
+      - MAX_FILE_SIZE=52428800
+      - MAX_FILES_PER_UPLOAD=20
+      - CORS_ORIGIN=http://localhost:3001
+      - LOG_LEVEL=info
+    volumes:
+      - ./document-service-api/src:/app/src
+      - ./document-service-api/storage:/app/storage
+      - ./document-service-api/temp-uploads:/app/temp-uploads
+      - ./document-service-api/logs:/app/logs
+      - /app/node_modules
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:4002/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  email-service-api:
+    build:
+      context: ./email-service-api
+      dockerfile: Dockerfile
+    container_name: email-service-api
+    image: leadpylot/email-service-api:latest
+    ports:
+      - "4008:4008"
+    environment:
+      - NODE_ENV=development
+      - PORT=4008
+      - MONGODB_URI=mongodb://host.docker.internal:27017/leadpylot
+      - JWT_SECRET=${JWT_SECRET}
+      - STORAGE_TYPE=local
+      - STORAGE_PATH=/app/storage
+      - TEMP_UPLOAD_PATH=/app/temp-uploads
+      - CLOUD_STORAGE_ENABLED=${CLOUD_STORAGE_ENABLED:-true}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION:-eu-central-1}
+      - AWS_S3_BUCKET=${AWS_S3_BUCKET:-leadpylot}
+      - AWS_S3_ENDPOINT=${AWS_S3_ENDPOINT}
+      - MAX_FILE_SIZE=52428800
+      - MAX_FILES_PER_UPLOAD=20
+      - SOCKET_URL=http://host.docker.internal:4004
+      - SEARCH_SERVICE_URL=http://host.docker.internal:3010
+      - LOG_LEVEL=info
+      - EMAIL_PROCESSING_INTERVAL=3
+    volumes:
+      - ./email-service-api/src:/app/src
+      - ./email-service-api/logs:/app/logs
+      - ./email-service-api/storage:/app/storage
+      - /app/node_modules
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:4008/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  lead-offer-service-api:
+    build:
+      context: ./lead-offer-service-api
+      dockerfile: Dockerfile
+    image: leadpylot/lead-offer-service-api:latest
+    ports:
+      - "4003:4003"
+    environment:
+      - NODE_ENV=development
+      - PORT=4003
+      - MONGODB_URI=mongodb://host.docker.internal:27017/leadpylot
+      - JWT_SECRET=${JWT_SECRET}
+      - CONFIGURATION_SERVICE_URL=http://host.docker.internal:4006
+      - USER_AUTH_SERVICE_URL=http://host.docker.internal:4000
+      - DOCUMENT_SERVICE_URL=http://host.docker.internal:4002
+      - EMAIL_SERVICE_URL=http://host.docker.internal:4008
+      - NOTIFICATION_SERVICE_URL=http://host.docker.internal:4004
+      - FRONTEND_URL=http://localhost:3001
+      - CORS_ORIGIN=http://localhost:3001
+      - FREEPBX_ENABLED=${FREEPBX_ENABLED:-true}
+      - FREEPBX_HOST=${FREEPBX_HOST}
+      - FREEPBX_URL=${FREEPBX_URL}
+      - AMI_PORT=${AMI_PORT:-5038}
+      - AMI_USERNAME=${AMI_USERNAME}
+      - AMI_PASSWORD=${AMI_PASSWORD}
+      - MARIA_HOST=${MARIA_HOST}
+      - MARIA_PORT=${MARIA_PORT:-3306}
+      - MARIA_USER=${MARIA_USER}
+      - MARIA_PASS=${MARIA_PASS}
+      - MARIA_DATABASE=${MARIA_DATABASE:-asterisk}
+      - FREEPBX_RECORDING_URL=${FREEPBX_RECORDING_URL}
+      - FREEPBX_RELOAD_URL=${FREEPBX_RELOAD_URL}
+      - RECORDING_CACHE_PATH=/app/cache/recordings
+      - FFMPEG_PATH=ffmpeg
+      - STORAGE_TYPE=local
+      - STORAGE_PATH=/app/storage
+      - TEMP_UPLOAD_PATH=/app/temp-uploads
+      - CLOUD_STORAGE_ENABLED=${CLOUD_STORAGE_ENABLED:-true}
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION:-eu-central-1}
+      - AWS_S3_BUCKET=${AWS_S3_BUCKET:-leadpylot}
+      - AWS_S3_ENDPOINT=${AWS_S3_ENDPOINT}
+      - MAX_FILE_SIZE=52428800
+      - MAX_FILES_PER_UPLOAD=20
+      - PDF_GENERATE_API_URL=http://host.docker.internal:4009/pdf/generate-offer
+      - SEARCH_SERVICE_URL=http://host.docker.internal:3010
+      - LOG_LEVEL=info
+    volumes:
+      - ./lead-offer-service-api/src:/app/src
+      - ./lead-offer-service-api/logs:/app/logs
+      - /app/node_modules
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:4003/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  notification-service-api:
+    build:
+      context: ./notification-service-api
+      dockerfile: Dockerfile
+    container_name: notification-service-api
+    image: leadpylot/notification-service-api:latest
+    ports:
+      - "4004:4004"
+    environment:
+      - NODE_ENV=development
+      - PORT=4004
+      - MONGODB_URI=mongodb://host.docker.internal:27017/leadpylot
+      - JWT_SECRET=${JWT_SECRET}
+      - CONFIGURATION_SERVICE_URL=http://host.docker.internal:4006
+      - USER_AUTH_SERVICE_URL=http://host.docker.internal:4000
+      - DOCUMENT_SERVICE_URL=http://host.docker.internal:4002
+      - LEAD_OFFERS_SERVICE_URL=http://host.docker.internal:4003
+      - SEARCH_SERVICE_URL=http://host.docker.internal:3010
+      - FRONTEND_URL=http://localhost:3001
+      - CORS_ORIGIN=http://localhost:3001
+      - LOG_LEVEL=info
+    volumes:
+      - ./notification-service-api/src:/app/src
+      - ./notification-service-api/logs:/app/logs
+      - /app/node_modules
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:4004/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  pdf-service-api:
+    build:
+      context: ./pdf-service-api
+      dockerfile: Dockerfile
+    container_name: pdf-service-api
+    image: leadpylot/pdf-service-api:latest
+    ports:
+      - "4009:4009"
+    environment:
+      - NODE_ENV=development
+      - PORT=4009
+      - MONGODB_URI=mongodb://host.docker.internal:27017/leadpylot
+      - LOG_LEVEL=info
+      - JWT_SECRET=${JWT_SECRET}
+      - SEARCH_SERVICE_URL=http://host.docker.internal:3010
+      - AWS_ACCESS_KEY_ID=${AWS_ACCESS_KEY_ID}
+      - AWS_SECRET_ACCESS_KEY=${AWS_SECRET_ACCESS_KEY}
+      - AWS_REGION=${AWS_REGION}
+      - AWS_S3_BUCKET=${AWS_S3_BUCKET}
+      - AWS_S3_ENDPOINT=${AWS_S3_ENDPOINT}
+      - CLOUD_STORAGE_ENABLED=${CLOUD_STORAGE_ENABLED}
+      - PREFERRED_STORAGE=${PREFERRED_STORAGE}
+      - STORAGE_FALLBACK_TO_LOCAL=${STORAGE_FALLBACK_TO_LOCAL}
+      - DUAL_STORAGE_MODE=${DUAL_STORAGE_MODE}
+      - AWS_S3_MULTIPART_THRESHOLD=${AWS_S3_MULTIPART_THRESHOLD}
+      - AWS_S3_PART_SIZE=${AWS_S3_PART_SIZE}
+      - AWS_CONNECTION_TIMEOUT=${AWS_CONNECTION_TIMEOUT}
+      - AWS_REQUEST_TIMEOUT=${AWS_REQUEST_TIMEOUT}
+      - AWS_S3_SERVER_SIDE_ENCRYPTION=${AWS_S3_SERVER_SIDE_ENCRYPTION}
+      - AWS_S3_ACL=${AWS_S3_ACL}
+    volumes:
+      - ./pdf-service-api/src:/app/src
+      - ./pdf-service-api/logs:/app/logs
+      - ./pdf-service-api/storage:/app/storage
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:4009/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  reporting-service-api:
+    build:
+      context: ./reporting-service-api
+      dockerfile: Dockerfile
+    container_name: reporting-service-api
+    image: leadpylot/reporting-service-api:latest
+    ports:
+      - "4007:4007"
+    environment:
+      - NODE_ENV=development
+      - PORT=4007
+      - MONGODB_URI=mongodb://host.docker.internal:27017/leadpylot
+      - JWT_SECRET=${JWT_SECRET}
+      - CORS_ORIGIN=http://localhost:3001
+      - LOG_LEVEL=info
+    volumes:
+      - ./reporting-service-api/src:/app/src
+      - ./reporting-service-api/logs:/app/logs
+      - /app/node_modules
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:4007/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  cashflow-service-api:
+    build:
+      context: ./cashflow-service-api
+      dockerfile: Dockerfile
+    container_name: cashflow-service-api
+    image: leadpylot/cashflow-service-api:latest
+    ports:
+      - "4011:4011"
+    environment:
+      - NODE_ENV=development
+      - PORT=4011
+      - MONGODB_URI=mongodb://host.docker.internal:27017/leadpylot
+      - JWT_SECRET=${JWT_SECRET}
+      - CORS_ORIGIN=http://localhost:3001
+      - LOG_LEVEL=info
+    volumes:
+      - ./cashflow-service-api/src:/app/src
+      - ./cashflow-service-api/logs:/app/logs
+      - /app/node_modules
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:4011/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  search-service-api:
+    build:
+      context: ./search-service-api
+      dockerfile: Dockerfile
+    container_name: search-service-api
+    image: leadpylot/search-service-api:latest
+    ports:
+      - "3010:3010"
+    environment:
+      - NODE_ENV=development
+      - PORT=3010
+      - MONGODB_URI=mongodb://host.docker.internal:27017/leadpylot
+      - LOG_LEVEL=info
+    volumes:
+      # Mount model directories from other services (read-only)
+      - ./lead-offer-service-api/src/models:/app/external-models/lead-offer-service:ro
+      - ./email-service-api/src/models:/app/external-models/email-service:ro
+      - ./notification-service-api/src/models:/app/external-models/notification-service:ro
+      - ./user-auth-service-api/src/models:/app/external-models/user-auth-service:ro
+      - ./configuration-service-api/src/models:/app/external-models/configuration-service:ro
+      - ./pdf-service-api/src/models:/app/external-models/pdf-service:ro
+      - ./cashflow-service-api/src/models:/app/external-models/cashflow-service:ro
+      - ./search-service-api/src:/app/src
+      - ./search-service-api/logs:/app/logs
+      - /app/node_modules
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "curl -f http://localhost:3010/health || exit 1"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+volumes:
+  redis-stack:

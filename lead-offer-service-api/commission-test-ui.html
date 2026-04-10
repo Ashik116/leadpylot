@@ -1,0 +1,873 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Commission System API Tester</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    h1 {
+      color: #333;
+      border-bottom: 3px solid #007bff;
+      padding-bottom: 10px;
+    }
+    h2 {
+      color: #007bff;
+      margin-top: 30px;
+      padding: 10px;
+      background: #e7f1ff;
+      border-radius: 5px;
+    }
+    h3 {
+      color: #555;
+      margin-top: 20px;
+    }
+    .config-section {
+      background: #fff3cd;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    .config-section label {
+      font-weight: bold;
+      margin-right: 10px;
+    }
+    .config-section input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .form-group {
+      margin-bottom: 15px;
+    }
+    .form-group label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: 600;
+      color: #333;
+    }
+    .form-group input, .form-group select, .form-group textarea {
+      width: 100%;
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 14px;
+    }
+    .form-row {
+      display: flex;
+      gap: 15px;
+    }
+    .form-row .form-group {
+      flex: 1;
+    }
+    button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: #007bff;
+      color: white;
+    }
+    .btn-primary:hover {
+      background: #0056b3;
+    }
+    .btn-success {
+      background: #28a745;
+      color: white;
+    }
+    .btn-success:hover {
+      background: #1e7e34;
+    }
+    .btn-danger {
+      background: #dc3545;
+      color: white;
+    }
+    .btn-danger:hover {
+      background: #c82333;
+    }
+    .btn-warning {
+      background: #ffc107;
+      color: #333;
+    }
+    .btn-warning:hover {
+      background: #e0a800;
+    }
+    .btn-info {
+      background: #17a2b8;
+      color: white;
+    }
+    .btn-info:hover {
+      background: #138496;
+    }
+    .response-box {
+      background: #1e1e1e;
+      color: #d4d4d4;
+      padding: 15px;
+      border-radius: 4px;
+      margin-top: 10px;
+      max-height: 400px;
+      overflow: auto;
+      font-family: 'Monaco', 'Menlo', monospace;
+      font-size: 12px;
+      white-space: pre-wrap;
+      word-break: break-all;
+    }
+    .response-box.success {
+      border-left: 4px solid #28a745;
+    }
+    .response-box.error {
+      border-left: 4px solid #dc3545;
+    }
+    .tabs {
+      display: flex;
+      border-bottom: 2px solid #ddd;
+      margin-bottom: 20px;
+    }
+    .tab {
+      padding: 12px 24px;
+      cursor: pointer;
+      border: none;
+      background: none;
+      font-size: 14px;
+      font-weight: 600;
+      color: #666;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+    }
+    .tab.active {
+      color: #007bff;
+      border-bottom-color: #007bff;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+      margin-left: 5px;
+    }
+    .badge-get { background: #28a745; color: white; }
+    .badge-post { background: #007bff; color: white; }
+    .badge-put { background: #ffc107; color: #333; }
+    .badge-delete { background: #dc3545; color: white; }
+    .endpoint-path {
+      font-family: monospace;
+      background: #f8f9fa;
+      padding: 3px 8px;
+      border-radius: 3px;
+      font-size: 12px;
+    }
+    .status-indicator {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 5px;
+    }
+    .status-connected { background: #28a745; }
+    .status-disconnected { background: #dc3545; }
+    .info-box {
+      background: #d1ecf1;
+      border: 1px solid #bee5eb;
+      color: #0c5460;
+      padding: 12px;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>🧪 Commission System API Tester</h1>
+    
+    <div class="info-box">
+      <strong>ℹ️ How it works:</strong><br>
+      • Default agent commission % is stored per category:<br>
+      &nbsp;&nbsp;- <code>User.commission_percentage_opening</code> for OPENING offers<br>
+      &nbsp;&nbsp;- <code>User.commission_percentage_load</code> for LOAD offers<br>
+      • Bank commission % is stored in <code>Bank.commission_percentage</code><br>
+      • Split/Inbound agent percentages are entered directly when adding to an offer
+    </div>
+    
+    <!-- Configuration Section -->
+    <div class="config-section">
+      <label>API Base URL:</label>
+      <input type="text" id="baseUrl" value="http://localhost:4003" />
+      <label style="margin-top: 10px; display: block;">JWT Token:</label>
+      <input type="text" id="authToken" value="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTM3ZjAxMjgyYTJkNWEwN2E0YTFkM2EiLCJsb2dpbiI6InNha2liIiwicm9sZSI6IkFkbWluIiwic2Vzc2lvbklkIjoiNmQ5NzhlNTctMGE0YS00YjExLThkN2YtNDNiZGNiYzZhZjA5IiwiaWF0IjoxNzY2MDU0Nzc5LCJleHAiOjE3NjYxNDExNzl9.zdaGyI1kR4O9sXgxPAu5sV2yCl7d1gQeFoCIPhee8jc" />
+      <div style="margin-top: 10px;">
+        <span class="status-indicator" id="connectionStatus"></span>
+        <span id="connectionText">Not tested</span>
+        <button class="btn-info" onclick="testConnection()" style="margin-left: 10px;">Test Connection</button>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" onclick="showTab('offers')">💰 Offer Financials</button>
+      <button class="tab" onclick="showTab('payments')">💳 Payments</button>
+      <button class="tab" onclick="showTab('agents')">👥 Split/Inbound Agents</button>
+      <button class="tab" onclick="showTab('summary')">📊 Agent Summary</button>
+    </div>
+
+    <!-- Tab 1: Offer Financials -->
+    <div id="offers" class="tab-content active">
+      <h2>Offer Financials</h2>
+      
+      <div class="card">
+        <h3>Get Offers (to select one)</h3>
+        <button class="btn-primary" onclick="getOffers()">Load Offers</button>
+        <div id="offersList" class="response-box"></div>
+      </div>
+
+      <div class="card">
+        <h3>Get Offer Financials <span class="badge badge-get">GET</span></h3>
+        <p class="endpoint-path">/offers/:offerId/financials</p>
+        <div class="form-group">
+          <label>Offer ID *</label>
+          <input type="text" id="getFinancialsOfferId" placeholder="MongoDB ObjectId" />
+        </div>
+        <button class="btn-primary" onclick="getOfferFinancials()">Get Financials</button>
+        <div id="getFinancialsResponse" class="response-box"></div>
+      </div>
+
+      <div class="card">
+        <h3>Initialize Financials <span class="badge badge-post">POST</span></h3>
+        <p class="endpoint-path">/offers/:offerId/financials/initialize</p>
+        <p style="font-size: 12px; color: #666;">
+          💡 Default agent % auto-selected based on offer category:<br>
+          &nbsp;&nbsp;• <strong>OPENING</strong> → User.commission_percentage_opening<br>
+          &nbsp;&nbsp;• <strong>LOAD</strong> → User.commission_percentage_load<br>
+          Bank % from Bank.commission_percentage
+        </p>
+        <div class="form-group">
+          <label>Offer ID *</label>
+          <input type="text" id="initOfferId" placeholder="MongoDB ObjectId" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Investment Total (optional)</label>
+            <input type="number" id="initInvestmentTotal" placeholder="Leave empty to use offer.investment_volume" min="0" step="0.01" />
+          </div>
+          <div class="form-group">
+            <label>Bonus Value</label>
+            <input type="number" id="initBonusValue" value="0" min="0" step="0.01" />
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Bank % (optional - uses Bank default)</label>
+            <input type="number" id="initBankPct" placeholder="From Bank.commission_percentage" min="0" max="100" step="0.1" />
+          </div>
+          <div class="form-group">
+            <label>Agent % (optional - override category default)</label>
+            <input type="number" id="initAgentPct" placeholder="Auto from User based on category" min="0" max="100" step="0.1" />
+          </div>
+        </div>
+        <button class="btn-success" onclick="initializeFinancials()">Initialize Financials</button>
+        <div id="initFinancialsResponse" class="response-box"></div>
+      </div>
+
+      <div class="card">
+        <h3>Update Investment Amounts <span class="badge badge-put">PUT</span></h3>
+        <p class="endpoint-path">/offers/:offerId/financials/investment</p>
+        <div class="form-group">
+          <label>Offer ID *</label>
+          <input type="text" id="updateInvestOfferId" placeholder="MongoDB ObjectId" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>New Investment Total</label>
+            <input type="number" id="updateInvestTotal" min="0" step="0.01" />
+          </div>
+          <div class="form-group">
+            <label>New Bonus Value</label>
+            <input type="number" id="updateBonusValue" min="0" step="0.01" />
+          </div>
+        </div>
+        <button class="btn-warning" onclick="updateInvestment()">Update Investment</button>
+        <div id="updateInvestResponse" class="response-box"></div>
+      </div>
+
+      <div class="card">
+        <h3>Override Percentages <span class="badge badge-put">PUT</span></h3>
+        <div class="form-group">
+          <label>Offer ID *</label>
+          <input type="text" id="overrideOfferId" placeholder="MongoDB ObjectId" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Primary Agent %</label>
+            <input type="number" id="overrideAgentPct" min="0" max="100" step="0.1" />
+            <button class="btn-warning" onclick="overridePrimaryAgent()" style="margin-top: 5px;">Override Agent %</button>
+          </div>
+          <div class="form-group">
+            <label>Bank %</label>
+            <input type="number" id="overrideBankPct" min="0" max="100" step="0.1" />
+            <button class="btn-warning" onclick="overrideBank()" style="margin-top: 5px;">Override Bank %</button>
+          </div>
+        </div>
+        <div id="overrideResponse" class="response-box"></div>
+      </div>
+
+      <div class="card">
+        <h3>Recalculate Financials <span class="badge badge-post">POST</span></h3>
+        <p class="endpoint-path">/offers/:offerId/financials/recalculate</p>
+        <div class="form-group">
+          <label>Offer ID *</label>
+          <input type="text" id="recalcOfferId" placeholder="MongoDB ObjectId" />
+        </div>
+        <button class="btn-info" onclick="recalculateFinancials()">Force Recalculate</button>
+        <div id="recalcResponse" class="response-box"></div>
+      </div>
+    </div>
+
+    <!-- Tab 2: Payments -->
+    <div id="payments" class="tab-content">
+      <h2>Payment Management</h2>
+      
+      <div class="card">
+        <h3>Add Customer Payment <span class="badge badge-post">POST</span></h3>
+        <p class="endpoint-path">/offers/:offerId/financials/payments</p>
+        <div class="form-group">
+          <label>Offer ID *</label>
+          <input type="text" id="paymentOfferId" placeholder="MongoDB ObjectId" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Amount *</label>
+            <input type="number" id="paymentAmount" placeholder="10000" min="0.01" step="0.01" />
+          </div>
+          <div class="form-group">
+            <label>Payment Method</label>
+            <select id="paymentMethod">
+              <option value="bank_transfer">Bank Transfer</option>
+              <option value="cash">Cash</option>
+              <option value="check">Check</option>
+              <option value="other">Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Reference</label>
+            <input type="text" id="paymentRef" placeholder="Transaction reference" />
+          </div>
+          <div class="form-group">
+            <label>Notes</label>
+            <input type="text" id="paymentNotes" placeholder="Optional notes" />
+          </div>
+        </div>
+        <button class="btn-success" onclick="addCustomerPayment()">Add Payment</button>
+        <div id="addPaymentResponse" class="response-box"></div>
+      </div>
+
+      <div class="card">
+        <h3>Record Agent Commission Payment <span class="badge badge-post">POST</span></h3>
+        <p class="endpoint-path">/offers/:offerId/financials/agent-payments</p>
+        <div class="form-group">
+          <label>Offer ID *</label>
+          <input type="text" id="agentPaymentOfferId" placeholder="MongoDB ObjectId" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Agent Type *</label>
+            <select id="agentPaymentType">
+              <option value="primary">Primary Agent</option>
+              <option value="split">Split Agent</option>
+              <option value="inbound">Inbound Agent</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Agent ID (for split/inbound)</label>
+            <input type="text" id="agentPaymentAgentId" placeholder="Required for split/inbound" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Amount *</label>
+          <input type="number" id="agentPaymentAmount" placeholder="Commission amount to pay" min="0.01" step="0.01" />
+        </div>
+        <button class="btn-success" onclick="recordAgentPayment()">Record Payment</button>
+        <div id="agentPaymentResponse" class="response-box"></div>
+      </div>
+    </div>
+
+    <!-- Tab 3: Split/Inbound Agents -->
+    <div id="agents" class="tab-content">
+      <h2>Split & Inbound Agents</h2>
+      
+      <div class="info-box">
+        <strong>💡 No predefined percentages!</strong><br>
+        Enter the percentage directly when adding a split or inbound agent.
+      </div>
+
+      <div class="card">
+        <h3>Get Available Agents</h3>
+        <button class="btn-primary" onclick="getAgents()">Load Agents</button>
+        <div id="agentsList" class="response-box"></div>
+      </div>
+
+      <div class="card">
+        <h3>Add Split Agent <span class="badge badge-post">POST</span></h3>
+        <p class="endpoint-path">/offers/:offerId/financials/split-agents</p>
+        <div class="form-group">
+          <label>Offer ID *</label>
+          <input type="text" id="splitOfferId" placeholder="MongoDB ObjectId" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Agent ID *</label>
+            <input type="text" id="splitAgentId" placeholder="Agent's MongoDB ObjectId" />
+          </div>
+          <div class="form-group">
+            <label>Percentage * (enter directly)</label>
+            <input type="number" id="splitPct" placeholder="e.g. 5" min="0" max="100" step="0.1" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Reason</label>
+          <input type="text" id="splitReason" placeholder="Why is this agent getting a split?" />
+        </div>
+        <button class="btn-success" onclick="addSplitAgent()">Add Split Agent</button>
+        <div id="addSplitResponse" class="response-box"></div>
+      </div>
+
+      <div class="card">
+        <h3>Remove Split Agent <span class="badge badge-delete">DELETE</span></h3>
+        <p class="endpoint-path">/offers/:offerId/financials/split-agents/:agentId</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Offer ID *</label>
+            <input type="text" id="removeSplitOfferId" placeholder="Offer ID" />
+          </div>
+          <div class="form-group">
+            <label>Agent ID *</label>
+            <input type="text" id="removeSplitAgentId" placeholder="Agent ID to remove" />
+          </div>
+        </div>
+        <button class="btn-danger" onclick="removeSplitAgent()">Remove Split Agent</button>
+        <div id="removeSplitResponse" class="response-box"></div>
+      </div>
+
+      <div class="card">
+        <h3>Add Inbound Agent <span class="badge badge-post">POST</span></h3>
+        <p class="endpoint-path">/offers/:offerId/financials/inbound-agents</p>
+        <div class="form-group">
+          <label>Offer ID *</label>
+          <input type="text" id="inboundOfferId" placeholder="MongoDB ObjectId" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Agent ID *</label>
+            <input type="text" id="inboundAgentId" placeholder="Agent's MongoDB ObjectId" />
+          </div>
+          <div class="form-group">
+            <label>Percentage * (enter directly)</label>
+            <input type="number" id="inboundPct" placeholder="e.g. 5" min="0" max="100" step="0.1" />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>Reason</label>
+          <input type="text" id="inboundReason" placeholder="Why is this agent getting inbound commission?" />
+        </div>
+        <button class="btn-success" onclick="addInboundAgent()">Add Inbound Agent</button>
+        <div id="addInboundResponse" class="response-box"></div>
+      </div>
+
+      <div class="card">
+        <h3>Remove Inbound Agent <span class="badge badge-delete">DELETE</span></h3>
+        <p class="endpoint-path">/offers/:offerId/financials/inbound-agents/:agentId</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Offer ID *</label>
+            <input type="text" id="removeInboundOfferId" placeholder="Offer ID" />
+          </div>
+          <div class="form-group">
+            <label>Agent ID *</label>
+            <input type="text" id="removeInboundAgentId" placeholder="Agent ID to remove" />
+          </div>
+        </div>
+        <button class="btn-danger" onclick="removeInboundAgent()">Remove Inbound Agent</button>
+        <div id="removeInboundResponse" class="response-box"></div>
+      </div>
+
+      <div class="card">
+        <h3>Update Agent Percentage <span class="badge badge-put">PUT</span></h3>
+        <p class="endpoint-path">/offers/:offerId/financials/:agentType/:agentId/percentage</p>
+        <div class="form-group">
+          <label>Offer ID *</label>
+          <input type="text" id="updateAgentPctOfferId" placeholder="Offer ID" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Agent Type *</label>
+            <select id="updateAgentPctType">
+              <option value="split-agents">Split Agent</option>
+              <option value="inbound-agents">Inbound Agent</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Agent ID *</label>
+            <input type="text" id="updateAgentPctAgentId" placeholder="Agent ID" />
+          </div>
+          <div class="form-group">
+            <label>New Percentage *</label>
+            <input type="number" id="updateAgentPctValue" min="0" max="100" step="0.1" />
+          </div>
+        </div>
+        <button class="btn-warning" onclick="updateAgentPercentage()">Update Percentage</button>
+        <div id="updateAgentPctResponse" class="response-box"></div>
+      </div>
+    </div>
+
+    <!-- Tab 4: Agent Summary -->
+    <div id="summary" class="tab-content">
+      <h2>Agent Summary & Balance Sheet</h2>
+      
+      <div class="card">
+        <h3>List All Offers with Financials <span class="badge badge-get">GET</span></h3>
+        <p class="endpoint-path">/commissions/offers</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Category</label>
+            <select id="listFinancialsCategory">
+              <option value="">All</option>
+              <option value="opening">Opening</option>
+              <option value="load">Load</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label>Payment Status</label>
+            <select id="listFinancialsPaymentStatus">
+              <option value="">All</option>
+              <option value="pending">Pending</option>
+              <option value="partial">Partial</option>
+              <option value="complete">Complete</option>
+              <option value="overpaid">Overpaid</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-primary" onclick="listOffersWithFinancials()">Get Offers</button>
+        <div id="listFinancialsResponse" class="response-box"></div>
+      </div>
+
+      <div class="card">
+        <h3>Agent's Offers (Balance Sheet) <span class="badge badge-get">GET</span></h3>
+        <p class="endpoint-path">/commissions/agents/:agentId/offers</p>
+        <div class="form-row">
+          <div class="form-group">
+            <label>Agent ID *</label>
+            <input type="text" id="agentOffersAgentId" placeholder="Agent's MongoDB ObjectId" />
+          </div>
+          <div class="form-group">
+            <label>Commission Type</label>
+            <select id="agentOffersType">
+              <option value="all">All</option>
+              <option value="primary">Primary</option>
+              <option value="split">Split</option>
+              <option value="inbound">Inbound</option>
+            </select>
+          </div>
+        </div>
+        <button class="btn-primary" onclick="getAgentOffers()">Get Agent's Offers</button>
+        <div id="agentOffersResponse" class="response-box"></div>
+      </div>
+
+      <div class="card">
+        <h3>Agent Commission Summary <span class="badge badge-get">GET</span></h3>
+        <p class="endpoint-path">/commissions/agents/:agentId/summary</p>
+        <div class="form-group">
+          <label>Agent ID *</label>
+          <input type="text" id="agentSummaryId" placeholder="Agent's MongoDB ObjectId" />
+        </div>
+        <button class="btn-primary" onclick="getAgentSummary()">Get Summary</button>
+        <div id="agentSummaryResponse" class="response-box"></div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Helper functions
+    function getBaseUrl() {
+      return document.getElementById('baseUrl').value.replace(/\/$/, '');
+    }
+
+    function getToken() {
+      return document.getElementById('authToken').value;
+    }
+
+    function getHeaders() {
+      return {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getToken()}`
+      };
+    }
+
+    async function apiCall(method, endpoint, body = null) {
+      const url = `${getBaseUrl()}${endpoint}`;
+      const options = {
+        method,
+        headers: getHeaders()
+      };
+      if (body && (method === 'POST' || method === 'PUT')) {
+        options.body = JSON.stringify(body);
+      }
+      
+      console.log(`${method} ${url}`, body);
+      
+      try {
+        const response = await fetch(url, options);
+        const data = await response.json();
+        return { success: response.ok, status: response.status, data };
+      } catch (error) {
+        return { success: false, error: error.message };
+      }
+    }
+
+    function showResponse(elementId, result) {
+      const el = document.getElementById(elementId);
+      el.className = 'response-box ' + (result.success ? 'success' : 'error');
+      el.textContent = JSON.stringify(result, null, 2);
+    }
+
+    function showTab(tabId) {
+      // Hide all tabs
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      
+      // Show selected tab
+      document.getElementById(tabId).classList.add('active');
+      event.target.classList.add('active');
+    }
+
+    // Connection test
+    async function testConnection() {
+      const result = await apiCall('GET', '/offers?limit=1');
+      const statusEl = document.getElementById('connectionStatus');
+      const textEl = document.getElementById('connectionText');
+      
+      if (result.success) {
+        statusEl.className = 'status-indicator status-connected';
+        textEl.textContent = 'Connected ✓';
+      } else {
+        statusEl.className = 'status-indicator status-disconnected';
+        textEl.textContent = 'Connection failed: ' + (result.error || result.data?.message || 'Unknown error');
+      }
+    }
+
+    // ============ Offer Financials ============
+    async function getOffers() {
+      const result = await apiCall('GET', '/offers?limit=20');
+      showResponse('offersList', result);
+    }
+
+    async function getOfferFinancials() {
+      const offerId = document.getElementById('getFinancialsOfferId').value;
+      const result = await apiCall('GET', `/offers/${offerId}/financials`);
+      showResponse('getFinancialsResponse', result);
+    }
+
+    async function initializeFinancials() {
+      const offerId = document.getElementById('initOfferId').value;
+      const body = {};
+      
+      const investTotal = document.getElementById('initInvestmentTotal').value;
+      const bonusValue = document.getElementById('initBonusValue').value;
+      const bankPct = document.getElementById('initBankPct').value;
+      const agentPct = document.getElementById('initAgentPct').value;
+      
+      if (investTotal) body.investment_total = parseFloat(investTotal);
+      if (bonusValue) body.bonus_value = parseFloat(bonusValue);
+      if (bankPct) body.bank_percentage = parseFloat(bankPct);
+      if (agentPct) body.agent_percentage = parseFloat(agentPct);
+      
+      const result = await apiCall('POST', `/offers/${offerId}/financials/initialize`, body);
+      showResponse('initFinancialsResponse', result);
+    }
+
+    async function updateInvestment() {
+      const offerId = document.getElementById('updateInvestOfferId').value;
+      const body = {};
+      const total = document.getElementById('updateInvestTotal').value;
+      const bonus = document.getElementById('updateBonusValue').value;
+      if (total) body.investment_total = parseFloat(total);
+      if (bonus) body.bonus_value = parseFloat(bonus);
+      
+      const result = await apiCall('PUT', `/offers/${offerId}/financials/investment`, body);
+      showResponse('updateInvestResponse', result);
+    }
+
+    async function overridePrimaryAgent() {
+      const offerId = document.getElementById('overrideOfferId').value;
+      const percentage = parseFloat(document.getElementById('overrideAgentPct').value);
+      const result = await apiCall('PUT', `/offers/${offerId}/financials/primary-agent/percentage`, { percentage });
+      showResponse('overrideResponse', result);
+    }
+
+    async function overrideBank() {
+      const offerId = document.getElementById('overrideOfferId').value;
+      const percentage = parseFloat(document.getElementById('overrideBankPct').value);
+      const result = await apiCall('PUT', `/offers/${offerId}/financials/bank/percentage`, { percentage });
+      showResponse('overrideResponse', result);
+    }
+
+    async function recalculateFinancials() {
+      const offerId = document.getElementById('recalcOfferId').value;
+      const result = await apiCall('POST', `/offers/${offerId}/financials/recalculate`);
+      showResponse('recalcResponse', result);
+    }
+
+    // ============ Payments ============
+    async function addCustomerPayment() {
+      const offerId = document.getElementById('paymentOfferId').value;
+      const body = {
+        amount: parseFloat(document.getElementById('paymentAmount').value),
+        payment_method: document.getElementById('paymentMethod').value,
+        reference: document.getElementById('paymentRef').value,
+        notes: document.getElementById('paymentNotes').value
+      };
+      const result = await apiCall('POST', `/offers/${offerId}/financials/payments`, body);
+      showResponse('addPaymentResponse', result);
+    }
+
+    async function recordAgentPayment() {
+      const offerId = document.getElementById('agentPaymentOfferId').value;
+      const body = {
+        agent_type: document.getElementById('agentPaymentType').value,
+        agent_id: document.getElementById('agentPaymentAgentId').value || undefined,
+        amount: parseFloat(document.getElementById('agentPaymentAmount').value)
+      };
+      const result = await apiCall('POST', `/offers/${offerId}/financials/agent-payments`, body);
+      showResponse('agentPaymentResponse', result);
+    }
+
+    // ============ Split/Inbound Agents ============
+    async function getAgents() {
+      // This would typically call a users endpoint - using offers to get agent IDs
+      const result = await apiCall('GET', '/offers?limit=50');
+      if (result.success && result.data?.data) {
+        const agents = new Set();
+        result.data.data.forEach(offer => {
+          if (offer.agent_id?._id) {
+            agents.add(JSON.stringify({ _id: offer.agent_id._id, name: offer.agent_id.name || offer.agent_id.login }));
+          }
+        });
+        result.agents = Array.from(agents).map(a => JSON.parse(a));
+      }
+      showResponse('agentsList', result);
+    }
+
+    async function addSplitAgent() {
+      const offerId = document.getElementById('splitOfferId').value;
+      const body = {
+        agent_id: document.getElementById('splitAgentId').value,
+        percentage: parseFloat(document.getElementById('splitPct').value),
+        reason: document.getElementById('splitReason').value
+      };
+      const result = await apiCall('POST', `/offers/${offerId}/financials/split-agents`, body);
+      showResponse('addSplitResponse', result);
+    }
+
+    async function removeSplitAgent() {
+      const offerId = document.getElementById('removeSplitOfferId').value;
+      const agentId = document.getElementById('removeSplitAgentId').value;
+      const result = await apiCall('DELETE', `/offers/${offerId}/financials/split-agents/${agentId}`);
+      showResponse('removeSplitResponse', result);
+    }
+
+    async function addInboundAgent() {
+      const offerId = document.getElementById('inboundOfferId').value;
+      const body = {
+        agent_id: document.getElementById('inboundAgentId').value,
+        percentage: parseFloat(document.getElementById('inboundPct').value),
+        reason: document.getElementById('inboundReason').value
+      };
+      const result = await apiCall('POST', `/offers/${offerId}/financials/inbound-agents`, body);
+      showResponse('addInboundResponse', result);
+    }
+
+    async function removeInboundAgent() {
+      const offerId = document.getElementById('removeInboundOfferId').value;
+      const agentId = document.getElementById('removeInboundAgentId').value;
+      const result = await apiCall('DELETE', `/offers/${offerId}/financials/inbound-agents/${agentId}`);
+      showResponse('removeInboundResponse', result);
+    }
+
+    async function updateAgentPercentage() {
+      const offerId = document.getElementById('updateAgentPctOfferId').value;
+      const agentType = document.getElementById('updateAgentPctType').value;
+      const agentId = document.getElementById('updateAgentPctAgentId').value;
+      const percentage = parseFloat(document.getElementById('updateAgentPctValue').value);
+      
+      const result = await apiCall('PUT', `/offers/${offerId}/financials/${agentType}/${agentId}/percentage`, { percentage });
+      showResponse('updateAgentPctResponse', result);
+    }
+
+    // ============ Agent Summary ============
+    async function listOffersWithFinancials() {
+      const category = document.getElementById('listFinancialsCategory').value;
+      const paymentStatus = document.getElementById('listFinancialsPaymentStatus').value;
+      
+      let endpoint = '/commissions/offers?';
+      if (category) endpoint += `category=${category}&`;
+      if (paymentStatus) endpoint += `payment_status=${paymentStatus}&`;
+      
+      const result = await apiCall('GET', endpoint);
+      showResponse('listFinancialsResponse', result);
+    }
+
+    async function getAgentOffers() {
+      const agentId = document.getElementById('agentOffersAgentId').value;
+      const commissionType = document.getElementById('agentOffersType').value;
+      
+      const result = await apiCall('GET', `/commissions/agents/${agentId}/offers?commission_type=${commissionType}`);
+      showResponse('agentOffersResponse', result);
+    }
+
+    async function getAgentSummary() {
+      const agentId = document.getElementById('agentSummaryId').value;
+      const result = await apiCall('GET', `/commissions/agents/${agentId}/summary`);
+      showResponse('agentSummaryResponse', result);
+    }
+
+    // Test connection on load
+    window.onload = function() {
+      testConnection();
+    };
+  </script>
+</body>
+</html>

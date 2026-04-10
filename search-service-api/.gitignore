@@ -1,0 +1,19 @@
+
+# Temporary files
+temp/
+temp-uploads/
+storage/
+uploads/
+logs/
+pdf/generated/
+
+# OS and editor files
+.DS_Store
+.vscode/
+*.log
+storage/*
+pdf/generated/*
+temp-uploads/*
+log.txt
+node_modules
+.env

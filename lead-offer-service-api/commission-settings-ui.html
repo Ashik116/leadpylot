@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Commission Settings - Banks & Users</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+    body {
+      margin: 0;
+      padding: 20px;
+      background: #f5f5f5;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    h1 {
+      color: #333;
+      border-bottom: 3px solid #007bff;
+      padding-bottom: 10px;
+    }
+    h2 {
+      color: #007bff;
+      margin-top: 30px;
+      padding: 10px;
+      background: #e7f1ff;
+      border-radius: 5px;
+    }
+    .config-section {
+      background: #fff3cd;
+      padding: 15px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    .config-section label {
+      font-weight: bold;
+      margin-right: 10px;
+    }
+    .config-section input {
+      width: 100%;
+      padding: 8px;
+      margin-top: 5px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      font-size: 12px;
+    }
+    .card {
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    button {
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 14px;
+      font-weight: 600;
+      transition: all 0.2s;
+      margin-right: 5px;
+    }
+    .btn-primary { background: #007bff; color: white; }
+    .btn-primary:hover { background: #0056b3; }
+    .btn-success { background: #28a745; color: white; }
+    .btn-success:hover { background: #1e7e34; }
+    .btn-info { background: #17a2b8; color: white; }
+    .btn-info:hover { background: #138496; }
+    .btn-sm {
+      padding: 5px 10px;
+      font-size: 12px;
+    }
+    .status-indicator {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 5px;
+    }
+    .status-connected { background: #28a745; }
+    .status-disconnected { background: #dc3545; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+    }
+    th, td {
+      padding: 12px;
+      text-align: left;
+      border-bottom: 1px solid #ddd;
+    }
+    th {
+      background: #f8f9fa;
+      font-weight: 600;
+      color: #333;
+    }
+    tr:hover {
+      background: #f5f5f5;
+    }
+    .commission-input {
+      width: 80px;
+      padding: 6px 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      text-align: center;
+    }
+    .commission-input:focus {
+      border-color: #007bff;
+      outline: none;
+      box-shadow: 0 0 0 2px rgba(0,123,255,0.25);
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 12px;
+      font-size: 11px;
+      font-weight: 600;
+    }
+    .badge-success { background: #d4edda; color: #155724; }
+    .badge-warning { background: #fff3cd; color: #856404; }
+    .badge-info { background: #d1ecf1; color: #0c5460; }
+    .tabs {
+      display: flex;
+      border-bottom: 2px solid #ddd;
+      margin-bottom: 20px;
+    }
+    .tab {
+      padding: 12px 24px;
+      cursor: pointer;
+      border: none;
+      background: none;
+      font-size: 14px;
+      font-weight: 600;
+      color: #666;
+      border-bottom: 3px solid transparent;
+      margin-bottom: -2px;
+    }
+    .tab.active {
+      color: #007bff;
+      border-bottom-color: #007bff;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .search-box {
+      padding: 10px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      width: 300px;
+      margin-bottom: 15px;
+    }
+    .loading {
+      text-align: center;
+      padding: 40px;
+      color: #666;
+    }
+    .success-msg {
+      color: #28a745;
+      font-size: 12px;
+      margin-left: 10px;
+    }
+    .error-msg {
+      color: #dc3545;
+      font-size: 12px;
+      margin-left: 10px;
+    }
+    .info-box {
+      background: #d1ecf1;
+      border: 1px solid #bee5eb;
+      color: #0c5460;
+      padding: 12px;
+      border-radius: 4px;
+      margin-bottom: 15px;
+      font-size: 13px;
+    }
+    .pct-display {
+      font-weight: bold;
+      color: #007bff;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>⚙️ Commission Settings</h1>
+    
+    <div class="info-box">
+      <strong>ℹ️ Set default commission percentages:</strong><br>
+      • <strong>Bank Commission %</strong> - What the bank deducts from customer payments<br>
+      • <strong>User Opening %</strong> - Agent commission for <strong>OPENING</strong> offers<br>
+      • <strong>User Load %</strong> - Agent commission for <strong>LOAD</strong> offers
+    </div>
+    
+    <!-- Configuration Section -->
+    <div class="config-section">
+      <label>Configuration Service URL (Banks):</label>
+      <input type="text" id="configServiceUrl" value="http://localhost:4001" />
+      <label style="margin-top: 10px; display: block;">User Auth Service URL (Users):</label>
+      <input type="text" id="userAuthServiceUrl" value="http://localhost:4000" />
+      <label style="margin-top: 10px; display: block;">JWT Token:</label>
+      <input type="text" id="authToken" value="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTM3ZjAxMjgyYTJkNWEwN2E0YTFkM2EiLCJsb2dpbiI6InNha2liIiwicm9sZSI6IkFkbWluIiwic2Vzc2lvbklkIjoiNmQ5NzhlNTctMGE0YS00YjExLThkN2YtNDNiZGNiYzZhZjA5IiwiaWF0IjoxNzY2MDU0Nzc5LCJleHAiOjE3NjYxNDExNzl9.zdaGyI1kR4O9sXgxPAu5sV2yCl7d1gQeFoCIPhee8jc" />
+      <div style="margin-top: 10px;">
+        <span class="status-indicator" id="connectionStatus"></span>
+        <span id="connectionText">Not tested</span>
+        <button class="btn-info" onclick="testConnection()" style="margin-left: 10px;">Test Connection</button>
+      </div>
+    </div>
+
+    <!-- Tabs -->
+    <div class="tabs">
+      <button class="tab active" onclick="showTab('banks')">🏦 Bank Commissions</button>
+      <button class="tab" onclick="showTab('users')">👤 User/Agent Commissions</button>
+    </div>
+
+    <!-- Tab 1: Banks -->
+    <div id="banks" class="tab-content active">
+      <h2>🏦 Bank Commission Percentages</h2>
+      
+      <div class="card">
+        <button class="btn-primary" onclick="loadBanks()">🔄 Refresh Banks</button>
+        <input type="text" class="search-box" id="bankSearch" placeholder="Search banks..." onkeyup="filterBanks()" style="margin-left: 15px;">
+        
+        <div id="banksLoading" class="loading" style="display: none;">Loading banks...</div>
+        
+        <table id="banksTable" style="display: none;">
+          <thead>
+            <tr>
+              <th>Bank Name</th>
+              <th>Nick Name</th>
+              <th>IBAN</th>
+              <th>State</th>
+              <th>Commission %</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="banksTableBody">
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Tab 2: Users -->
+    <div id="users" class="tab-content">
+      <h2>👤 User/Agent Commission Percentages</h2>
+      
+      <div class="card">
+        <button class="btn-primary" onclick="loadUsers()">🔄 Refresh Users</button>
+        <input type="text" class="search-box" id="userSearch" placeholder="Search users..." onkeyup="filterUsers()" style="margin-left: 15px;">
+        <select id="roleFilter" onchange="filterUsers()" style="margin-left: 10px; padding: 8px;">
+          <option value="">All Roles</option>
+          <option value="Admin">Admin</option>
+          <option value="Agent">Agent</option>
+          <option value="Manager">Manager</option>
+          <option value="Banker">Banker</option>
+        </select>
+        
+        <div id="usersLoading" class="loading" style="display: none;">Loading users...</div>
+        
+        <table id="usersTable" style="display: none;">
+          <thead>
+            <tr>
+              <th>Login</th>
+              <th>Role</th>
+              <th>Active</th>
+              <th>Opening %</th>
+              <th>Load %</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody id="usersTableBody">
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let banksData = [];
+    let usersData = [];
+
+    function getConfigServiceUrl() {
+      return document.getElementById('configServiceUrl').value.replace(/\/$/, '');
+    }
+
+    function getUserAuthServiceUrl() {
+      return document.getElementById('userAuthServiceUrl').value.replace(/\/$/, '');
+    }
+
+    function getToken() {
+      return document.getElementById('authToken').value;
+    }
+
+    function getHeaders() {
+      return {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${getToken()}`
+      };
+    }
+
+    async function apiCall(baseUrl, method, endpoint, body = null) {
+      const url = `${baseUrl}${endpoint}`;
+      const options = {
+        method,
+        headers: getHeaders()
+      };
+      if (body && (method === 'POST' || method === 'PUT' || method === 'PATCH')) {
+        options.body = JSON.stringify(body);
+      }
+      
+      console.log(`${method} ${url}`, body);
+      
+      try {
+        const response = await fetch(url, options);
+        const data = await response.json();
+        return { success: response.ok, status: response.status, data };
+      } catch (error) {
+        return { success: false, error: error.message };
+      }
+    }
+
+    function showTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+      document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+      document.getElementById(tabId).classList.add('active');
+      event.target.classList.add('active');
+      
+      if (tabId === 'banks' && banksData.length === 0) {
+        loadBanks();
+      } else if (tabId === 'users' && usersData.length === 0) {
+        loadUsers();
+      }
+    }
+
+    async function testConnection() {
+      const statusEl = document.getElementById('connectionStatus');
+      const textEl = document.getElementById('connectionText');
+      
+      // Test config service (banks)
+      const configResult = await apiCall(getConfigServiceUrl(), 'GET', '/banks?limit=1');
+      // Test user-auth service (users)
+      const userResult = await apiCall(getUserAuthServiceUrl(), 'GET', '/users?limit=1');
+      
+      if (configResult.success && userResult.success) {
+        statusEl.className = 'status-indicator status-connected';
+        textEl.textContent = 'Both services connected ✓';
+      } else if (configResult.success) {
+        statusEl.className = 'status-indicator status-connected';
+        textEl.textContent = 'Config OK, User-Auth service failed';
+      } else if (userResult.success) {
+        statusEl.className = 'status-indicator status-connected';
+        textEl.textContent = 'User-Auth OK, Config service failed';
+      } else {
+        statusEl.className = 'status-indicator status-disconnected';
+        textEl.textContent = 'Connection failed';
+      }
+    }
+
+    // ============ BANKS ============
+    async function loadBanks() {
+      const loading = document.getElementById('banksLoading');
+      const table = document.getElementById('banksTable');
+      const tbody = document.getElementById('banksTableBody');
+      
+      loading.style.display = 'block';
+      table.style.display = 'none';
+      
+      const result = await apiCall(getConfigServiceUrl(), 'GET', '/banks?limit=100');
+      
+      loading.style.display = 'none';
+      
+      if (result.success) {
+        banksData = result.data.data || result.data || [];
+        renderBanks(banksData);
+        table.style.display = 'table';
+      } else {
+        tbody.innerHTML = `<tr><td colspan="6" style="color: red;">Error: ${result.error || 'Failed to load banks'}</td></tr>`;
+        table.style.display = 'table';
+      }
+    }
+
+    function renderBanks(banks) {
+      const tbody = document.getElementById('banksTableBody');
+      tbody.innerHTML = '';
+      
+      banks.forEach(bank => {
+        const row = document.createElement('tr');
+        row.setAttribute('data-bank-id', bank._id);
+        row.innerHTML = `
+          <td><strong>${bank.name || '-'}</strong></td>
+          <td>${bank.nickName || '-'}</td>
+          <td style="font-family: monospace; font-size: 11px;">${bank.iban || '-'}</td>
+          <td>
+            <span class="badge ${bank.state === 'active' ? 'badge-success' : 'badge-warning'}">
+              ${bank.state || 'unknown'}
+            </span>
+          </td>
+          <td>
+            <input type="number" 
+                   class="commission-input" 
+                   id="bank-pct-${bank._id}" 
+                   value="${bank.commission_percentage || 0}" 
+                   min="0" 
+                   max="100" 
+                   step="0.1">
+            <span>%</span>
+            <span id="bank-msg-${bank._id}"></span>
+          </td>
+          <td>
+            <button class="btn-success btn-sm" onclick="updateBankCommission('${bank._id}')">
+              💾 Save
+            </button>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+      
+      if (banks.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6">No banks found</td></tr>';
+      }
+    }
+
+    function filterBanks() {
+      const search = document.getElementById('bankSearch').value.toLowerCase();
+      const filtered = banksData.filter(bank => 
+        (bank.name || '').toLowerCase().includes(search) ||
+        (bank.nickName || '').toLowerCase().includes(search) ||
+        (bank.iban || '').toLowerCase().includes(search)
+      );
+      renderBanks(filtered);
+    }
+
+    async function updateBankCommission(bankId) {
+      const input = document.getElementById(`bank-pct-${bankId}`);
+      const msgSpan = document.getElementById(`bank-msg-${bankId}`);
+      const percentage = parseFloat(input.value);
+      
+      if (isNaN(percentage) || percentage < 0 || percentage > 100) {
+        msgSpan.innerHTML = '<span class="error-msg">Invalid %</span>';
+        return;
+      }
+      
+      msgSpan.innerHTML = '<span style="color: #666;">Saving...</span>';
+      
+      const result = await apiCall(getConfigServiceUrl(), 'PUT', `/banks/${bankId}`, {
+        commission_percentage: percentage
+      });
+      
+      if (result.success) {
+        msgSpan.innerHTML = '<span class="success-msg">✓ Saved!</span>';
+        // Update local data
+        const bank = banksData.find(b => b._id === bankId);
+        if (bank) bank.commission_percentage = percentage;
+        
+        setTimeout(() => { msgSpan.innerHTML = ''; }, 2000);
+      } else {
+        msgSpan.innerHTML = `<span class="error-msg">Failed: ${result.data?.message || result.error}</span>`;
+      }
+    }
+
+    // ============ USERS ============
+    async function loadUsers() {
+      const loading = document.getElementById('usersLoading');
+      const table = document.getElementById('usersTable');
+      const tbody = document.getElementById('usersTableBody');
+      
+      loading.style.display = 'block';
+      table.style.display = 'none';
+      
+      // Use user-auth service
+      const result = await apiCall(getUserAuthServiceUrl(), 'GET', '/users?limit=200');
+      
+      loading.style.display = 'none';
+      
+      if (result.success) {
+        usersData = result.data.data || result.data || [];
+        renderUsers(usersData);
+        table.style.display = 'table';
+      } else {
+        tbody.innerHTML = `<tr><td colspan="5" style="color: red;">Error: ${result.error || 'Failed to load users'}</td></tr>`;
+        table.style.display = 'table';
+      }
+    }
+
+    function renderUsers(users) {
+      const tbody = document.getElementById('usersTableBody');
+      tbody.innerHTML = '';
+      
+      users.forEach(user => {
+        const row = document.createElement('tr');
+        row.setAttribute('data-user-id', user._id);
+        row.innerHTML = `
+          <td><strong>${user.login || '-'}</strong></td>
+          <td>
+            <span class="badge badge-info">${user.role || 'Unknown'}</span>
+          </td>
+          <td>
+            <span class="badge ${user.active ? 'badge-success' : 'badge-warning'}">
+              ${user.active ? 'Active' : 'Inactive'}
+            </span>
+          </td>
+          <td>
+            <input type="number" 
+                   class="commission-input" 
+                   id="user-pct-opening-${user._id}" 
+                   value="${user.commission_percentage_opening || 0}" 
+                   min="0" 
+                   max="100" 
+                   step="0.1">
+            <span>%</span>
+          </td>
+          <td>
+            <input type="number" 
+                   class="commission-input" 
+                   id="user-pct-load-${user._id}" 
+                   value="${user.commission_percentage_load || 0}" 
+                   min="0" 
+                   max="100" 
+                   step="0.1">
+            <span>%</span>
+          </td>
+          <td>
+            <button class="btn-success btn-sm" onclick="updateUserCommission('${user._id}')">
+              💾 Save
+            </button>
+            <span id="user-msg-${user._id}"></span>
+          </td>
+        `;
+        tbody.appendChild(row);
+      });
+      
+      if (users.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6">No users found</td></tr>';
+      }
+    }
+
+    function filterUsers() {
+      const search = document.getElementById('userSearch').value.toLowerCase();
+      const roleFilter = document.getElementById('roleFilter').value;
+      
+      const filtered = usersData.filter(user => {
+        const matchesSearch = (user.login || '').toLowerCase().includes(search);
+        const matchesRole = !roleFilter || user.role === roleFilter;
+        return matchesSearch && matchesRole;
+      });
+      renderUsers(filtered);
+    }
+
+    async function updateUserCommission(userId) {
+      const openingInput = document.getElementById(`user-pct-opening-${userId}`);
+      const loadInput = document.getElementById(`user-pct-load-${userId}`);
+      const msgSpan = document.getElementById(`user-msg-${userId}`);
+      
+      const openingPct = parseFloat(openingInput.value);
+      const loadPct = parseFloat(loadInput.value);
+      
+      if (isNaN(openingPct) || openingPct < 0 || openingPct > 100) {
+        msgSpan.innerHTML = '<span class="error-msg">Invalid Opening %</span>';
+        return;
+      }
+      if (isNaN(loadPct) || loadPct < 0 || loadPct > 100) {
+        msgSpan.innerHTML = '<span class="error-msg">Invalid Load %</span>';
+        return;
+      }
+      
+      msgSpan.innerHTML = '<span style="color: #666;">Saving...</span>';
+      
+      // Use user-auth service
+      const result = await apiCall(getUserAuthServiceUrl(), 'PUT', `/users/${userId}`, {
+        commission_percentage_opening: openingPct,
+        commission_percentage_load: loadPct
+      });
+      
+      if (result.success) {
+        msgSpan.innerHTML = '<span class="success-msg">✓ Saved!</span>';
+        // Update local data
+        const user = usersData.find(u => u._id === userId);
+        if (user) {
+          user.commission_percentage_opening = openingPct;
+          user.commission_percentage_load = loadPct;
+        }
+        
+        setTimeout(() => { msgSpan.innerHTML = ''; }, 2000);
+      } else {
+        msgSpan.innerHTML = `<span class="error-msg">Failed: ${result.data?.message || result.error}</span>`;
+      }
+    }
+
+    // Load data on page load
+    window.onload = function() {
+      testConnection();
+      loadBanks();
+    };
+  </script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+services:
+  lead-offers-service:
+    build:
+      context: .
+      target: development
+    container_name: lead-offers-service
+    ports:
+      - "4003:4003"
+    environment:
+      - NODE_ENV=development
+      - PORT=4003
+      # Connect to main project's MongoDB running on host
+      - MONGODB_URI=mongodb://host.docker.internal:27017/leadpylot
+      - JWT_SECRET=${JWT_SECRET}
+      - NOTIFICATION_SERVICE_URL=${NOTIFICATION_SERVICE_URL:-http://host.docker.internal:4004}
+      - SEARCH_SERVICE_URL=${SEARCH_SERVICE_URL:-http://host.docker.internal:3010}
+      - EMAIL_SERVICE_URL=${EMAIL_SERVICE_URL:-http://host.docker.internal:4008}
+      - CORS_ORIGIN=${CORS_ORIGIN:-http://localhost:3001}
+      - LOG_LEVEL=${LOG_LEVEL:-info}
+    env_file:
+      - .env
+    volumes:
+      - ./src:/app/src
+      - ./logs:/app/logs
+      - ./uploads:/app/uploads
+      - ./storage:/app/storage
+      - ./temp-uploads:/app/temp-uploads
+    extra_hosts:
+      # Enable host.docker.internal on Linux
+      - "host.docker.internal:host-gateway"
+    networks:
+      - lead-offer-network
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:4003/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+networks:
+  lead-offer-network:
+    driver: bridge
+
+
