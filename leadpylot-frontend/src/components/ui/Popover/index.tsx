@@ -103,7 +103,7 @@ export const Popover: React.FC<PopoverProps> = ({
                   exit={{ opacity: 0, scale: 0.95, y: 5 }}
                   transition={{ duration: 0.15, ease: 'easeOut' }}
                   className={classNames(
-                    'min-w-[200px] overflow-hidden rounded-lg border border-gray-200 bg-white shadow-xl',
+                    'min-w-[200px] overflow-hidden rounded-lg border border-gray-200 bg-white shadow-xl dark:bg-[var(--dm-bg-elevated)] dark:border-[var(--dm-border)]',
                     className
                   )}
                 >

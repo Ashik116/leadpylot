@@ -1,18 +1,22 @@
 @layer components {
   .card {
     @apply rounded-none bg-white;
+    .dark & { background-color: var(--dm-bg-surface); }
   }
 
   .card-border {
     @apply border-sand-5 border;
+    .dark & { border-color: var(--dm-border); }
   }
 
   .card-shadow {
     @apply border-b border-gray-200 shadow-[0_0.125rem_0.25rem_rgba(0,0,0,0.15)];
+    .dark & { border-color: var(--dm-border); }
   }
 
   .card-header-border {
     @apply rounded-t-2xl border-b border-gray-200;
+    .dark & { border-color: var(--dm-border); }
   }
 
   .card-header-extra {
@@ -25,6 +29,7 @@
 
   .card-footer-border {
     @apply border-t border-gray-200;
+    .dark & { border-color: var(--dm-border); }
   }
 
   .card-header,

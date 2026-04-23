@@ -46,6 +46,8 @@ const navigationIcon: NavigationIcons = {
   allLeadsIcon: <ApolloIcon name="users" />,
   pendingLeadsIcon: <ApolloIcon name="clock-eight" />,
   archivedLeadsIcon: <ApolloIcon name="archive-box" />,
+  activeLeadsIcon: <ApolloIcon name="check-circle-task" className="text-evergreen" />,
+  useableLeadsIcon: <ApolloIcon name="enrichment-refresh" className="text-blue-500" />,
   // Agent leads icons
   agentLiveLeadsIcon: <ApolloIcon name="check-circle-task" className="text-rust" />,
   agentRecycleLeadsIcon: <ApolloIcon name="enrichment-refresh" className="text-evergreen" />,
@@ -72,6 +74,7 @@ const navigationIcon: NavigationIcons = {
   'sliders-settings': <ApolloIcon name="sliders-settings" />,
   // Tenants - using company to represent organizations
   company: <ApolloIcon name="company" />,
+  dashboardMeetings: <ApolloIcon name="meeting-source" />,
 };
 
 export default navigationIcon;

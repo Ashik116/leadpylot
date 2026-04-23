@@ -1,6 +1,7 @@
 @layer components {
   .notification {
     @apply relative w-full rounded-lg border border-gray-100 bg-white font-semibold shadow-xl;
+    .dark & { background-color: var(--dm-bg-elevated); border-color: var(--dm-border); color: var(--dm-text-primary); }
   }
 
   .notification-content {
@@ -13,10 +14,12 @@
 
   .notification-title {
     @apply text-sand-1 font-bold;
+    .dark & { color: var(--dm-text-primary); }
   }
 
   .notification-description {
     @apply text-sand-2 text-sm font-normal;
+    .dark & { color: var(--dm-text-secondary); }
   }
 
   .notification-close {

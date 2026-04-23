@@ -1,6 +1,7 @@
 @layer components {
   .drawer-content {
     @apply absolute flex flex-col bg-white shadow-xl;
+    .dark & { background-color: var(--dm-bg-surface); color: var(--dm-text-primary); }
 
     &.vertical {
       @apply h-full;
@@ -85,6 +86,7 @@
 
     .drawer-header {
       @apply bg-white px-2 py-1;
+      .dark & { background-color: var(--dm-bg-surface); }
       border-radius: 8px 8px 0 0;
       flex-shrink: 0;
     }

@@ -13,6 +13,7 @@ import toast from '@/components/ui/toast';
 import { Role } from '@/configs/navigation.config/auth.route.config';
 import { useSession } from '@/hooks/useSession';
 import EmailDraftService from '@/services/emailSystem/EmailDraftService';
+import EmailApiService from '../../_services/EmailApiService';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { formatDistanceToNow } from 'date-fns';
 import Link from 'next/link';
@@ -49,7 +50,7 @@ export default function ConversationCard({
   const { data: session } = useSession();
   const isAdmin = session?.user?.role === Role.ADMIN;
   const isAgent = session?.user?.role === Role.AGENT;
-  const { currentView } = useEmailStore();
+  const { currentView, updateConversation } = useEmailStore();
   const isUnread = isAdmin
     ? !conversation.admin_viewed
     : isAgent
@@ -58,6 +59,35 @@ export default function ConversationCard({
 
   const hasComments = (conversation.comment_count || 0) > 0;
   const [showRejectModal, setShowRejectModal] = useState(false);
+
+  // Mark single email as read
+  const markAsReadMutation = useMutation({
+    mutationFn: () => EmailApiService.markMultipleAsViewed([conversation._id]),
+    onMutate: () => {
+      updateConversation(conversation._id, {
+        unread_count: 0,
+        admin_viewed: true,
+        agent_viewed: true,
+      });
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['emails'] });
+      queryClient.invalidateQueries({ queryKey: ['email-conversations-infinite'] });
+    },
+    onError: () => {
+      toast.push(
+        <Notification title="Error" type="danger">
+          Failed to mark email as read
+        </Notification>
+      );
+    },
+  });
+
+  const handleMarkAsRead = (e: React.MouseEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    markAsReadMutation.mutate();
+  };
 
   // Draft action state
   const [isDeleteConfirmOpen, setIsDeleteConfirmOpen] = useState(false);
@@ -140,24 +170,6 @@ export default function ConversationCard({
     }
   };
 
-  // Draft action handlers
-  // const handleEdit = (e: React.MouseEvent) => {
-  //   e.preventDefault();
-  //   e.stopPropagation();
-  //   onClick();
-  // };
-
-  // const handleDelete = (e: React.MouseEvent) => {
-  //   e.preventDefault();
-  //   e.stopPropagation();
-  //   setIsDeleteConfirmOpen(true);
-  // };
-
-  // const handleSend = (e: React.MouseEvent) => {
-  //   e.preventDefault();
-  //   e.stopPropagation();
-  //   setIsSendConfirmOpen(true);
-  // };
 
   const confirmDelete = () => {
     deleteDraftMutation.mutate(conversation._id);
@@ -214,8 +226,19 @@ export default function ConversationCard({
           />
         </div>
 
-        {/* Right Section - Time and Modal Button */}
-        <div className="flex items-center space-x-2 ">
+        {/* Right Section - Time and Action Buttons */}
+        <div className="flex items-center space-x-1 ">
+          {/* Mark as Read Button — shown on hover when unread */}
+          {isUnread && (
+            <button
+              onClick={handleMarkAsRead}
+              disabled={markAsReadMutation.isPending}
+              className="prevent-select hidden rounded-md p-0.5 text-gray-400 transition-all hover:bg-blue-100 hover:text-blue-600 group-hover:inline-flex"
+              title="Mark as read"
+            >
+              <ApolloIcon name="list-checked" className="text-[0.9rem]" />
+            </button>
+          )}
           {/* Open Modal Button */}
           {onOpenModal && (
             <button
@@ -235,27 +258,17 @@ export default function ConversationCard({
       </div>
 
       {/* Subject */}
-      <div className="flex items-center">
+      <div className="flex items-center mt-0.5">
         <div
-          className={` truncate px-5.5 text-[0.8152375rem] line-clamp-1 max-w-[70dvw] ${isUnread ? 'font-semibold' : 'font-thin'} text-gray-900`}
+          className={`px-5.5 text-[0.8735rem] line-clamp-1 max-w-[70dvw] ${isUnread ? 'font-bold text-gray-900' : 'font-semibold text-gray-700'}`}
         >
           {conversation.subject || '(no subject)'}
         </div>
-        {/* Approval Actions - Show on hover for emails without lead OR pending approval */}
-        {/* {(!conversation.lead_id || conversation.needs_approval) && (
-          <div className="prevent-select z-10 opacity-0 transition-opacity duration-200 group-hover:opacity-100">
-            <ApprovalActions
-              conversation={conversation}
-              onReject={() => setShowRejectModal(true)}
-              compact
-            />
-          </div>
-        )} */}
       </div>
 
-      {/* Preview */}
-      <div className="mb-2 px-5.5 text-[0.698775rem] text-gray-500 line-clamp-1 truncate">
-        {conversation.latest_message_snippet}
+      {/* Body Preview */}
+      <div className="mb-2 px-5.5 text-[0.75rem] leading-relaxed text-gray-500 line-clamp-2">
+        {conversation.latest_message_snippet || 'No preview available'}
       </div>
 
       {/* Draft Action Buttons */}

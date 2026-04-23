@@ -1,10 +1,12 @@
 @layer components {
   .select-control {
     @apply border-border flex items-center justify-between rounded-lg border transition duration-150;
+    .dark & { background-color: var(--dm-bg-input); border-color: var(--dm-border); }
   }
 
   .select-control-focused {
     @apply bg-white;
+    .dark & { background-color: var(--dm-bg-input); }
   }
 
   .select-placeholder {
@@ -18,6 +20,7 @@
 
   .select-input-container {
     @apply text-sand-1 inline-grid flex-auto items-center;
+    .dark & { color: var(--dm-text-primary); }
     grid-area: 1/1/2/3;
     grid-template-columns: 0 min-content;
   }
@@ -33,10 +36,12 @@
   .select-single-value {
     grid-area: 1/1/2/3;
     @apply text-sand-1 flex items-center max-w-full overflow-hidden text-ellipsis whitespace-nowrap;
+    .dark & { color: var(--dm-text-primary); }
   }
 
   .select-multi-value {
     @apply border-border text-sand-1 flex rounded-lg border bg-white font-bold;
+    .dark & { background-color: var(--dm-bg-elevated); border-color: var(--dm-border); color: var(--dm-text-primary); }
   }
 
   .select-multi-value-label {
@@ -49,6 +54,7 @@
 
   .select-menu {
     @apply border-border ring-border my-2 rounded-lg border bg-white px-1 py-0 ring-1;
+    .dark & { background-color: var(--dm-bg-elevated); border-color: var(--dm-border); ring-color: var(--dm-border); }
     box-shadow: 0 48px 64px -16px rgba(0, 0, 0, 0.25);
     z-index: 9999;
   }

@@ -633,8 +633,8 @@ const OffersTable = ({
         'border-l-4 border-amber-400': isPinned,
         'border-l-4 border-ocean-2': !isPinned && isSelected,
         'bg-ocean-3/20 shadow-ocean-3 animate-bounce shadow-inner': isHighlighted,
-        'bg-gray-300': isBulkSelected,
-        'bg-gray-100': isActive && !isHighlighted && !isBulkSelected,
+        'bg-gray-300 dark:bg-[var(--dm-bg-elevated)] dark:text-[var(--dm-text-primary)]': isBulkSelected,
+        'bg-gray-100 dark:bg-[var(--dm-bg-hover)] dark:text-[var(--dm-text-primary)]': isActive && !isHighlighted && !isBulkSelected,
         'bg-red-50 hover:bg-red-100':
           offer?.active === false && !isHighlighted && !isActive && !isBulkSelected,
         'hover:brightness-95': offerTypeClass && !isHighlighted && !isActive && !isBulkSelected,

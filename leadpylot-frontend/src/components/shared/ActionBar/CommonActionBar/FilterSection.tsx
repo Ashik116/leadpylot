@@ -77,10 +77,10 @@ export function FilterSection({
             type="button"
             onClick={handleStageGroupByToggle}
             disabled={!canUseStageGroupBy}
-            className={`flex h-6 items-center gap-0.5 rounded border border-gray-200 bg-white px-1.5 py-0 text-xs transition-colors xl:px-2 ${
+            className={`flex h-6 items-center gap-0.5 rounded border border-gray-200 bg-white px-1.5 py-0 text-xs transition-colors xl:px-2 dark:bg-[var(--dm-bg-surface)] dark:border-[var(--dm-border)] ${
               isStageGroupByActive
-                ? 'border-blue-500 bg-blue-50 text-blue-700 hover:bg-blue-100'
-                : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+                ? 'border-blue-500 bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-500/10 dark:text-blue-400 dark:border-blue-500'
+                : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900 dark:text-[var(--dm-text-primary)] dark:hover:bg-[var(--dm-bg-hover)]'
             } ${!canUseStageGroupBy ? 'cursor-not-allowed opacity-60' : ''}`}
           >
             <ApolloIcon name="layer-group" className="text-xs" />

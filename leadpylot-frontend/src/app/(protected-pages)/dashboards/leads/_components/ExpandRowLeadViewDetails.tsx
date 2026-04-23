@@ -119,7 +119,7 @@ const ExpandRowLeadViewDetails = ({
   // };
 
   return (
-    <div className="bg-gray-50 pl-4">
+    <div className="bg-gray-50 pl-4 dark:bg-[var(--dm-bg-base)]">
       <div className="3xl:gap-4 grid grid-cols-[repeat(5,minmax(270px,1fr))] gap-2">
         <ContactInfoCard
           lead={lead}

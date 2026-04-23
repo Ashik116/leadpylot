@@ -12,6 +12,7 @@
 
     > tbody {
       > tr {
+        .dark & { color: var(--dm-text-primary); }
         > td {
           @apply border-b border-gray-400 px-0 py-4;
         }
@@ -32,16 +33,19 @@
 
     .thead {
       @apply bg-gray-50;
+      .dark & { background-color: var(--dm-bg-surface); }
 
       .tr {
         .th {
           @apply border border-gray-400 px-0 py-1 text-left text-xs font-semibold tracking-wider text-gray-500 uppercase;
+          .dark & { color: var(--dm-text-secondary); }
         }
       }
     }
 
     .tbody {
       .tr {
+        .dark & { color: var(--dm-text-primary); }
         .td {
           @apply border border-gray-400 px-0 py-4;
         }
@@ -125,9 +129,13 @@
 
   .table-hover {
     > tbody {
+      > tr {
+        .dark & { color: var(--dm-text-primary); }
+      }
       > tr:hover {
         > * {
           @apply bg-black/[.03];
+          .dark & { background-color: var(--dm-bg-hover); }
         }
       }
     }

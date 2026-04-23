@@ -48,7 +48,7 @@ export const ActionButton = ({
   return (
     <button
       className={`flex w-fit items-center gap-1 rounded px-2 py-0.5 text-left text-sm transition-colors duration-150 ${
-        className || 'text-gray-700 hover:bg-gray-100'
+        className || 'text-gray-700 hover:bg-gray-100 dark:text-[var(--dm-text-primary)] dark:hover:bg-[var(--dm-bg-hover)]'
       }`}
       onClick={onClick}
       disabled={disabled}
@@ -180,7 +180,7 @@ const ActionDropDown = ({
     <div
       ref={menuRef}
       style={menuStyle}
-      className={`z-[100010] min-w-max w-max origin-top transform whitespace-nowrap rounded-md border border-gray-200 bg-white shadow-lg ${
+      className={`z-[100010] min-w-max w-max origin-top transform whitespace-nowrap rounded-md border border-gray-200 bg-white shadow-lg dark:bg-[var(--dm-bg-elevated)] dark:border-[var(--dm-border)] ${
         // Only transition opacity and transform - NOT left/top. transition-all would animate
         // position from -9999 to correct spot on first open, causing visible shake/slide.
         menuReady ? 'transition-[opacity,transform] duration-200 ease-in-out' : 'transition-none'
@@ -225,9 +225,9 @@ const ActionDropDown = ({
         })}
         {deleteButton && isPermission && (
           <>
-            <hr className="my-1 border-gray-200" />
+            <hr className="my-1 border-gray-200 dark:border-[var(--dm-border)]" />
             <button
-              className="flex w-full items-center gap-2 px-2 py-2 text-left text-sm text-red-600 transition-colors duration-150 hover:bg-red-50"
+              className="flex w-full items-center gap-2 px-2 py-2 text-left text-sm text-red-600 transition-colors duration-150 hover:bg-red-50 dark:hover:bg-red-500/10"
               onClick={() => {
                 setDeleteConfirmDialogOpen();
                 onActionClick?.();

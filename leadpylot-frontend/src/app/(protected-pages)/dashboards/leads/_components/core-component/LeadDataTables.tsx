@@ -1403,7 +1403,7 @@ const LeadDataTables = ({ fixedHeight }: { fixedHeight?: string }) => {
                 loading={currentTableLoading}
                 columns={baseColumns}
                 rowClassName={(row: any) =>
-                  selectedLeads.includes((row?.original?._id ?? '').toString()) ? 'bg-gray-300' : ''
+                  selectedLeads.includes((row?.original?._id ?? '').toString()) ? 'bg-gray-300 dark:bg-[var(--dm-bg-elevated)] dark:text-[var(--dm-text-primary)]' : ''
                 }
                 showPagination={false}
                 // showPagination={(() => {

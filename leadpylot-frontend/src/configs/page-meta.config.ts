@@ -11,7 +11,7 @@ const pageMeta: Metadata = {
 
 // Dynamic metadata generator function
 export function generateDynamicMeta(pathname?: string): Metadata {
-  const title = pathname ? `${getPageTitle(pathname)} | ePortaL` : 'Lead Pylot';
+  const title = pathname ? `${getPageTitle(pathname)} | OurGaMe` : 'Lead Pylot';
 
   return {
     ...pageMeta,

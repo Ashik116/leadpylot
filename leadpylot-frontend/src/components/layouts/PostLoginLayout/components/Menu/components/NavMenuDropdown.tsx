@@ -46,8 +46,8 @@ export const NavMenuDropdown = ({
               'outline-none focus:ring-0 focus:outline-none focus-visible:outline-none',
               'whitespace-nowrap',
               isParentActive
-                ? 'bg-gray-100 text-black'
-                : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                ? 'bg-gray-100 text-black dark:bg-[var(--dm-bg-hover)] dark:text-[var(--dm-text-primary)]'
+                : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-[var(--dm-text-secondary)] dark:hover:bg-[var(--dm-bg-hover)] dark:hover:text-[var(--dm-text-primary)]'
             )}
             title={displayTitle}
           >
@@ -72,7 +72,7 @@ export const NavMenuDropdown = ({
                 variant="custom"
                 style={{ height: '22px' }}
                 className={classNames(
-                  'flex min-w-[150px] items-center rounded-sm px-1.5 hover:bg-gray-200',
+                  'flex min-w-[150px] items-center rounded-sm px-1.5 hover:bg-gray-200 dark:hover:bg-[var(--dm-bg-hover)]',
                   isSubActive ? 'bg-sand-1 hover:bg-sand-1 text-white' : ''
                 )}
               >

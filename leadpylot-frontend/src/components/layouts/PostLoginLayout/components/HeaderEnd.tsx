@@ -17,6 +17,7 @@ import { ConfigurationMenu } from './ConfigurationMenu';
 import DataExchange from './DataExchange';
 import { SyncStatusPill } from './SyncStatusPill';
 import Phone from '@/components/template/Phone';
+import InfoDropdown from './InfoDropdown';
 
 export interface HeaderEndProps {
   // Sync status
@@ -152,6 +153,9 @@ export const HeaderEnd = React.memo<HeaderEndProps>(
             </div>
           </RoleGuard>
         )}
+
+        {/* Info Dropdown */}
+        <InfoDropdown />
 
         {/* Phone - Available for both Admin and Agent */}
         <Phone hoverable={false} />

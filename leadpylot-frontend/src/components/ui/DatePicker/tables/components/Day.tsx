@@ -91,7 +91,7 @@ const Day = (props: DayProps) => {
         outOfMonth && hideOutOfMonthDates && 'd-none',
         !outOfMonth && !disabled && !selected && 'date-picker-cell-current-month',
         !disabled && !selected && !inRange && 'date-picker-cell-hoverable hover:text-white',
-        selected && !disabled && 'date-picker-cell-selected bg-sand-1 text-white',
+        selected && !disabled && 'date-picker-cell-selected bg-pink-500 text-white',
         inRange && !disabled && !firstInRange && !lastInRange && !selected && 'bg-sand-2',
         !inRange && !firstInRange && !lastInRange && 'rounded-full',
         inRange && isToday && 'date-picker-cell-inrange-today',

@@ -392,7 +392,7 @@ export default function MetadataCheckboxFilterDropdown({
         createPortal(
           <div
             ref={dropdownRef}
-            className="fixed z-100031 w-60 rounded-md border border-gray-200 bg-white shadow-lg"
+            className="fixed z-100031 w-60 rounded-md border border-gray-200 bg-white shadow-lg dark:bg-[var(--dm-bg-elevated)] dark:border-[var(--dm-border)]"
             style={{
               top: `${dropdownPosition.top}px`,
               left: `${dropdownPosition.left}px`,
@@ -402,22 +402,22 @@ export default function MetadataCheckboxFilterDropdown({
             <div
               className={
                 headerAction
-                  ? 'flex items-center justify-between gap-1.5 border-b border-gray-200 px-3 py-1.5'
-                  : 'border-b border-gray-200 px-3 py-1.5'
+                  ? 'flex items-center justify-between gap-1.5 border-b border-gray-200 px-3 py-1.5 dark:border-[var(--dm-border)]'
+                  : 'border-b border-gray-200 px-3 py-1.5 dark:border-[var(--dm-border)]'
               }
             >
-              <h3 className="text-sm font-semibold text-gray-700">{dropdownTitle}</h3>
+              <h3 className="text-sm font-semibold text-gray-700 dark:text-[var(--dm-text-primary)]">{dropdownTitle}</h3>
               {headerAction}
             </div>
 
             {options.length > SEARCH_THRESHOLD && (
-              <div className="border-b border-gray-200 px-3 py-1.5">
+              <div className="border-b border-gray-200 px-3 py-1.5 dark:border-[var(--dm-border)]">
                 <input
                   type="text"
                   placeholder={searchPlaceholder}
                   value={searchQuery}
                   onChange={(event) => setSearchQuery(event.target.value)}
-                  className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                  className="w-full rounded-md border border-gray-300 px-2 py-1.5 text-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500 focus:outline-none dark:bg-[var(--dm-bg-input)] dark:border-[var(--dm-border)] dark:text-[var(--dm-text-primary)] dark:placeholder:text-[var(--dm-text-muted)]"
                 />
               </div>
             )}
@@ -432,10 +432,10 @@ export default function MetadataCheckboxFilterDropdown({
                   Failed to load options
                 </div>
               ) : filteredOptions.length === 0 ? (
-                <div className="px-3 py-6 text-center text-sm text-gray-500">{emptyStateLabel}</div>
+                <div className="px-3 py-6 text-center text-sm text-gray-500 dark:text-[var(--dm-text-muted)]">{emptyStateLabel}</div>
               ) : (
                 <>
-                  <div className="border-b border-gray-200 px-3 py-1.5">
+                  <div className="border-b border-gray-200 px-3 py-1.5 dark:border-[var(--dm-border)]">
                     <label className="flex cursor-pointer items-start gap-1.5">
                       <input
                         type="checkbox"
@@ -449,10 +449,10 @@ export default function MetadataCheckboxFilterDropdown({
                         className="h-4 w-4 cursor-pointer rounded border-gray-300 accent-black"
                       />
                       <span className="flex flex-col">
-                        <span className="text-sm font-medium text-gray-700">
+                        <span className="text-sm font-medium text-gray-700 dark:text-[var(--dm-text-primary)]">
                           {areAllOptionsSelected ? 'Unselect All' : 'Select All'}
                         </span>
-                        <span className="text-xs text-gray-500">
+                        <span className="text-xs text-gray-500 dark:text-[var(--dm-text-muted)]">
                           {options.length} total options
                         </span>
                       </span>
@@ -460,7 +460,7 @@ export default function MetadataCheckboxFilterDropdown({
                   </div>
 
                   {shouldShowFilteredSelectionToggle && (
-                    <div className="border-b border-gray-200 px-3 py-1.5">
+                    <div className="border-b border-gray-200 px-3 py-1.5 dark:border-[var(--dm-border)]">
                       <label className="flex cursor-pointer items-start gap-1.5">
                         <input
                           type="checkbox"
@@ -475,10 +475,10 @@ export default function MetadataCheckboxFilterDropdown({
                           className="h-4 w-4 cursor-pointer rounded border-gray-300 accent-black"
                         />
                         <span className="flex flex-col">
-                          <span className="text-sm font-medium text-gray-700">
+                          <span className="text-sm font-medium text-gray-700 dark:text-[var(--dm-text-primary)]">
                             {areAllFilteredOptionsSelected ? 'Unselect Results' : 'Select Results'}
                           </span>
-                          <span className="text-xs text-gray-500">
+                          <span className="text-xs text-gray-500 dark:text-[var(--dm-text-muted)]">
                             {filteredOptions.length} matching search
                           </span>
                         </span>
@@ -486,11 +486,11 @@ export default function MetadataCheckboxFilterDropdown({
                     </div>
                   )}
 
-                  <div className="divide-y divide-gray-100">
+                  <div className="divide-y divide-gray-100 dark:divide-[var(--dm-border)]">
                     {filteredOptions.map((option) => (
                       <label
                         key={option.id}
-                        className="flex cursor-pointer items-center gap-1.5 px-3 py-1.5 hover:bg-gray-50"
+                        className="flex cursor-pointer items-center gap-1.5 px-3 py-1.5 hover:bg-gray-50 dark:hover:bg-[var(--dm-bg-hover)]"
                       >
                         <input
                           type="checkbox"
@@ -498,7 +498,7 @@ export default function MetadataCheckboxFilterDropdown({
                           onChange={() => handleToggleOption(option.id)}
                           className="h-4 w-4 cursor-pointer rounded border-gray-300 accent-black"
                         />
-                        <span className="text-sm text-gray-700">{option.label}</span>
+                        <span className="text-sm text-gray-700 dark:text-[var(--dm-text-primary)]">{option.label}</span>
                       </label>
                     ))}
                   </div>
@@ -506,13 +506,13 @@ export default function MetadataCheckboxFilterDropdown({
               )}
             </div>
 
-            <div className="flex items-center justify-end gap-1.5 border-t border-gray-200 px-3 py-1.5">
+            <div className="flex items-center justify-end gap-1.5 border-t border-gray-200 px-3 py-1.5 dark:border-[var(--dm-border)]">
               {hasActiveFilter && onClear ? (
                 <Button
                   variant="secondary"
                   size="xs"
                   onClick={handleClear}
-                  className="border border-gray-900 bg-transparent px-3 text-gray-900 hover:bg-gray-50"
+                  className="border border-gray-900 bg-transparent px-3 text-gray-900 hover:bg-gray-50 dark:border-[var(--dm-border)] dark:text-[var(--dm-text-primary)] dark:hover:bg-[var(--dm-bg-hover)]"
                 >
                   Clear
                 </Button>
@@ -521,7 +521,7 @@ export default function MetadataCheckboxFilterDropdown({
                   variant="secondary"
                   size="xs"
                   onClick={handleCancel}
-                  className="border border-gray-900 bg-transparent px-3 text-gray-900 hover:bg-gray-50"
+                  className="border border-gray-900 bg-transparent px-3 text-gray-900 hover:bg-gray-50 dark:border-[var(--dm-border)] dark:text-[var(--dm-text-primary)] dark:hover:bg-[var(--dm-bg-hover)]"
                 >
                   Cancel
                 </Button>
@@ -532,7 +532,7 @@ export default function MetadataCheckboxFilterDropdown({
                 onClick={handleApply}
                 disabled={!canApply}
                 className={
-                  canApply ? 'border-0 bg-black px-3 text-white hover:bg-gray-800' : 'px-3'
+                  canApply ? 'border-0 bg-black px-3 text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200' : 'px-3'
                 }
               >
                 Apply

@@ -10,9 +10,11 @@
 
   .side-nav-light {
     @apply border-r border-gray-200 bg-white;
+    .dark & { background-color: var(--dm-bg-surface); border-color: var(--dm-border); }
   }
 
   .side-nav-bg {
     @apply border-r border-gray-200 bg-white;
+    .dark & { background-color: var(--dm-bg-surface); border-color: var(--dm-border); }
   }
 }

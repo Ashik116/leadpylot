@@ -21,6 +21,15 @@
   padding: 0.35em;
 }
 
+.dark .prose table[border]:not([border='0']) {
+  border-color: var(--dm-border) !important;
+}
+
+.dark .prose table[border]:not([border='0']) td,
+.dark .prose table[border]:not([border='0']) th {
+  border-color: var(--dm-border) !important;
+}
+
 /* Custom hand-wave animation for right-to-left waving */
 @keyframes hand-wave {
   0%,
@@ -218,6 +227,10 @@
 * {
   scrollbar-width: thin;
   scrollbar-color: rgba(156, 163, 175, 0.5) transparent;
+}
+
+.dark * {
+  scrollbar-color: rgba(160, 155, 148, 0.2) transparent;
 }
 
 *::-webkit-scrollbar {

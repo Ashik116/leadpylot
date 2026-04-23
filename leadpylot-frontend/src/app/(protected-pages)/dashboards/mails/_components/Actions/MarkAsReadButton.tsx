@@ -5,6 +5,7 @@
  * Bulk action to mark multiple emails as viewed/read
  */
 
+import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import Button from '@/components/ui/Button';
   import ApolloIcon from '@/components/ui/ApolloIcon';
@@ -15,10 +16,12 @@ import EmailApiService from '../../_services/EmailApiService';
 interface MarkAsReadButtonProps {
   selectedEmailIds: string[];
   onClearSelection: () => void;
+  onDelete?: (ids: string[]) => void;
 }
 
-export default function MarkAsReadButton({ selectedEmailIds, onClearSelection }: MarkAsReadButtonProps) {
+export default function MarkAsReadButton({ selectedEmailIds, onClearSelection, onDelete }: MarkAsReadButtonProps) {
   const queryClient = useQueryClient();
+  const [isDeleting, setIsDeleting] = useState(false);
 
   const markAsReadMutation = useMutation({
     mutationFn: async () => {
@@ -73,6 +76,27 @@ export default function MarkAsReadButton({ selectedEmailIds, onClearSelection }:
         >
           {markAsReadMutation.isPending ? 'Marking...' : 'Mark as Read'}
         </Button>
+
+        {onDelete && (
+          <Button
+            size="sm"
+            variant="solid"
+            className="bg-red-500 hover:bg-red-600 text-white"
+            onClick={async () => {
+              setIsDeleting(true);
+              try {
+                onDelete(selectedEmailIds);
+              } finally {
+                setIsDeleting(false);
+              }
+            }}
+            disabled={isDeleting}
+            loading={isDeleting}
+            icon={<ApolloIcon name="trash" />}
+          >
+            {isDeleting ? 'Deleting...' : `Delete (${selectedEmailIds.length})`}
+          </Button>
+        )}
         
         <Button
           size="sm"

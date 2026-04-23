@@ -309,7 +309,7 @@ export default function OfficesDashboard() {
     onRowClick: (row) => {
       if (row?._id) handleRowClick(row);
     },
-    rowClassName: (row) => (row?.original?._id === selectedId ? 'bg-blue-50' : ''),
+    rowClassName: (row) => (row?.original?._id === selectedId ? 'bg-blue-50 dark:bg-[var(--dm-bg-hover)] dark:text-[var(--dm-text-primary)]' : ''),
     setPageInfoFromBaseTable: true,
     pageInfoTitle: 'Offices',
     pageInfoSubtitlePrefix: 'Total Offices',

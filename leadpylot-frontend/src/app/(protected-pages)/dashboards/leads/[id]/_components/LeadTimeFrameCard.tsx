@@ -53,11 +53,11 @@ const LeadTimeFrameCard = ({
         <div key={index} className="flex items-center justify-between ">
           <div className="flex items-center">
             <ApolloIcon name={item.icon as any} className="mr-2 text-sm" />
-            <span className="text-sm font-medium text-black">{item?.label}</span>
+            <span className="text-sm font-medium text-black dark:text-[var(--dm-text-primary)]">{item?.label}</span>
           </div>
           <div className="flex items-center ">
-            <div className="text-sm text-black">{item?.value}</div>
-            <div className="text-sm text-black">
+            <div className="text-sm text-black dark:text-[var(--dm-text-primary)]">{item?.value}</div>
+            <div className="text-sm text-black dark:text-[var(--dm-text-primary)]">
               {item?.copyable && <CopyButton value={item?.value} />}
             </div>
           </div>

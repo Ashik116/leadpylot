@@ -30,6 +30,7 @@
 
   .dialog-content {
     @apply relative h-full rounded-lg bg-gray-50 p-2 py-2 shadow-xl sm:my-10;
+    .dark & { background-color: var(--dm-bg-surface); color: var(--dm-text-primary); }
   }
 
   .dialog-overlay {

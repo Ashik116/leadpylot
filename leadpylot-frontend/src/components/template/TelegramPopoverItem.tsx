@@ -305,7 +305,7 @@ const TelegramPopoverItem = ({ value }: TelegramPopoverItemProps) => {
         className="w-[310px]"
         content={
           <div
-            className="bg-gradient-to-br from-sky-50 via-white to-cyan-50 p-4"
+            className="bg-gradient-to-br from-sky-50 via-white to-cyan-50 p-4 dark:from-[var(--dm-bg-elevated)] dark:via-[var(--dm-bg-elevated)] dark:to-[var(--dm-bg-elevated)]"
             onClick={(event) => event.stopPropagation()}
             onKeyDown={(event) => event.stopPropagation()}
           >
@@ -317,13 +317,13 @@ const TelegramPopoverItem = ({ value }: TelegramPopoverItemProps) => {
               </div>
               <div className="min-w-0 flex-1">
                 <div className="flex items-center gap-2">
-                  <h3 className="text-sm font-semibold text-gray-900">Telegram</h3>
+                  <h3 className="text-sm font-semibold text-gray-900 dark:text-[var(--dm-text-primary)]">Telegram</h3>
                   <span
                     className={`text-xxs rounded-full px-2 py-0.5 font-semibold tracking-[0.14em] uppercase ${hasLinkedTelegram
-                      ? 'bg-sky-100 text-sky-700'
+                      ? 'bg-sky-100 text-sky-700 dark:bg-sky-500/15 dark:text-sky-400'
                       : hasSavedValue
-                        ? 'bg-sky-100 text-sky-700'
-                        : 'bg-gray-100 text-gray-500'
+                        ? 'bg-sky-100 text-sky-700 dark:bg-sky-500/15 dark:text-sky-400'
+                        : 'bg-gray-100 text-gray-500 dark:bg-[var(--dm-bg-hover)] dark:text-[var(--dm-text-muted)]'
                       }`}
                   >
                     {hasLinkedTelegram ? 'connected' : hasSavedValue ? 'Configured' : 'Not set'}
@@ -339,12 +339,12 @@ const TelegramPopoverItem = ({ value }: TelegramPopoverItemProps) => {
 
             {/* Bot start links — shown in connected view or after saving credentials */}
             {(hasLinkedTelegram || showBotSetupStep) && visibleActiveBots.length > 0 && (
-              <div className="mb-3 rounded-lg border border-sky-100 bg-white/90 p-4 shadow-sm">
-                <div className="mb-2 text-[11px] font-semibold tracking-[0.16em] text-sky-600 uppercase">
+              <div className="mb-3 rounded-lg border border-sky-100 bg-white/90 p-4 shadow-sm dark:bg-[var(--dm-bg-surface)] dark:border-[var(--dm-border)]">
+                <div className="mb-2 text-[11px] font-semibold tracking-[0.16em] text-sky-600 uppercase dark:text-sky-400">
                   {showBotSetupStep && !hasLinkedTelegram ? 'Step 2 — Start the bots' : 'Active bots'}
                 </div>
                 {showBotSetupStep && !hasLinkedTelegram && (
-                  <p className="mb-3 text-xs text-gray-500 leading-4">
+                  <p className="mb-3 text-xs text-gray-500 leading-4 dark:text-[var(--dm-text-muted)]">
                     Open each bot in Telegram and press <b>Start</b>. You&apos;ll be automatically linked and receive notifications.
                   </p>
                 )}
@@ -355,13 +355,13 @@ const TelegramPopoverItem = ({ value }: TelegramPopoverItemProps) => {
                       href={`https://t.me/${bot.bot_username}`}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="flex items-center justify-between gap-3 rounded-2xl bg-sky-50 px-3 py-2.5 transition-colors hover:bg-sky-100"
+                      className="flex items-center justify-between gap-3 rounded-2xl bg-sky-50 px-3 py-2.5 transition-colors hover:bg-sky-100 dark:bg-sky-500/10 dark:hover:bg-sky-500/20"
                     >
                       <div className="min-w-0">
-                        <div className="text-xs font-semibold text-gray-900">{bot.name}</div>
-                        <div className="text-[11px] text-gray-500">@{bot.bot_username}</div>
+                        <div className="text-xs font-semibold text-gray-900 dark:text-[var(--dm-text-primary)]">{bot.name}</div>
+                        <div className="text-[11px] text-gray-500 dark:text-[var(--dm-text-muted)]">@{bot.bot_username}</div>
                       </div>
-                      <span className="flex shrink-0 items-center gap-1 text-[11px] font-semibold text-sky-600">
+                      <span className="flex shrink-0 items-center gap-1 text-[11px] font-semibold text-sky-600 dark:text-sky-400">
                         Open <ExternalLink className="h-3 w-3" />
                       </span>
                     </a>
@@ -371,7 +371,7 @@ const TelegramPopoverItem = ({ value }: TelegramPopoverItemProps) => {
                   <button
                     type="button"
                     onClick={() => { setShowBotSetupStep(false); setIsOpen(false); }}
-                    className="mt-3 w-full rounded-2xl bg-gray-100 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-200 transition-colors"
+                    className="mt-3 w-full rounded-2xl bg-gray-100 py-2 text-xs font-semibold text-gray-600 hover:bg-gray-200 transition-colors dark:bg-[var(--dm-bg-surface)] dark:text-[var(--dm-text-secondary)] dark:hover:bg-[var(--dm-bg-hover)]"
                   >
                     Done
                   </button>
@@ -473,9 +473,9 @@ const TelegramPopoverItem = ({ value }: TelegramPopoverItemProps) => {
                   handleSetTelegram(contactToUsernamePayload(data.contact))
                 )}
               >
-                <div className="rounded-lg border border-sky-100 bg-white/90 p-3 shadow-sm">
+                <div className="rounded-lg border border-sky-100 bg-white/90 p-3 shadow-sm dark:bg-[var(--dm-bg-surface)] dark:border-[var(--dm-border)]">
                   <div className="mb-2">
-                    <div className="text-xs font-semibold tracking-wide text-sky-600 uppercase">
+                    <div className="text-xs font-semibold tracking-wide text-sky-600 uppercase dark:text-sky-400">
                       Contact details
                     </div>
                   </div>
@@ -486,7 +486,7 @@ const TelegramPopoverItem = ({ value }: TelegramPopoverItemProps) => {
                       invalid={Boolean(errors.contact)}
                       errorMessage={errors.contact?.message}
                       className="mb-0"
-                      labelClass="text-xs font-semibold text-gray-700"
+                      labelClass="text-xs font-semibold text-gray-700 dark:text-[var(--dm-text-primary)]"
                     >
                       <Input
                         {...register('contact')}
@@ -522,7 +522,7 @@ const TelegramPopoverItem = ({ value }: TelegramPopoverItemProps) => {
                   </Button>
                 </div>
 
-                <p className="text-[11px] leading-4 text-gray-500">
+                <p className="text-[11px] leading-4 text-gray-500 dark:text-[var(--dm-text-muted)]">
                   Use the same @username you use in Telegram (with or without @). Clear the field
                   and save to remove Telegram details.
                 </p>
@@ -534,7 +534,7 @@ const TelegramPopoverItem = ({ value }: TelegramPopoverItemProps) => {
         <button
           type="button"
           aria-expanded={isOpen}
-          className={`flex w-full items-center justify-between gap-3 rounded-2xl px-2.5 py-2.5 text-left transition-colors ${isOpen ? 'bg-sky-50' : 'hover:bg-gray-50'
+          className={`flex w-full items-center justify-between gap-3 rounded-2xl px-2.5 py-2.5 text-left transition-colors ${isOpen ? 'bg-sky-50 dark:bg-sky-500/10' : 'hover:bg-gray-50 dark:hover:bg-[var(--dm-bg-hover)]'
             }`}
           onClick={(event) => {
             event.preventDefault();
@@ -549,23 +549,23 @@ const TelegramPopoverItem = ({ value }: TelegramPopoverItemProps) => {
             </div>
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2">
-                <span className="text-sm font-semibold text-gray-900">Telegram</span>
+                <span className="text-sm font-semibold text-gray-900 dark:text-[var(--dm-text-primary)]">Telegram</span>
                 <span
                   className={`text-xxs rounded-full px-2 py-0.5 font-semibold ${hasLinkedTelegram
                     ? 'bg-sky-100 text-sky-700'
                     : hasSavedValue
                       ? 'bg-sky-100 text-sky-700'
-                      : 'bg-gray-100 text-gray-500'
+                      : 'bg-gray-100 text-gray-500 dark:bg-[var(--dm-bg-hover)] dark:text-[var(--dm-text-muted)]'
                     }`}
                 >
                   {hasLinkedTelegram ? 'connected' : hasSavedValue ? 'Saved' : 'Optional'}
                 </span>
               </div>
-              <p className="truncate text-xs text-gray-500">{triggerSummary}</p>
+              <p className="truncate text-xs text-gray-500 dark:text-[var(--dm-text-muted)]">{triggerSummary}</p>
             </div>
           </div>
           <ChevronDown
-            className={`h-4 w-4 shrink-0 text-gray-400 transition-transform ${isOpen ? 'rotate-180 text-sky-500' : ''
+            className={`h-4 w-4 shrink-0 text-gray-400 dark:text-[var(--dm-text-muted)] transition-transform ${isOpen ? 'rotate-180 text-sky-500' : ''
               }`}
           />
         </button>

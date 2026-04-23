@@ -188,7 +188,7 @@ const InlineEditField = ({
         {/* Hidden measurement div */}
         <div
           ref={measureRef}
-          className={classNames('absolute hidden text-sm  text-black', className)}
+          className={classNames('absolute hidden text-sm text-black dark:text-[var(--dm-text-primary)]', className)}
         >
           {editValue || placeholder}
         </div>
@@ -217,7 +217,7 @@ const InlineEditField = ({
             width: getInputWidth(),
           }}
           className={classNames(
-            'absolute inset-0 w-fit rounded border-[0.1px] border-gray-900 bg-white text-sm font-medium transition-colors outline-none',
+            'absolute inset-0 w-fit rounded border-[0.1px] border-gray-900 bg-white text-sm font-medium transition-colors outline-none dark:bg-[var(--dm-bg-input)] dark:border-[var(--dm-border)] dark:text-[var(--dm-text-primary)]',
             isSaving && 'cursor-wait opacity-50',
             className,
             textClassName,

@@ -8,10 +8,12 @@
 
     &:not(.segment-item-active):not(.segment-item-disabled) {
       @apply hover:bg-sand-4;
+      .dark & { &:hover { background-color: var(--dm-bg-hover); } }
     }
 
     &.segment-item-active {
       @apply text-sand-1 bg-white shadow-sm;
+      .dark & { background-color: var(--dm-bg-elevated); color: var(--dm-text-primary); }
     }
 
     &.segment-item-disabled {

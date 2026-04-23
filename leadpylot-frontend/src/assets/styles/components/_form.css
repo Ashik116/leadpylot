@@ -17,6 +17,7 @@
 
   .form-label {
     @apply flex items-center text-sm font-medium;
+    .dark & { color: var(--dm-text-primary); }
 
     &.invalid {
       @apply text-rust;

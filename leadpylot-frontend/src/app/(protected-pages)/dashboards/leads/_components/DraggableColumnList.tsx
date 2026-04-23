@@ -624,7 +624,7 @@ export const DraggableColumnList: React.FC<DraggableColumnListProps> = ({
         </div>
 
         <DragDropContext onDragEnd={handleDragEnd}>
-          <div className="min-w-full rounded-lg border border-gray-200 bg-white shadow-sm">
+          <div className="min-w-full rounded-lg border border-gray-200 bg-white shadow-sm dark:bg-[var(--dm-bg-surface)] dark:border-[var(--dm-border)]">
             {/* Table Header */}
             <Droppable droppableId="columns" direction="horizontal">
               {(provided, snapshot) => (
@@ -705,11 +705,11 @@ export const DraggableColumnList: React.FC<DraggableColumnListProps> = ({
   return (
     <div
       ref={dropdownRef}
-      className="relative flex max-h-[60dvh] max-w-80 flex-col overflow-hidden rounded-lg border border-gray-200 bg-white p-3 shadow-xl"
+      className="relative flex max-h-[60dvh] max-w-80 flex-col overflow-hidden rounded-lg border border-gray-200 bg-white p-3 shadow-xl dark:bg-[var(--dm-bg-elevated)] dark:border-[var(--dm-border)]"
     >
       <div className="mb-1 flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <h3 className="text-sm font-semibold whitespace-nowrap">Customize Columns</h3>
+          <h3 className="text-sm font-semibold whitespace-nowrap dark:text-[var(--dm-text-primary)]">Customize Columns</h3>
           <Button
             variant="secondary"
             size="xs"
@@ -747,7 +747,7 @@ export const DraggableColumnList: React.FC<DraggableColumnListProps> = ({
         </div>
       )}
 
-      <div className="mb-2 text-xs text-gray-400 sm:mb-3">
+      <div className="mb-2 text-xs text-gray-400 sm:mb-3 dark:text-[var(--dm-text-muted)]">
         {isLoadingAgentSettings ? (
           <span className="flex items-center gap-2">
             <span className="inline-block h-3 w-3 animate-spin rounded-full border-2 border-gray-300 border-t-gray-600"></span>
@@ -768,7 +768,7 @@ export const DraggableColumnList: React.FC<DraggableColumnListProps> = ({
               <div
                 {...provided.droppableProps}
                 ref={provided.innerRef}
-                className={`min-h-[200px] space-y-2 rounded border-2 border-dashed p-1 transition-colors ${snapshot.isDraggingOver ? 'border-blue-400 bg-blue-50' : 'border-gray-200'
+                className={`min-h-[200px] space-y-2 rounded border-2 border-dashed p-1 transition-colors ${snapshot.isDraggingOver ? 'border-blue-400 bg-blue-50 dark:bg-blue-500/10' : 'border-gray-200 dark:border-[var(--dm-border)]'
                   }`}
               >
                 {!isResetting &&
@@ -780,27 +780,27 @@ export const DraggableColumnList: React.FC<DraggableColumnListProps> = ({
                         <div
                           ref={provided.innerRef}
                           {...provided.draggableProps}
-                          className={`flex touch-manipulation items-center justify-between rounded-lg border bg-white shadow-sm transition-all ${snapshot.isDragging
-                            ? 'rotate-2 border-blue-300 bg-blue-50 shadow-lg'
+                          className={`flex touch-manipulation items-center justify-between rounded-lg border bg-white shadow-sm transition-all dark:bg-[var(--dm-bg-surface)] dark:border-[var(--dm-border)] ${snapshot.isDragging
+                            ? 'rotate-2 border-blue-300 bg-blue-50 shadow-lg dark:bg-blue-500/10'
                             : 'hover:shadow-md'
                             }`}
                         >
                           <div className="flex flex-1 items-center gap-2 px-2">
                             <div
                               {...provided.dragHandleProps}
-                              className="cursor-grab touch-manipulation p-1 text-gray-400 hover:cursor-grabbing mt-1.5 hover:text-gray-600 sm:p-0"
+                              className="cursor-grab touch-manipulation p-1 text-gray-400 hover:cursor-grabbing mt-1.5 hover:text-gray-600 sm:p-0 dark:text-[var(--dm-text-muted)] dark:hover:text-[var(--dm-text-secondary)]"
                             >
                               <ApolloIcon name="drag-and-sort" />
                             </div>
 
-                            <span className="flex-1 truncate text-xs font-medium text-gray-700 uppercase">
+                            <span className="flex-1 truncate text-xs font-medium text-gray-700 uppercase dark:text-[var(--dm-text-primary)]">
                               {column?.label}
                             </span>
                             <button
                               onClick={() =>
                                 handleVisibilityChange(column?.key, !column?.isVisible)
                               }
-                              className="touch-manipulation p-1 text-gray-400 transition-colors hover:text-gray-600 mt-1"
+                              className="touch-manipulation p-1 text-gray-400 transition-colors hover:text-gray-600 mt-1 dark:text-[var(--dm-text-muted)] dark:hover:text-[var(--dm-text-secondary)]"
                               title={column?.isVisible ? 'Hide column' : 'Show column'}
                             >
                               <ApolloIcon
@@ -822,7 +822,7 @@ export const DraggableColumnList: React.FC<DraggableColumnListProps> = ({
 
       {/* Save button for agent settings */}
       {isAgentSettingsMode && hasAgentChanges && (
-        <div className="mt-3 border-t border-gray-200 pt-3">
+        <div className="mt-3 border-t border-gray-200 pt-3 dark:border-[var(--dm-border)]">
           <Button
             variant="solid"
             size="sm"
@@ -838,7 +838,7 @@ export const DraggableColumnList: React.FC<DraggableColumnListProps> = ({
       )}
 
       {/* Mobile-specific instruction */}
-      <div className="mt-3 text-xs text-gray-500 sm:hidden">
+      <div className="mt-3 text-xs text-gray-500 sm:hidden dark:text-[var(--dm-text-muted)]">
         💡 Tip: Tap and hold the drag handle to reorder columns
       </div>
     </div>

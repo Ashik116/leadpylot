@@ -120,8 +120,8 @@ const Button = (props: ButtonProps) => {
 
   const plainColor = () => {
     const btn = {
-      bgColor: active ? `` : `hover:bg-sand-5`,
-      textColor: `text-sand-1`,
+      bgColor: active ? `` : `hover:bg-sand-5 dark:hover:bg-[var(--dm-bg-hover)]`,
+      textColor: `text-sand-1 dark:text-[var(--dm-text-primary)]`,
       hoverColor: active ? '' : `hover:text-sand-1`,
       activeColor: ``,
     };
@@ -130,9 +130,9 @@ const Button = (props: ButtonProps) => {
 
   const defaultColor = () => {
     const btn = {
-      bgColor: active ? `bg-gray-100 border border-gray-300` : `bg-white border border-border`,
-      textColor: `text-gray-600`,
-      hoverColor: active ? '' : `hover:bg-sand-5`,
+      bgColor: active ? `bg-gray-100 border border-gray-300 dark:bg-[var(--dm-bg-hover)] dark:border-[var(--dm-border)]` : `bg-white border border-border dark:bg-[var(--dm-bg-surface)] dark:border-[var(--dm-border)]`,
+      textColor: `text-gray-600 dark:text-[var(--dm-text-primary)]`,
+      hoverColor: active ? '' : `hover:bg-sand-5 dark:hover:bg-[var(--dm-bg-hover)]`,
       activeColor: ``,
     };
     return getBtnColor(btn);

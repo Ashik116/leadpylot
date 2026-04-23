@@ -1,17 +1,21 @@
 'use client';
 
 import type { NavigationTree } from '@/@types/navigation';
+import type { Mode } from '@/@types/theme';
 import { useBulkSearch } from '@/components/layouts/PostLoginLayout/contexts/BulkSearchContext';
 import AuthorityCheck from '@/components/shared/AuthorityCheck';
 import VerticalMenuIcon from '@/components/template/VerticalMenuContent/VerticalMenuIcon';
 import Button from '@/components/ui/Button';
 import Dropdown from '@/components/ui/Dropdown';
 import ApolloIcon from '@/components/ui/ApolloIcon';
+import Switcher from '@/components/ui/Switcher';
 import { Role } from '@/configs/navigation.config/auth.route.config';
 import { NAV_ITEM_TYPE_COLLAPSE } from '@/constants/navigation.constant';
+import { MODE_DARK, MODE_LIGHT } from '@/constants/theme.constant';
 import { useAuth } from '@/hooks/useAuth';
 import classNames from '@/utils/classNames';
 import useNavigation from '@/utils/hooks/useNavigation';
+import useTheme from '@/utils/hooks/useTheme';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
@@ -32,6 +36,8 @@ export const ConfigurationMenu = ({ onItemSelect }: ConfigurationMenuProps) => {
   const { navigationTree } = useNavigation();
   const { user } = useAuth();
   const { setSelectedChild, getSelectedChild, removeSelectedChild } = useSelectedMenuItems();
+  const { mode, setMode } = useTheme((s) => s);
+  const isDark = mode === MODE_DARK;
 
   // Bulk search context
   const bulkSearchContext = useBulkSearch();
@@ -502,8 +508,8 @@ export const ConfigurationMenu = ({ onItemSelect }: ConfigurationMenuProps) => {
             </span>
           }
           className={classNames(
-            'flex items-center border-none px-1.5 py-1.5 text-sm whitespace-nowrap hover:bg-gray-100',
-            isSettingsActive && 'bg-gray-100 text-black hover:bg-gray-100 hover:text-black'
+            'flex items-center border-none px-1.5 py-1.5 text-sm whitespace-nowrap hover:bg-gray-100 dark:hover:bg-[var(--dm-bg-hover)]',
+            isSettingsActive && 'bg-gray-100 text-black hover:bg-gray-100 hover:text-black dark:bg-[var(--dm-bg-hover)] dark:text-[var(--dm-text-primary)] dark:hover:bg-[var(--dm-bg-hover)]'
           )}
           gapClass="gap-2"
         >
@@ -657,6 +663,34 @@ export const ConfigurationMenu = ({ onItemSelect }: ConfigurationMenuProps) => {
             }}
           />
         ))}
+
+      {/* Dark / Light mode toggle */}
+      <Dropdown.Item
+        eventKey="dark-mode-toggle"
+        className="mt-1 rounded-md border-t border-gray-100 px-0 py-0"
+        variant="custom"
+      >
+        <div
+          className="flex w-full items-center justify-between gap-3 px-2 py-1.5"
+          onMouseDown={(e) => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <div className="flex items-center gap-2 text-sm">
+            <ApolloIcon
+              name={isDark ? 'moon' : 'sun'}
+              className="text-base text-gray-500 dark:text-gray-400"
+            />
+            <span>{isDark ? 'Dark Mode' : 'Light Mode'}</span>
+          </div>
+          <Switcher
+            checked={isDark}
+            onChange={() => {
+              const nextMode: Mode = isDark ? MODE_LIGHT : MODE_DARK;
+              setMode(nextMode);
+            }}
+          />
+        </div>
+      </Dropdown.Item>
     </Dropdown>
   );
 };
@@ -690,7 +724,7 @@ const ConfigurationMenuItem = ({
           active={isItemActive}
           style={{ height: '24px' }}
           className={classNames(
-            'min-w-[180px] rounded-md border-none px-0 py-0.5 hover:bg-gray-200',
+            'min-w-[180px] rounded-md border-none px-0 py-0.5 hover:bg-gray-200 dark:hover:bg-[var(--dm-bg-hover)]',
             isItemActive ? 'bg-sand-1 hover:bg-sand-1 text-white' : '',
             isChild && 'pl-4'
           )}
@@ -715,7 +749,7 @@ const ConfigurationMenuItem = ({
           eventKey={item.key}
           active={isItemActive}
           className={classNames(
-            'min-w-[180px] rounded-md border-none px-2 py-0.5 hover:bg-gray-200',
+            'min-w-[180px] rounded-md border-none px-2 py-0.5 hover:bg-gray-200 dark:hover:bg-[var(--dm-bg-hover)]',
             isItemActive ? 'bg-sand-1 hover:bg-sand-1 text-white' : '',
             isChild && 'pl-4'
           )}
@@ -778,8 +812,8 @@ const ConfigurationExpandableSection = ({
           eventKey={section.key}
           style={{ height: '24px' }}
           className={classNames(
-            'rounded-md border-none px-0 py-0 hover:bg-gray-200',
-            hasActiveChild && 'bg-gray-100'
+            'rounded-md border-none px-0 py-0 hover:bg-gray-200 dark:hover:bg-[var(--dm-bg-hover)]',
+            hasActiveChild && 'bg-gray-100 dark:bg-[var(--dm-bg-hover)]'
           )}
           variant="custom"
         >

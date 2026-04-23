@@ -12,8 +12,8 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { useEffect, useMemo } from 'react';
 import { CustomMenuItem } from './components/CustomMenuItem';
-import { NavMenuDropdown } from './components/NavMenuDropdown';
 import { NavMenuItem } from './components/NavMenuItem';
+import { NavMenuDropdown } from './components/NavMenuDropdown';
 import { useMoreMenuSections } from './hooks/useMoreMenuSections';
 import { useNavMenuData } from './hooks/useNavMenuData';
 import { useSelectedMenuItems } from './hooks/useSelectedMenuItems';
@@ -357,13 +357,26 @@ const NavMenu = ({ onTaskDrawerOpen, pendingTaskCount = 0 }: NavMenuProps) => {
       );
     }
 
-    // Collapse item (with submenu) - render as dropdown
+    // Leads collapse - render as plain tab link; sub-items shown in NavSubTabBar below header
+    if (nav.type === NAV_ITEM_TYPE_COLLAPSE && hasSubMenu && nav.key === 'dashboard.leads') {
+      const hasActive = hasActiveChild(pathname, nav.subMenu);
+      const isParentActive = isActive || activedRoute?.parentKey === nav.key || hasActive;
+      const firstSubPath = nav.subMenu?.find((s) => s.path)?.path || nav.path || '';
+      return (
+        <NavMenuItem
+          key={nav.key}
+          nav={{ ...nav, path: firstSubPath }}
+          isActive={isParentActive}
+          userAuthority={userAuthority}
+        />
+      );
+    }
+
+    // All other collapse items (Offers, Calendar, Mails) - keep existing dropdown behaviour
     if (nav.type === NAV_ITEM_TYPE_COLLAPSE && hasSubMenu) {
-      // Check if this parent has a selected child item
       const selectedChild = getSelectedChild(nav.key);
       const hasActive = hasActiveChild(pathname, nav.subMenu);
       const isParentActive = isActive || activedRoute?.parentKey === nav.key || hasActive;
-
       return (
         <NavMenuDropdown
           key={nav.key}

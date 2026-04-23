@@ -12,7 +12,7 @@ interface ComposeButtonProps {
 export default function ComposeButton({ onClick, isCompact }: ComposeButtonProps) {
   if (isCompact) {
     return (
-      <Tooltip title="Compose">
+      <Tooltip title="Send Mail">
         <Button
           variant="solid"
           size="md"
@@ -32,7 +32,7 @@ export default function ComposeButton({ onClick, isCompact }: ComposeButtonProps
       onClick={onClick}
       icon={<ApolloIcon name="plus" />}
     >
-      Compose
+      Send Mail
     </Button>
   );
 }

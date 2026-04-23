@@ -1,6 +1,7 @@
 @layer components {
   .secondary-header-light {
     @apply border-b border-gray-200 bg-white print:hidden;
+    .dark & { background-color: var(--dm-bg-surface); border-color: var(--dm-border); }
   }
 
   .secondary-header-themed {

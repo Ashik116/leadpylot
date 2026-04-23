@@ -97,16 +97,16 @@
   }
 
   .date-picker-cell-selected-start {
-    @apply before:bg-sand-1/20 relative rounded-full before:absolute before:top-0 before:left-0 before:h-full before:w-full before:content-[''] ltr:before:rounded-tl-full ltr:before:rounded-bl-full rtl:before:rounded-tr-full rtl:before:rounded-br-full -z-10 bg-sand-1;
+    @apply before:bg-pink-500/20 relative rounded-full before:absolute before:top-0 before:left-0 before:h-full before:w-full before:content-[''] ltr:before:rounded-tl-full ltr:before:rounded-bl-full rtl:before:rounded-tr-full rtl:before:rounded-br-full -z-10 bg-pink-500;
   }
 
 
   .date-picker-cell-selected-end {
-    @apply before:bg-sand-1/20 relative rounded-full before:absolute before:top-0 before:left-0 before:h-full before:w-full before:content-[''] ltr:before:rounded-tr-full ltr:before:rounded-br-full rtl:before:rounded-tl-full rtl:before:rounded-bl-full;
+    @apply before:bg-pink-500/20 relative rounded-full before:absolute before:top-0 before:left-0 before:h-full before:w-full before:content-[''] ltr:before:rounded-tr-full ltr:before:rounded-br-full rtl:before:rounded-tl-full rtl:before:rounded-bl-full;
   }
 
   .date-picker-cell-inrange-today {
-    @apply before:bg-sand-1/20 relative rounded-full before:absolute before:top-0 before:left-0 before:h-full before:w-full before:content-[''];
+    @apply before:bg-pink-500/20 relative rounded-full before:absolute before:top-0 before:left-0 before:h-full before:w-full before:content-[''];
   }
 
   .date-picker-cell-content {
@@ -118,7 +118,7 @@
   }
 
   .date-picker-cell-hoverable {
-    @apply hover:bg-sand-2;
+    @apply hover:bg-red-500;
   }
 
   .date-picker-cell-disabled {

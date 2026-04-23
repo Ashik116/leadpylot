@@ -297,7 +297,7 @@ export const useBaseTable = <T extends Record<string, any> = any>(
     rowIdField = '_id',
     onPaginationChange,
     onRowClick,
-    rowClassName = 'cursor-pointer hover:bg-gray-50',
+    rowClassName = 'cursor-pointer hover:bg-gray-50 dark:hover:bg-[var(--dm-bg-hover)]',
     sortKey,
     order,
     customActions,

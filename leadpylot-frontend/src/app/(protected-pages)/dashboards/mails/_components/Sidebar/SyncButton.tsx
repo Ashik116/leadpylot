@@ -128,7 +128,7 @@ export default function SyncButton({ isCompact }: SyncButtonProps) {
       ? 'Starting...'
       : 'Refreshing...'
     : isAdmin
-      ? 'Sync Emails'
+      ? 'Sync'
       : 'Refresh';
 
   const button = (

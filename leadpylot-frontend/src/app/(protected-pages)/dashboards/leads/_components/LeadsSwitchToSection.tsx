@@ -282,7 +282,7 @@ export function LeadsSwitchToSection({ switchMode = true }: { switchMode?: boole
 
   return (
     <div className="flex min-w-0 items-center gap-2">
-      <span className="text-xs text-gray-600">Switch To</span>
+      <span className="text-xs text-gray-600 dark:text-[var(--dm-text-secondary)]">Switch To</span>
       <ActionDropDown
         deleteButton={false}
         setDeleteConfirmDialogOpen={() => {}}

@@ -1,6 +1,7 @@
 @layer components {
   .skeleton {
     @apply flex bg-gray-200;
+    .dark & { background-color: var(--dm-bg-elevated); }
   }
 
   .skeleton-circle {

@@ -29,6 +29,7 @@ import { HeaderEnd } from './HeaderEnd';
 import { MobileSearchOverlay } from './MobileSearchOverlay';
 import GlobalSearch from '@/components/shared/GlobalSearch/GlobalSearch';
 import { ActiveCallIndicator } from '@/components/template/Phone/ActiveCallIndicator';
+import NavSubTabBar from './Menu/NavSubTabBar';
 
 // Inner component that uses the hook (must be inside provider)
 const FrameLessSideContent = ({ children }: CommonProps) => {
@@ -89,7 +90,7 @@ const FrameLessSideContent = ({ children }: CommonProps) => {
     <LayoutBase
       adaptiveCardActive
       type={LAYOUT_FRAMELESS_SIDE}
-      className="app-layout-frameless-side flex flex-auto flex-col bg-gray-950"
+      className="app-layout-frameless-side flex flex-auto flex-col bg-gray-950 dark:bg-[var(--dm-bg-shell)]"
       pageContainerReassemble={({
         pageContainerType,
         pageBackgroundType,
@@ -104,7 +105,7 @@ const FrameLessSideContent = ({ children }: CommonProps) => {
           className={classNames(
             defaultClass,
             'rounded-2xl',
-            pageBackgroundType === 'plain' && 'bg-white'
+            pageBackgroundType === 'plain' && 'bg-white dark:bg-[var(--dm-bg-base)]'
           )}
         >
           <main className="h-full">
@@ -129,7 +130,7 @@ const FrameLessSideContent = ({ children }: CommonProps) => {
         </div>
       )}
     >
-      <div className="flex min-w-0 flex-auto bg-white">
+      <div className="flex min-w-0 flex-auto bg-white dark:bg-[var(--dm-bg-base)]">
         {/* <SideNav
           background={true}
           className={classNames(
@@ -137,11 +138,11 @@ const FrameLessSideContent = ({ children }: CommonProps) => {
           )}
           contentClass="h-[calc(100vh-8rem)] transition-all duration-800 ease-in-out"
         /> */}
-        <FrameLessGap className="relative min-h-screen w-full min-w-0 bg-white transition-all duration-800 ease-in-out">
-          <div className="flex h-screen flex-1 flex-col overflow-hidden rounded-2xl bg-white transition-all duration-800 ease-in-out">
+        <FrameLessGap className="relative min-h-screen w-full min-w-0 bg-white transition-all duration-800 ease-in-out dark:bg-[var(--dm-bg-base)]">
+          <div className="flex h-screen flex-1 flex-col overflow-hidden rounded-2xl bg-white transition-all duration-800 ease-in-out dark:bg-[var(--dm-bg-surface)]">
             {/* Skeleton loading */}
             {!user ? (
-              <div className="flex h-12 items-center justify-between border-b border-gray-200 bg-white px-4">
+              <div className="flex h-12 items-center justify-between border-b border-gray-200 bg-white px-4 dark:bg-[var(--dm-bg-surface)]">
                 <HeaderSkeleton />
               </div>
             ) : (
@@ -193,7 +194,8 @@ const FrameLessSideContent = ({ children }: CommonProps) => {
               />
             )}
 
-            <div className="flex h-full flex-auto flex-col bg-white transition-all duration-800 ease-in-out">
+            <NavSubTabBar />
+            <div className="flex h-full flex-auto flex-col bg-white transition-all duration-800 ease-in-out dark:bg-[var(--dm-bg-base)]">
               {children}
             </div>
           </div>

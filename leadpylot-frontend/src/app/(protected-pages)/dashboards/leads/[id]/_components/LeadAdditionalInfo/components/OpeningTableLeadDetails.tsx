@@ -236,8 +236,8 @@ const OpeningTableLeadDetails = ({
         'border-l-4 border-ocean-2': isSelected,
         'border-l-4 border-amber-400': !isSelected && isPinned,
         'bg-ocean-3/20 shadow-ocean-3 animate-bounce shadow-inner': isHighlighted,
-        'bg-gray-300': isBulkSelected,
-        'bg-gray-100': isActive && !isHighlighted && !isBulkSelected,
+        'bg-gray-300 dark:bg-[var(--dm-bg-elevated)] dark:text-[var(--dm-text-primary)]': isBulkSelected,
+        'bg-gray-100 dark:bg-[var(--dm-bg-hover)] dark:text-[var(--dm-text-primary)]': isActive && !isHighlighted && !isBulkSelected,
         'hover:brightness-95': offerTypeClass && !isHighlighted && !isActive && !isBulkSelected,
         'hover:bg-gray-50 hover:shadow-sm':
           !offerTypeClass && !isHighlighted && !isActive && !isBulkSelected,

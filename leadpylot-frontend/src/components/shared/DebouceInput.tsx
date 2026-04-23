@@ -80,7 +80,7 @@ const DebouceInput = forwardRef<DebounceInputRef, DebouceInputProps>((props, ref
             <button
               type="button"
               onClick={handleClear}
-              className="flex h-4 w-4 items-center justify-center text-gray-400 transition-colors hover:text-gray-600"
+              className="flex h-4 w-4 items-center justify-center text-gray-400 transition-colors hover:text-gray-600 dark:text-[var(--dm-text-muted)] dark:hover:text-[var(--dm-text-primary)]"
               aria-label="Clear input"
             >
               <HiX size={14} />

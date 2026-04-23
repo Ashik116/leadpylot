@@ -23,6 +23,7 @@
 
   .progress-inner {
     @apply relative w-full overflow-hidden rounded-full bg-gray-100;
+    .dark & { background-color: var(--dm-bg-elevated); }
   }
 
   .progress-wrapper {

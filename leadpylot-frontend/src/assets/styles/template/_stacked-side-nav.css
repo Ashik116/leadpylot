@@ -18,9 +18,11 @@
 
   .stacked-side-nav-mini-light {
     @apply border-gray-200 bg-white ltr:border-r rtl:border-l;
+    .dark & { background-color: var(--dm-bg-surface); border-color: var(--dm-border); }
   }
 
   .stacked-side-nav-secondary-light {
     @apply border-gray-200 bg-white ltr:border-r rtl:border-l;
+    .dark & { background-color: var(--dm-bg-surface); border-color: var(--dm-border); }
   }
 }

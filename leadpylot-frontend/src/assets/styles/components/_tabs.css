@@ -9,6 +9,7 @@
 
   .tab-nav {
     @apply flex cursor-pointer items-center justify-center px-2 font-bold text-gray-600 transition duration-200 ease-in-out;
+    .dark & { color: var(--dm-text-secondary); }
 
     &.tab-nav-disabled {
       @apply cursor-not-allowed opacity-60;

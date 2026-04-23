@@ -3,6 +3,7 @@
     &[type='button'],
     &[type='reset'] {
       @apply hover:bg-sand-5 rounded-lg p-1 text-lg outline-none;
+      .dark & { &:hover { background-color: var(--dm-bg-hover); } }
     }
   }
 }

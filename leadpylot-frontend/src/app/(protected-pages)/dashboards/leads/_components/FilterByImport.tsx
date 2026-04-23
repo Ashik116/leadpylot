@@ -285,8 +285,8 @@ export default function FilterByImport({
               onClick={() => handleFilterSelect(filter.value as number)}
               className={`w-full rounded px-4 py-1.5 text-left text-sm transition-colors ${
                 currentSelectedState === filter.value
-                  ? 'font-medium text-gray-900'
-                  : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                  ? 'font-medium text-gray-900 dark:text-[var(--dm-text-primary)]'
+                  : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-[var(--dm-text-primary)] dark:hover:bg-[var(--dm-bg-hover)]'
               }`}
             >
               <div className="flex items-center justify-between">

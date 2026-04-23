@@ -168,7 +168,7 @@ export default function CalendarFilterModal({ onClose }: CalendarFilterModalProp
                         <div className="flex items-center gap-2">
                             <h2 className="text-xl font-semibold text-gray-900 flex items-center gap-2">
                                 <ApolloIcon name="calendar" />
-                                Calendar Filter
+                                Calendar
                             </h2>
                             {filters.date_filter && (
                                 <div className="text-sm text-gray-600">
@@ -205,7 +205,7 @@ export default function CalendarFilterModal({ onClose }: CalendarFilterModalProp
                                 renderDay={renderDay}
                                 dayClassName={(date) => {
                                     const dateStr = dayjs(date).format('YYYY-MM-DD');
-                                    return hoveredDate === dateStr ? 'hover:bg-gray-400' : '';
+                                    return hoveredDate === dateStr ? 'hover:bg-red-500' : '';
                                 }}
                                 enableHeaderLabel
                             />

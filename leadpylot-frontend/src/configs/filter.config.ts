@@ -5,6 +5,8 @@ import type { DomainFilter } from '@/stores/universalGroupingFilterStore';
 // Define page types for better type safety
 export type PageType =
   | 'pending-leads'
+  | 'active-leads'
+  | 'useable-leads'
   | 'todo'
   | 'live-leads'
   | 'recycle-leads'
@@ -98,6 +100,30 @@ export const FILTER_CONFIGS: FilterConfig[] = [
     pageType: 'pending-leads',
     pathPatterns: ['pending-leads'],
     defaultFilters: [COMMON_FILTERS.PENDING, COMMON_FILTERS.STATUS_NOT_EQUALS_HOLD],
+  },
+  {
+    pageType: 'active-leads',
+    pathPatterns: ['active-leads'],
+    defaultFilters: [
+      {
+        field: 'use_status',
+        operator: '=' as const,
+        value: 'active',
+      },
+      COMMON_FILTERS.STATUS_NOT_EQUALS_HOLD,
+    ],
+  },
+  {
+    pageType: 'useable-leads',
+    pathPatterns: ['useable-leads'],
+    defaultFilters: [
+      {
+        field: 'use_status',
+        operator: '=' as const,
+        value: 'usable',
+      },
+      COMMON_FILTERS.STATUS_NOT_EQUALS_HOLD,
+    ],
   },
   {
     pageType: 'todo',

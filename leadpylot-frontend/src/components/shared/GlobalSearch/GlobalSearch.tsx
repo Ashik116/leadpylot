@@ -384,7 +384,7 @@ const GlobalSearch = forwardRef<GlobalSearchRef, GlobalSearchProps>(
           createPortal(
             <div
               ref={dropdownRef}
-              className="fixed z-[999999] mt-1 rounded-md border border-gray-200 bg-white p-2 shadow-lg"
+              className="fixed z-[999999] mt-1 rounded-md border border-gray-200 bg-white p-2 shadow-lg dark:border-[var(--dm-border)] dark:bg-[var(--dm-bg-elevated)]"
               style={{
                 top: dropdownStyle?.top,
                 left: dropdownStyle?.left,
@@ -406,7 +406,7 @@ const GlobalSearch = forwardRef<GlobalSearchRef, GlobalSearchProps>(
                   searchResults?.map((result) => (
                     <div
                       key={result?._id}
-                      className="flex w-auto cursor-pointer items-center rounded-md px-1 py-1 hover:bg-gray-100"
+                      className="flex w-auto cursor-pointer items-center rounded-md px-1 py-1 hover:bg-gray-100 dark:hover:bg-[var(--dm-bg-hover)]"
                       onClick={() => handleResultClick(result)}
                     >
                       <div className="mr-1 flex h-8 w-8 items-center justify-center rounded-full bg-gray-100">

@@ -11,7 +11,7 @@ const NavToggle = ({ toggled, className }: NavToggleProps) => {
     <div
       className={classNames(
         'relative flex h-9 w-9 cursor-pointer items-center justify-center',
-        'rounded-full border border-gray-200 bg-white shadow-sm',
+        'rounded-full border border-gray-200 bg-white shadow-sm dark:bg-[var(--dm-bg-elevated)] dark:border-[var(--dm-border)]',
         'transition-all duration-200 ease-in-out',
         'hover:border-gray-300 hover:shadow-md',
         'active:scale-95',

@@ -19,7 +19,7 @@ const CopyButton = ({ value, className }: { value: string | number; className?: 
   return (
     <ApolloIcon
       name={isCopying ? 'copy' : 'command-v-alt'}
-      className={`cursor-pointer transition-all ${isCopying ? 'text-green-600 hover:text-green-600' : 'hover:text-blue-500'} flex size-4 items-center justify-center duration-600 ${className}`}
+      className={`cursor-pointer transition-all ${isCopying ? 'text-green-600 hover:text-green-600' : 'text-gray-500 hover:text-blue-500 dark:text-[var(--dm-text-secondary)] dark:hover:text-blue-400'} flex size-4 items-center justify-center duration-600 ${className}`}
       onClick={async () => {
         if (!isCopying) {
           await onCopy(value);

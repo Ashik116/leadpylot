@@ -3,6 +3,7 @@
     min-width: 2.75rem;
     height: 1.5rem;
     @apply bg-sand-2 relative inline-flex cursor-pointer items-center rounded-3xl transition-colors duration-200 ease-in-out;
+    .dark & { background-color: var(--dm-bg-elevated); }
 
     input {
       @apply hidden;

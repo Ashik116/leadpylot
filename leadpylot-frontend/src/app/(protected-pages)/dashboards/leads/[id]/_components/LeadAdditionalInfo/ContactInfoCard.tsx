@@ -226,7 +226,7 @@ const ContactInfoCard = ({
       bodyClass="rounded-lg  overflow-hidden"
     >
       <div className="flex items-center justify-between">
-        <h6 className="font-semibold text-black">Contact Information</h6>
+        <h6 className="font-semibold text-black dark:text-[var(--dm-text-primary)]">Contact Information</h6>
       </div>
       {batchMode && onBatchContactUpdate ? (
         <BatchInlineEdit

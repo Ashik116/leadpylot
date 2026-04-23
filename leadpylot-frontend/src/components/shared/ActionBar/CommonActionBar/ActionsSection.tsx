@@ -28,8 +28,8 @@ export function ActionsSection({
   return (
     <div className="flex flex-nowrap items-center gap-2 whitespace-nowrap">
       {sectionTitle && (
-        <div className="flex items-center gap-2 rounded-md border border-gray-200 bg-gray-50 px-3 py-1.5">
-          <span className="text-sm font-semibold text-gray-700">{sectionTitle}</span>
+        <div className="flex items-center gap-2 rounded-md border border-gray-200 bg-gray-50 px-3 py-1.5 dark:bg-[var(--dm-bg-surface)] dark:border-[var(--dm-border)]">
+          <span className="text-sm font-semibold text-gray-700 dark:text-[var(--dm-text-primary)]">{sectionTitle}</span>
         </div>
       )}
       <div className="flex flex-nowrap items-center whitespace-nowrap">

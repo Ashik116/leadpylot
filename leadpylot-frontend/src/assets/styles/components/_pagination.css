@@ -9,6 +9,7 @@
 
   .pagination-pager-inactive {
     @apply text-sand-2 hover:bg-sand-4;
+    .dark & { color: var(--dm-text-secondary); &:hover { background-color: var(--dm-bg-hover); } }
   }
 
   .pagination-pager-disabled {

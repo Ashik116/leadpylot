@@ -15,6 +15,7 @@ import { useOptimisticViewed } from '../../_hooks/useOptimisticViewed';
 import { useConversationMerge } from '../../_hooks/useConversationMerge';
 import { useDebouncedSearch } from '../../_hooks/useDebouncedSearch';
 import { useEmailSelection } from '../../_hooks/useEmailSelection';
+import EmailApiService from '../../_services/EmailApiService';
 import { updateUrlHash } from '../../_hooks/useUrlSync';
 import { useStarEmail } from '../../_hooks/useStarEmail';
 import ConversationCard from '../Conversation/ConversationCard';
@@ -33,6 +34,145 @@ import ConversationListHeader from './ConversationListHeader';
 
 // Constants
 const SKELETON_ITEMS = 8;
+
+// Mock emails for UI preview
+const MOCK_CONVERSATIONS: EmailConversation[] = [
+  {
+    _id: 'mock-001',
+    thread_id: null,
+    subject: 'Welcome to LeadPylot! Get started today 🚀',
+    participants: [{ email: 'noreply@leadpylot.com', name: 'LeadPylot Team' } as any],
+    messages: [],
+    latest_message_date: new Date().toISOString(),
+    latest_message_snippet: 'Hi there! We are excited to have you on board. Here is everything you need to get started with your account...',
+    unread_count: 1,
+    message_count: 1,
+    is_active: true,
+    attachment_count: 0,
+    email_access_to_agent: [],
+    from: 'noreply@leadpylot.com',
+    from_address: 'noreply@leadpylot.com',
+    direction: 'incoming',
+    visible_to_agents: [],
+    needs_approval: false,
+    approval_status: 'approved',
+    email_approved: true,
+    attachment_approved: true,
+    has_attachments: false,
+    incoming_count: 1,
+    outgoing_count: 0,
+    agent_viewed: true,
+    admin_viewed: true,
+  },
+  {
+    _id: 'mock-002',
+    thread_id: null,
+    subject: 'Your monthly report is ready 📊',
+    participants: [{ email: 'reports@analytics.com', name: 'Analytics Bot' } as any],
+    messages: [],
+    latest_message_date: new Date(Date.now() - 3600000).toISOString(),
+    latest_message_snippet: 'Your performance report for this month is now available. Total leads: 142, Conversion rate: 18.4%...',
+    unread_count: 1,
+    message_count: 1,
+    is_active: true,
+    attachment_count: 1,
+    email_access_to_agent: [],
+    from: 'reports@analytics.com',
+    from_address: 'reports@analytics.com',
+    direction: 'incoming',
+    visible_to_agents: [],
+    needs_approval: false,
+    approval_status: 'approved',
+    email_approved: true,
+    attachment_approved: true,
+    has_attachments: true,
+    incoming_count: 1,
+    outgoing_count: 0,
+    agent_viewed: true,
+    admin_viewed: true,
+  },
+  {
+    _id: 'mock-003',
+    thread_id: null,
+    subject: 'Re: Follow up on loan application',
+    participants: [{ email: 'john.smith@gmail.com', name: 'John Smith' } as any],
+    messages: [],
+    latest_message_date: new Date(Date.now() - 86400000).toISOString(),
+    latest_message_snippet: 'Thank you for getting back to me. I have reviewed the documents and I think we can proceed with the next step...',
+    unread_count: 0,
+    message_count: 3,
+    is_active: true,
+    attachment_count: 2,
+    email_access_to_agent: [],
+    from: 'john.smith@gmail.com',
+    from_address: 'john.smith@gmail.com',
+    direction: 'incoming',
+    visible_to_agents: [],
+    needs_approval: false,
+    approval_status: 'approved',
+    email_approved: true,
+    attachment_approved: true,
+    has_attachments: true,
+    incoming_count: 3,
+    outgoing_count: 0,
+    agent_viewed: true,
+    admin_viewed: true,
+  },
+  {
+    _id: 'mock-004',
+    thread_id: null,
+    subject: 'New lead assigned to you',
+    participants: [{ email: 'system@crm.internal', name: 'CRM System' } as any],
+    messages: [],
+    latest_message_date: new Date(Date.now() - 172800000).toISOString(),
+    latest_message_snippet: 'A new lead has been assigned to your queue. Contact: Maria Gonzalez, Phone: +49 123 456789, Source: Website...',
+    unread_count: 0,
+    message_count: 1,
+    is_active: true,
+    attachment_count: 0,
+    email_access_to_agent: [],
+    from: 'system@crm.internal',
+    from_address: 'system@crm.internal',
+    direction: 'incoming',
+    visible_to_agents: [],
+    needs_approval: false,
+    approval_status: 'approved',
+    email_approved: true,
+    attachment_approved: true,
+    has_attachments: false,
+    incoming_count: 1,
+    outgoing_count: 0,
+    agent_viewed: true,
+    admin_viewed: true,
+  },
+  {
+    _id: 'mock-005',
+    thread_id: null,
+    subject: 'Invoice #INV-2024-0892 - Payment Confirmation',
+    participants: [{ email: 'billing@supplier.de', name: 'Supplier GmbH' } as any],
+    messages: [],
+    latest_message_date: new Date(Date.now() - 259200000).toISOString(),
+    latest_message_snippet: 'We confirm receipt of your payment for invoice #INV-2024-0892. Amount received: €2,450.00. Thank you for your business...',
+    unread_count: 0,
+    message_count: 2,
+    is_active: true,
+    attachment_count: 1,
+    email_access_to_agent: [],
+    from: 'billing@supplier.de',
+    from_address: 'billing@supplier.de',
+    direction: 'incoming',
+    visible_to_agents: [],
+    needs_approval: false,
+    approval_status: 'approved',
+    email_approved: true,
+    attachment_approved: true,
+    has_attachments: true,
+    incoming_count: 2,
+    outgoing_count: 0,
+    agent_viewed: true,
+    admin_viewed: true,
+  },
+];
 
 export default function ConversationList() {
   const router = useRouter();
@@ -78,11 +218,17 @@ export default function ConversationList() {
   );
 
   // Merge query conversations with store updates and optimistic updates
-  const conversations = useConversationMerge(
+  const mergedConversations = useConversationMerge(
     queryConversations as any,
     storeConversations,
     optimisticViewed
   );
+
+  // Mock emails managed as state so they can be deleted
+  const [mockEmails, setMockEmails] = useState<EmailConversation[]>(MOCK_CONVERSATIONS);
+
+  // Prepend mock emails so they always appear at the top
+  const conversations = [...mockEmails, ...mergedConversations];
 
   // Get the conversation reactively from merged conversations
   // This ensures it updates when cache is updated after assignment
@@ -103,6 +249,20 @@ export default function ConversationList() {
     isAllSelected,
     hasSelection,
   } = useEmailSelection(conversations);
+
+  // Handle deleting selected emails (removes mocks locally, archives real ones)
+  const handleDeleteSelected = useCallback(
+    (deletedIds: string[]) => {
+      const mockIds = new Set(MOCK_CONVERSATIONS.map((m) => m._id));
+      setMockEmails((prev) => prev.filter((m) => !deletedIds.includes(m._id)));
+      const realIds = deletedIds.filter((id) => !mockIds.has(id));
+      if (realIds.length > 0) {
+        EmailApiService.archiveEmail(realIds).catch(() => {});
+      }
+      clearSelection();
+    },
+    [clearSelection]
+  );
 
   // Star email hook
   const { toggleStar } = useStarEmail();
@@ -293,7 +453,11 @@ export default function ConversationList() {
       {/* Mark as Read Button */}
       {hasSelection && (
         <div className="shrink-0 border-b border-gray-200 p-2">
-          <MarkAsReadButton selectedEmailIds={selectedEmailIds} onClearSelection={clearSelection} />
+          <MarkAsReadButton
+            selectedEmailIds={selectedEmailIds}
+            onClearSelection={clearSelection}
+            onDelete={handleDeleteSelected}
+          />
         </div>
       )}
       {/* Conversation List */}

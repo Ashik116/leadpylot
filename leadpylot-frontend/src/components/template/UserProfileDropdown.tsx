@@ -74,8 +74,8 @@ const UserDropdownBefore = () => {
             <div className="flex items-center gap-3  pt-2">
               <Avatar {...avatarProps} />
               <div>
-                <div className="font-bold text-gray-900">{user?.name || 'Anonymous'}</div>
-                <div className="text-xs">{user?.email || 'No email available'}</div>
+                <div className="font-bold text-gray-900 dark:text-[var(--dm-text-primary)]">{user?.name || 'Anonymous'}</div>
+                <div className="text-xs dark:text-[var(--dm-text-secondary)]">{user?.email || 'No email available'}</div>
               </div>
             </div>
           </Link>
@@ -83,8 +83,8 @@ const UserDropdownBefore = () => {
           <div className="flex items-center gap-3    py-1 ">
             <Avatar {...avatarProps} />
             <div>
-              <div className="font-bold text-gray-900">{user?.name || 'Anonymous'}</div>
-              <div className="text-xs">{user?.email || 'No email available'}</div>
+              <div className="font-bold text-gray-900 dark:text-[var(--dm-text-primary)]">{user?.name || 'Anonymous'}</div>
+              <div className="text-xs dark:text-[var(--dm-text-secondary)]">{user?.email || 'No email available'}</div>
             </div>
           </div>
         )}
@@ -104,7 +104,7 @@ const UserDropdownBefore = () => {
         )) : ''}
       <Dropdown.Item
         eventKey="Sign Out"
-        className="gap-2 border-t mt-1 border-gray-200 rounded-none"
+        className="gap-2 border-t mt-1 border-gray-200 rounded-none dark:border-[var(--dm-border)]"
         onClick={handleSignOut}
         disabled={false} // Removed isSigningOut state
       >

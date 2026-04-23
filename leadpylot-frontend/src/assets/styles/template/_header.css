@@ -1,6 +1,7 @@
 @layer components {
   .header {
     @apply sticky top-0 z-30 flex w-full bg-white print:hidden;
+    .dark & { background-color: var(--dm-bg-surface); }
   }
 
   .header-wrapper {
@@ -29,6 +30,7 @@
 
   .header-action-item-hoverable {
     @apply transition-colors duration-300 ease-in-out hover:bg-black/5 hover:text-gray-900;
+    .dark & { &:hover { background-color: var(--dm-bg-hover); color: var(--dm-text-primary); } }
   }
 
   /* Responsive adjustments */

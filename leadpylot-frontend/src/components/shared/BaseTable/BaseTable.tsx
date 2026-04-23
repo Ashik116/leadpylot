@@ -268,7 +268,7 @@ const BaseTable = <T extends Record<string, any> = any>({
 
   // Row interaction
   onRowClick,
-  rowClassName = 'cursor-pointer hover:bg-gray-50',
+  rowClassName = 'cursor-pointer hover:bg-gray-50 dark:hover:bg-[var(--dm-bg-hover)]',
   fixedHeight = '85dvh',
   // Drag and drop
   enableDragDrop = false,

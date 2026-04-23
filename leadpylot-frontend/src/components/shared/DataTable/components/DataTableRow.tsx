@@ -58,7 +58,7 @@ function DataTableRowComponent<T>({
         ref={combinedRef}
         className={classNames(
           typeof rowClassName === 'function' ? rowClassName(row) : rowClassName,
-          isDragging ? 'border-2 border-blue-500 bg-blue-100 opacity-30' : 'hover:bg-gray-50',
+          isDragging ? 'border-2 border-blue-500 bg-blue-100 opacity-30' : 'hover:bg-gray-50 dark:hover:bg-[var(--dm-bg-hover)]',
           draggableProps
             ? 'cursor-grab transition-all duration-200 active:cursor-grabbing'
             : 'cursor-pointer'
@@ -85,7 +85,6 @@ function DataTableRowComponent<T>({
             ? {
               position: 'sticky' as const,
               left: 0,
-              background: 'white',
               zIndex: 10,
               ...columnStyle,
               ...checkboxWidths,
@@ -100,7 +99,7 @@ function DataTableRowComponent<T>({
               className={classNames(
                 'hover:bg-btn-netto1/30 relative text-sm',
                 resizingColumnId === cell.column.id && 'resizing-column',
-                isSelectOrCheckboxColumn && ' overflow-hidden'
+                isSelectOrCheckboxColumn && 'overflow-hidden bg-white dark:bg-[var(--dm-bg-surface)]'
               )}
               style={cellStyle}
             >

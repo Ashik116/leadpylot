@@ -243,7 +243,7 @@ export function PaginationBar({
       >
         <button
           type="button"
-          className="cursor-pointer rounded px-1 text-sm whitespace-nowrap text-gray-700 transition-colors hover:bg-gray-100 hover:text-gray-900"
+          className="cursor-pointer rounded px-1 text-sm whitespace-nowrap text-gray-700 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-[var(--dm-text-primary)] dark:hover:bg-[var(--dm-bg-hover)]"
         >
           <span
             ref={pageNumberSpanRef}
@@ -255,7 +255,7 @@ export function PaginationBar({
             onKeyDown={handlePageNumberKeyDown}
             className={
               isEditingPageNumber
-                ? 'inline-block w-12 max-w-min rounded bg-gray-50 px-1 transition-all duration-200 ease-in-out outline-none'
+                ? 'inline-block w-12 max-w-min rounded bg-gray-50 px-1 transition-all duration-200 ease-in-out outline-none dark:bg-[var(--dm-bg-input)]'
                 : 'transition-all duration-200 ease-in-out'
             }
           >
@@ -264,7 +264,7 @@ export function PaginationBar({
         </button>
       </Tooltip>
 
-      <span className="mx-0.5 text-gray-700">-</span>
+      <span className="mx-0.5 text-gray-700 dark:text-[var(--dm-text-primary)]">-</span>
 
       <Tooltip
         title={ACTION_BAR_PAGINATION_RANGE_END_TOOLTIP}
@@ -275,7 +275,7 @@ export function PaginationBar({
         <button
           type="button"
           onDoubleClick={handleRangeEndDoubleClick}
-          className="cursor-pointer rounded px-1 text-sm whitespace-nowrap text-gray-700 transition-colors hover:bg-gray-100 hover:text-gray-900"
+          className="cursor-pointer rounded px-1 text-sm whitespace-nowrap text-gray-700 transition-colors hover:bg-gray-100 hover:text-gray-900 dark:text-[var(--dm-text-primary)] dark:hover:bg-[var(--dm-bg-hover)]"
         >
           <span
             ref={rangeEndSpanRef}
@@ -287,7 +287,7 @@ export function PaginationBar({
             onKeyDown={handleRangeEndKeyDown}
             className={
               isEditingRangeEnd
-                ? 'inline-block w-12 max-w-min rounded bg-gray-50 px-1 transition-all duration-200 ease-in-out outline-none'
+                ? 'inline-block w-12 max-w-min rounded bg-gray-50 px-1 transition-all duration-200 ease-in-out outline-none dark:bg-[var(--dm-bg-input)]'
                 : 'transition-all duration-200 ease-in-out'
             }
           >
@@ -302,7 +302,7 @@ export function PaginationBar({
         wrapperClass="inline-flex"
         className={TOOLTIP_POPOVER_CLASS}
       >
-        <span className="ml-1 cursor-default text-sm font-semibold text-gray-700">/{total}</span>
+        <span className="ml-1 cursor-default text-sm font-semibold text-gray-700 dark:text-[var(--dm-text-primary)]">/{total}</span>
       </Tooltip>
 
       {showNavigation && (
@@ -317,10 +317,10 @@ export function PaginationBar({
               <Prev
                 currentPage={currentPage}
                 pagerClass={{
-                  default: 'cursor-pointer rounded-md hover:bg-gray-200 transition-colors',
-                  inactive: 'text-gray-700',
+                  default: 'cursor-pointer rounded-md hover:bg-gray-200 transition-colors dark:hover:bg-[var(--dm-bg-hover)]',
+                  inactive: 'text-gray-700 dark:text-[var(--dm-text-primary)]',
                   active: 'bg-blue-500 text-white',
-                  disabled: 'text-gray-400 cursor-not-allowed hover:bg-transparent',
+                  disabled: 'text-gray-400 cursor-not-allowed hover:bg-transparent dark:text-[var(--dm-text-muted)]',
                 }}
                 onPrev={() => onPageChange(currentPage - 1, pageSize)}
               />
@@ -338,10 +338,10 @@ export function PaginationBar({
                 currentPage={currentPage}
                 pageCount={pageCount}
                 pagerClass={{
-                  default: 'cursor-pointer rounded hover:bg-gray-300 transition-colors',
-                  inactive: 'text-gray-700',
+                  default: 'cursor-pointer rounded hover:bg-gray-300 transition-colors dark:hover:bg-[var(--dm-bg-hover)]',
+                  inactive: 'text-gray-700 dark:text-[var(--dm-text-primary)]',
                   active: 'bg-blue-500 text-white',
-                  disabled: 'text-gray-400 cursor-not-allowed hover:bg-transparent',
+                  disabled: 'text-gray-400 cursor-not-allowed hover:bg-transparent dark:text-[var(--dm-text-muted)]',
                 }}
                 onNext={() => onPageChange(currentPage + 1, pageSize)}
               />

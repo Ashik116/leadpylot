@@ -886,7 +886,7 @@ const FilterTags: React.FC<FilterTagsProps> = ({ tableId, stacked = false }) => 
         {tags.map((tag) => (
           <div
             key={tag.id}
-            className={`flex h-6 items-center overflow-hidden rounded-full border border-gray-200 bg-white shadow-sm transition-colors ${
+            className={`flex h-6 items-center overflow-hidden rounded-full border border-gray-200 bg-white shadow-sm transition-colors dark:bg-[var(--dm-bg-elevated)] dark:border-[var(--dm-border)] ${
               stacked ? 'w-full' : 'shrink-0'
             } ${
               tableId ? '' : 'cursor-pointer hover:border-gray-300'

@@ -186,7 +186,7 @@ const SearchListAndGlobalSearch: React.FC<SearchListAndGlobalSearchProps> = ({
 
       {/* Search bar with filter button - do not use w-full so filter tags stay on same line */}
       <div
-        className={`search-bar-container flex min-h-6 h-6 shrink-0 items-center rounded-md border-[0.3px] border-gray-300 bg-white transition-all duration-300 ease-in-out focus-within:ring-gray-700`}
+        className={`search-bar-container flex min-h-6 h-6 shrink-0 items-center rounded-md border-[0.3px] border-gray-300 bg-white transition-all duration-300 ease-in-out focus-within:ring-gray-700 dark:bg-[var(--dm-bg-input)] dark:border-[var(--dm-border)]`}
       >
         {/* Right Side - Global Search / List Search */}
         <div

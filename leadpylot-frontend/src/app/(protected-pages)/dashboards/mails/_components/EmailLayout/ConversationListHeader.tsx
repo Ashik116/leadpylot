@@ -146,8 +146,8 @@ export default function ConversationListHeader({
         </div>
 
         {/* Right: Mail Server, Calendar, DateFilter */}
-        <div className="flex shrink-0 items-center gap-2">
-          {showMailServerBadge && (
+        <div className="flex shrink-0 items-center gap-0">
+          {/* {showMailServerBadge && (
             <div className="relative" ref={badgeRef}>
               <div
                 role="button"
@@ -211,13 +211,14 @@ export default function ConversationListHeader({
                 </div>
               )}
             </div>
-          )}
+          )} */}
           <Button
+          
             size="sm"
             variant="plain"
             onClick={onOpenCalendarFilter}
             title="Calendar Filter"
-            className="shrink-0 cursor-pointer"
+            className="shrink-0 cursor-pointer mr-1"
             icon={<ApolloIcon name="calendar" />}
           />
           {dateFilterLabel && (

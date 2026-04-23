@@ -398,10 +398,10 @@ const DateFilterDropdown: React.FC<DateFilterDropdownProps> = ({
           type="button"
           ref={buttonRef}
           onClick={() => setIsOpen(!isOpen)}
-          className={`flex h-6 items-center gap-0.5 rounded border border-gray-200 bg-white px-1.5 py-0 xl:px-2 text-xs transition-colors ${
+          className={`flex h-6 items-center gap-0.5 rounded border border-gray-200 bg-white px-1.5 py-0 xl:px-2 text-xs transition-colors dark:bg-[var(--dm-bg-surface)] dark:border-[var(--dm-border)] ${
             isDateFilterActive
-              ? 'border-blue-500 bg-blue-50 text-blue-700 hover:bg-blue-100'
-              : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900'
+              ? 'border-blue-500 bg-blue-50 text-blue-700 hover:bg-blue-100 dark:bg-blue-500/10 dark:text-blue-400 dark:border-blue-500'
+              : 'text-gray-700 hover:bg-gray-50 hover:text-gray-900 dark:text-[var(--dm-text-primary)] dark:hover:bg-[var(--dm-bg-hover)]'
           }`}
         >
           <ApolloIcon name="calendar" className="text-xs" />
@@ -415,15 +415,15 @@ const DateFilterDropdown: React.FC<DateFilterDropdownProps> = ({
         createPortal(
           <div
             ref={dropdownRef}
-            className="fixed z-50 w-64 rounded-md border border-gray-200 bg-white shadow-lg"
+            className="fixed z-50 w-64 rounded-md border border-gray-200 bg-white shadow-lg dark:bg-[var(--dm-bg-elevated)] dark:border-[var(--dm-border)]"
             style={{
               top: `${dropdownPosition.top}px`,
               left: `${dropdownPosition.left}px`,
             }}
           >
             {/* Header */}
-            <div className="flex items-center justify-between border-b border-gray-200 px-4 py-2">
-              <h3 className="text-sm font-semibold text-gray-700">Filter by Date</h3>
+            <div className="flex items-center justify-between border-b border-gray-200 px-4 py-2 dark:border-[var(--dm-border)]">
+              <h3 className="text-sm font-semibold text-gray-700 dark:text-[var(--dm-text-primary)]">Filter by Date</h3>
               <button
                 onClick={handleCancel}
                 className="rounded p-1 text-gray-400 hover:text-gray-600"
@@ -436,14 +436,14 @@ const DateFilterDropdown: React.FC<DateFilterDropdownProps> = ({
             {/* Date Options */}
             <div className="max-h-96 overflow-y-auto">
               {!showCustomPicker ? (
-                <div className="divide-y divide-gray-100">
+                <div className="divide-y divide-gray-100 dark:divide-[var(--dm-border)]">
                   {/* Today */}
                   <button
                     onClick={() => handleOptionSelect('today')}
                     className={`w-full px-4 py-2 text-left text-sm transition-colors ${
                       selectedOption === 'today'
-                        ? 'bg-blue-50 text-blue-700'
-                        : 'text-gray-700 hover:bg-gray-50'
+                        ? 'bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400'
+                        : 'text-gray-700 hover:bg-gray-50 dark:text-[var(--dm-text-primary)] dark:hover:bg-[var(--dm-bg-hover)]'
                     }`}
                   >
                     <div className="flex items-center gap-2">
@@ -451,7 +451,7 @@ const DateFilterDropdown: React.FC<DateFilterDropdownProps> = ({
                         className={`h-4 w-4 rounded-full border-2 ${
                           selectedOption === 'today'
                             ? 'border-blue-500 bg-blue-500'
-                            : 'border-gray-300'
+                            : 'border-gray-300 dark:border-[var(--dm-border)]'
                         }`}
                       >
                         {selectedOption === 'today' && (
@@ -469,8 +469,8 @@ const DateFilterDropdown: React.FC<DateFilterDropdownProps> = ({
                     onClick={() => handleOptionSelect('yesterday')}
                     className={`w-full px-4 py-2 text-left text-sm transition-colors ${
                       selectedOption === 'yesterday'
-                        ? 'bg-blue-50 text-blue-700'
-                        : 'text-gray-700 hover:bg-gray-50'
+                        ? 'bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400'
+                        : 'text-gray-700 hover:bg-gray-50 dark:text-[var(--dm-text-primary)] dark:hover:bg-[var(--dm-bg-hover)]'
                     }`}
                   >
                     <div className="flex items-center gap-2">
@@ -478,7 +478,7 @@ const DateFilterDropdown: React.FC<DateFilterDropdownProps> = ({
                         className={`h-4 w-4 rounded-full border-2 ${
                           selectedOption === 'yesterday'
                             ? 'border-blue-500 bg-blue-500'
-                            : 'border-gray-300'
+                            : 'border-gray-300 dark:border-[var(--dm-border)]'
                         }`}
                       >
                         {selectedOption === 'yesterday' && (
@@ -496,8 +496,8 @@ const DateFilterDropdown: React.FC<DateFilterDropdownProps> = ({
                     onClick={() => handleOptionSelect('last7days')}
                     className={`w-full px-4 py-2 text-left text-sm transition-colors ${
                       selectedOption === 'last7days'
-                        ? 'bg-blue-50 text-blue-700'
-                        : 'text-gray-700 hover:bg-gray-50'
+                        ? 'bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400'
+                        : 'text-gray-700 hover:bg-gray-50 dark:text-[var(--dm-text-primary)] dark:hover:bg-[var(--dm-bg-hover)]'
                     }`}
                   >
                     <div className="flex items-center gap-2">
@@ -505,7 +505,7 @@ const DateFilterDropdown: React.FC<DateFilterDropdownProps> = ({
                         className={`h-4 w-4 rounded-full border-2 ${
                           selectedOption === 'last7days'
                             ? 'border-blue-500 bg-blue-500'
-                            : 'border-gray-300'
+                            : 'border-gray-300 dark:border-[var(--dm-border)]'
                         }`}
                       >
                         {selectedOption === 'last7days' && (
@@ -523,8 +523,8 @@ const DateFilterDropdown: React.FC<DateFilterDropdownProps> = ({
                     onClick={() => handleOptionSelect('last1month')}
                     className={`w-full px-4 py-2 text-left text-sm transition-colors ${
                       selectedOption === 'last1month'
-                        ? 'bg-blue-50 text-blue-700'
-                        : 'text-gray-700 hover:bg-gray-50'
+                        ? 'bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400'
+                        : 'text-gray-700 hover:bg-gray-50 dark:text-[var(--dm-text-primary)] dark:hover:bg-[var(--dm-bg-hover)]'
                     }`}
                   >
                     <div className="flex items-center gap-2">
@@ -532,7 +532,7 @@ const DateFilterDropdown: React.FC<DateFilterDropdownProps> = ({
                         className={`h-4 w-4 rounded-full border-2 ${
                           selectedOption === 'last1month'
                             ? 'border-blue-500 bg-blue-500'
-                            : 'border-gray-300'
+                            : 'border-gray-300 dark:border-[var(--dm-border)]'
                         }`}
                       >
                         {selectedOption === 'last1month' && (
@@ -550,8 +550,8 @@ const DateFilterDropdown: React.FC<DateFilterDropdownProps> = ({
                     onClick={() => handleOptionSelect('currentyear')}
                     className={`w-full px-4 py-2 text-left text-sm transition-colors ${
                       selectedOption === 'currentyear'
-                        ? 'bg-blue-50 text-blue-700'
-                        : 'text-gray-700 hover:bg-gray-50'
+                        ? 'bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400'
+                        : 'text-gray-700 hover:bg-gray-50 dark:text-[var(--dm-text-primary)] dark:hover:bg-[var(--dm-bg-hover)]'
                     }`}
                   >
                     <div className="flex items-center gap-2">
@@ -559,7 +559,7 @@ const DateFilterDropdown: React.FC<DateFilterDropdownProps> = ({
                         className={`h-4 w-4 rounded-full border-2 ${
                           selectedOption === 'currentyear'
                             ? 'border-blue-500 bg-blue-500'
-                            : 'border-gray-300'
+                            : 'border-gray-300 dark:border-[var(--dm-border)]'
                         }`}
                       >
                         {selectedOption === 'currentyear' && (
@@ -577,8 +577,8 @@ const DateFilterDropdown: React.FC<DateFilterDropdownProps> = ({
                     onClick={() => handleOptionSelect('custom')}
                     className={`w-full px-4 py-2 text-left text-sm transition-colors ${
                       selectedOption === 'custom'
-                        ? 'bg-blue-50 text-blue-700'
-                        : 'text-gray-700 hover:bg-gray-50'
+                        ? 'bg-blue-50 text-blue-700 dark:bg-blue-500/10 dark:text-blue-400'
+                        : 'text-gray-700 hover:bg-gray-50 dark:text-[var(--dm-text-primary)] dark:hover:bg-[var(--dm-bg-hover)]'
                     }`}
                   >
                     <div className="flex items-center gap-2">
@@ -586,7 +586,7 @@ const DateFilterDropdown: React.FC<DateFilterDropdownProps> = ({
                         className={`h-4 w-4 rounded-full border-2 ${
                           selectedOption === 'custom'
                             ? 'border-blue-500 bg-blue-500'
-                            : 'border-gray-300'
+                            : 'border-gray-300 dark:border-[var(--dm-border)]'
                         }`}
                       >
                         {selectedOption === 'custom' && (
@@ -604,12 +604,12 @@ const DateFilterDropdown: React.FC<DateFilterDropdownProps> = ({
                   <div className="mb-3">
                     <button
                       onClick={() => setShowCustomPicker(false)}
-                      className="mb-2 flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900"
+                      className="mb-2 flex items-center gap-1 text-sm text-gray-600 hover:text-gray-900 dark:text-[var(--dm-text-secondary)] dark:hover:text-[var(--dm-text-primary)]"
                     >
                       <ApolloIcon name="arrow-left" className="text-xs" />
                       <span>Back</span>
                     </button>
-                    <label className="mb-2 block text-sm font-medium text-gray-700">
+                    <label className="mb-2 block text-sm font-medium text-gray-700 dark:text-[var(--dm-text-primary)]">
                       Select Date Range
                     </label>
                   </div>
@@ -628,7 +628,7 @@ const DateFilterDropdown: React.FC<DateFilterDropdownProps> = ({
             </div>
 
             {/* Footer Actions */}
-            <div className="flex items-center justify-end gap-2 border-t border-gray-200 px-4 py-2">
+            <div className="flex items-center justify-end gap-2 border-t border-gray-200 px-4 py-2 dark:border-[var(--dm-border)]">
               <Button variant="secondary" size="sm" onClick={handleCancel}>
                 Cancel
               </Button>

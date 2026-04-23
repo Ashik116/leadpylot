@@ -1,6 +1,8 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/typography';
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 @theme {
   --font-sans: var(--font-abc-diatype), sans-serif;
   --: var(--), sans-serif;
@@ -148,12 +150,46 @@
 }
 
 @layer base {
+  :root {
+    --dm-bg-shell: #f4f2f0;
+    --dm-bg-base: #f4f2f0;
+    --dm-bg-surface: #ffffff;
+    --dm-bg-elevated: #ffffff;
+    --dm-bg-input: #ffffff;
+    --dm-bg-hover: rgba(0, 0, 0, 0.04);
+    --dm-border-subtle: rgba(0, 0, 0, 0.06);
+    --dm-border: #d8d6d4;
+    --dm-text-primary: #2d2827;
+    --dm-text-secondary: #78746e;
+    --dm-text-muted: #a09d98;
+  }
+
+  .dark {
+    --dm-bg-shell: #161514;
+    --dm-bg-base: #1c1b19;
+    --dm-bg-surface: #252321;
+    --dm-bg-elevated: #2d2a28;
+    --dm-bg-input: #2d2a28;
+    --dm-bg-hover: rgba(255, 255, 255, 0.06);
+    --dm-border-subtle: rgba(255, 255, 255, 0.06);
+    --dm-border: rgba(255, 255, 255, 0.10);
+    --dm-text-primary: #e8e6e3;
+    --dm-text-secondary: #a8a5a0;
+    --dm-text-muted: #706d68;
+  }
+
   *,
   ::after,
   ::before,
   ::backdrop,
   ::file-selector-button {
     border-color: var(--color-border, currentColor);
+  }
+
+  .dark *,
+  .dark ::after,
+  .dark ::before {
+    border-color: var(--dm-border);
   }
 
   button,
@@ -164,6 +200,11 @@
   body {
     @apply text-black bg-sand-4 text-base;
     -webkit-font-smoothing: antialiased;
+  }
+
+  .dark body {
+    background-color: var(--dm-bg-base);
+    color: var(--dm-text-primary);
   }
 
   h1,
@@ -377,12 +418,18 @@
   [data-rbd-drag-handle-dragging-id='true'],
   [data-rbd-draggable-context-id] [data-rbd-draggable-id][style*='transform'] {
     z-index: 99999 !important;
-    position: fixed !important; /* Use fixed to escape all parent stacking contexts */
+    position: fixed !important;
     box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5) !important;
     background-color: white !important;
     border: 3px solid #3b82f6 !important;
     border-radius: 8px !important;
     opacity: 1 !important;
     pointer-events: none !important;
+  }
+
+  .dark [data-rbd-drag-handle-dragging-id='true'],
+  .dark [data-rbd-draggable-context-id] [data-rbd-draggable-id][style*='transform'] {
+    background-color: var(--dm-bg-elevated) !important;
+    border-color: #5b8def !important;
   }
 }

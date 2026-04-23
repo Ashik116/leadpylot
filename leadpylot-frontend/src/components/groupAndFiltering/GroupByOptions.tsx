@@ -927,7 +927,7 @@ export default function GroupByOptions({
               ? 'bg-gray-50 font-medium text-gray-900'
               : isDisabled
                 ? 'cursor-not-allowed text-gray-400 opacity-50'
-                : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-[var(--dm-text-primary)] dark:hover:bg-[var(--dm-bg-hover)]'
           }`}
           title={
             isDisabled && isLastTransfer && (hasAgentSelected || hasAgentInDynamicFilters)
@@ -1005,7 +1005,7 @@ export default function GroupByOptions({
                         ? 'bg-gray-800 font-medium text-white'
                         : isParentSelected || hasChildSelected
                           ? 'bg-gray-800 font-medium text-white'
-                          : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+                          : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-[var(--dm-text-primary)] dark:hover:bg-[var(--dm-bg-hover)]'
                     }`}
                   >
                     <div className="flex items-center justify-between">
@@ -1089,7 +1089,7 @@ export default function GroupByOptions({
               <span>{showAllOptions ? 'Show Less' : 'See More'}</span>
               <ApolloIcon
                 name={showAllOptions ? 'dropdown-up-large' : 'dropdown-large'}
-                className="text-xs text-gray-700 transition-transform"
+                className="text-xs text-gray-700 transition-transform dark:text-[var(--dm-text-primary)]"
               />
             </button>
           )}
@@ -1114,7 +1114,7 @@ export default function GroupByOptions({
       defaultVisibleOptions={getDefaultVisibleOptions} // Pass default visible options for reset functionality
       // Add custom footer with Cancel and Update buttons
       customFooter={
-        <div className="border-t border-gray-200 p-2">
+        <div className="border-t border-gray-200 p-2 dark:border-[var(--dm-border)]">
           <div className="flex justify-end gap-2">
             {hasChanges && (
               <button
@@ -1493,7 +1493,7 @@ export function GroupBySavedPresetsToolbar({
           <div
             ref={loadPickerRef}
             data-groupby-saved-picker
-            className="fixed max-h-[min(260px,calc(100svh-48px))] overflow-hidden rounded-xl border border-gray-200/90 bg-white shadow-xl"
+            className="fixed max-h-[min(260px,calc(100svh-48px))] overflow-hidden rounded-xl border border-gray-200/90 bg-white shadow-xl dark:bg-[var(--dm-bg-elevated)] dark:border-[var(--dm-border)]"
             style={{
               top: loadPickerRect.top,
               left: loadPickerRect.left,
@@ -1681,7 +1681,7 @@ export function GroupBySavedPresetsToolbar({
           <div
             ref={savePickerRef}
             data-groupby-save-picker
-            className="fixed max-h-[min(320px,calc(100svh-48px))] overflow-hidden rounded-xl border border-gray-200/90 bg-white shadow-xl shadow-gray-200/50"
+            className="fixed max-h-[min(320px,calc(100svh-48px))] overflow-hidden rounded-xl border border-gray-200/90 bg-white shadow-xl shadow-gray-200/50 dark:bg-[var(--dm-bg-elevated)] dark:border-[var(--dm-border)]"
             style={{
               top: savePickerRect.top,
               left: savePickerRect.left,

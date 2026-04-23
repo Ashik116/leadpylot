@@ -615,7 +615,7 @@ const CellInlineEdit = ({
               e.stopPropagation();
               e.preventDefault();
             }}
-            className="inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-full bg-white"
+            className="inline-flex size-6 shrink-0 cursor-pointer items-center justify-center rounded-full bg-white dark:bg-[var(--dm-bg-elevated)]"
           >
             <CopyButton value={currentValue} />
           </div>

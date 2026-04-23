@@ -398,7 +398,7 @@ const FiltersDropdown: React.FC<TFiltersDropdownProps> = ({
     return (
       <button
         onClick={() => toggleEditMode(column)}
-        className="rounded p-1 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700"
+        className="rounded p-1 text-gray-500 transition-colors hover:bg-gray-100 hover:text-gray-700 dark:text-[var(--dm-text-secondary)] dark:hover:bg-[var(--dm-bg-hover)] dark:hover:text-[var(--dm-text-primary)]"
         title={isInEditMode ? 'Done' : 'Edit'}
       >
         <ApolloIcon name={isInEditMode ? 'check' : 'pen'} className="text-sm" />
@@ -828,7 +828,7 @@ const FiltersDropdown: React.FC<TFiltersDropdownProps> = ({
             transform: 'translateX(-50%)',
           }}
         >
-          <div className="h-0 w-0 border-r-[6px] border-b-[6px] border-l-[6px] border-r-transparent border-b-white border-l-transparent" />
+          <div className="h-0 w-0 border-r-[6px] border-b-[6px] border-l-[6px] border-r-transparent border-b-white border-l-transparent dark:border-b-[var(--dm-bg-elevated)]" />
           <div className="-mt-[6px] h-0 w-0 border-r-[7px] border-b-[7px] border-l-[7px] border-r-transparent border-b-gray-200 border-l-transparent" />
         </div>
       )}
@@ -836,7 +836,7 @@ const FiltersDropdown: React.FC<TFiltersDropdownProps> = ({
       {/* Dropdown */}
       <div
         ref={dropdownRef}
-        className={`fixed z-50 flex w-[calc(100vw-32px)] flex-col overflow-hidden rounded-lg bg-white shadow-lg lg:w-[650px] ${position.centerHorizontally ? '' : 'lg:translate-x-[-96%]'}`}
+        className={`fixed z-50 flex w-[calc(100vw-32px)] flex-col overflow-hidden rounded-lg bg-white shadow-lg lg:w-[650px] dark:bg-[var(--dm-bg-elevated)] dark:border dark:border-[var(--dm-border)] ${position.centerHorizontally ? '' : 'lg:translate-x-[-96%]'}`}
         style={{
           top: `${position.top}px`,
           left: `${position.left}px`,
@@ -862,7 +862,7 @@ const FiltersDropdown: React.FC<TFiltersDropdownProps> = ({
           className={`grid overflow-y-auto ${
             editModes.dynamic
               ? 'grid-cols-1'
-              : 'grid-cols-1 divide-y divide-gray-200 lg:grid-cols-[1fr_1fr] lg:divide-x lg:divide-y-0'
+              : 'grid-cols-1 divide-y divide-gray-200 lg:grid-cols-[1fr_1fr] lg:divide-x lg:divide-y-0 dark:divide-[var(--dm-border)]'
           }`}
         >
           {/* Filters Column (Left) */}
@@ -875,10 +875,10 @@ const FiltersDropdown: React.FC<TFiltersDropdownProps> = ({
           >
             {/* Column Header - Hide when CustomFilterOption is open */}
             {!editModes.dynamic && (
-              <div className="flex items-center justify-between gap-2 border-b border-gray-200 px-3 py-2">
+              <div className="flex items-center justify-between gap-2 border-b border-gray-200 px-3 py-2 dark:border-[var(--dm-border)]">
                 <div className="flex items-center gap-2">
-                  <ApolloIcon name="funnel-chart" className="text-gray-600" />
-                  <span className="text-sm font-medium text-gray-700">Filters</span>
+                  <ApolloIcon name="funnel-chart" className="text-gray-600 dark:text-[var(--dm-text-secondary)]" />
+                  <span className="text-sm font-medium text-gray-700 dark:text-[var(--dm-text-primary)]">Filters</span>
                 </div>
                 {/* {getEditIconButton('import')} */}
               </div>
@@ -903,7 +903,7 @@ const FiltersDropdown: React.FC<TFiltersDropdownProps> = ({
                 <>
                   {!editModes.dynamic && (
                     <div
-                      className={`space-y-0 ${editModes.import ? '' : 'border-t border-gray-200'}`}
+                      className={`space-y-0 ${editModes.import ? '' : 'border-t border-gray-200 dark:border-[var(--dm-border)]'}`}
                     >
                       <div className="flex items-center justify-between">
                         <Tooltip
@@ -915,7 +915,7 @@ const FiltersDropdown: React.FC<TFiltersDropdownProps> = ({
                           <button
                             type="button"
                             onClick={() => toggleEditMode('dynamic')}
-                            className="w-full flex-1 px-2 py-2 text-left text-sm font-medium text-gray-700 hover:text-gray-900"
+                            className="w-full flex-1 px-2 py-2 text-left text-sm font-medium text-gray-700 hover:text-gray-900 dark:text-[var(--dm-text-primary)] dark:hover:text-[var(--dm-text-primary)]"
                           >
                             Add Custom Filter
                           </button>
@@ -926,7 +926,7 @@ const FiltersDropdown: React.FC<TFiltersDropdownProps> = ({
                   {editModes.dynamic && (
                     <div className="px-2 py-2">
                       <div className="mb-2 flex items-center justify-between">
-                        <h3 className="text-sm font-medium text-gray-700">Custom Filter</h3>
+                        <h3 className="text-sm font-medium text-gray-700 dark:text-[var(--dm-text-primary)]">Custom Filter</h3>
                         <Tooltip
                           title={CUSTOM_FILTER_BACK_TOOLTIP}
                           placement="left"
@@ -936,7 +936,7 @@ const FiltersDropdown: React.FC<TFiltersDropdownProps> = ({
                           <button
                             type="button"
                             onClick={() => toggleEditMode('dynamic')}
-                            className="rounded px-2 py-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700"
+                            className="rounded px-2 py-1 text-gray-500 hover:bg-gray-100 hover:text-gray-700 dark:text-[var(--dm-text-secondary)] dark:hover:bg-[var(--dm-bg-hover)] dark:hover:text-[var(--dm-text-primary)]"
                           >
                             <ApolloIcon name="arrow-left" className="text-sm" />
                           </button>
@@ -976,10 +976,10 @@ const FiltersDropdown: React.FC<TFiltersDropdownProps> = ({
               }`}
             >
               {/* Column Header */}
-              <div className="flex items-start justify-between gap-2 border-b border-gray-200 px-3 py-2">
+              <div className="flex items-start justify-between gap-2 border-b border-gray-200 px-3 py-2 dark:border-[var(--dm-border)]">
                 <div className="flex min-w-0 items-center gap-2 pt-0.5">
-                  <ApolloIcon name="layer-group" className="shrink-0 text-gray-600" />
-                  <span className="text-sm font-medium text-gray-700">Group By</span>
+                  <ApolloIcon name="layer-group" className="shrink-0 text-gray-600 dark:text-[var(--dm-text-secondary)]" />
+                  <span className="text-sm font-medium text-gray-700 dark:text-[var(--dm-text-primary)]">Group By</span>
                 </div>
                 {!editModes.groupBy && (
                   <GroupBySavedPresetsToolbar

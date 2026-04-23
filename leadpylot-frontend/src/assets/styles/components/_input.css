@@ -1,9 +1,11 @@
 @layer components {
   .input {
     @apply border-border text-sand-1 w-full appearance-none rounded-lg border bg-white px-3 py-2 transition duration-150 ease-in-out focus-within:ring-1 focus:ring-1 focus:outline-none read-only:focus:ring-0;
+    .dark & { background-color: var(--dm-bg-input); border-color: var(--dm-border); color: var(--dm-text-primary); }
 
     &::placeholder {
       @apply text-sand-3;
+      .dark & { color: var(--dm-text-muted); }
     }
 
     &.input-invalid {
@@ -21,6 +23,7 @@
 
   .input-addon {
     @apply flex items-center rounded-lg border border-gray-200 bg-gray-200 px-4;
+    .dark & { background-color: var(--dm-bg-elevated); border-color: var(--dm-border); }
   }
 
   .input-textarea {

@@ -25,7 +25,7 @@ export const NavMenuItem = ({
         href={nav.path}
         className={classNames(
           'focus:outline-non relative flex items-center gap-1 rounded-sm px-1 py-0.5 text-sm font-medium transition-colors outline-none focus:ring-0',
-          isActive ? 'bg-sand-1 text-white [&_*]:text-white' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900'
+          isActive ? 'bg-sand-1 text-white [&_*]:text-white' : 'text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-[var(--dm-text-secondary)] dark:hover:bg-[var(--dm-bg-hover)] dark:hover:text-[var(--dm-text-primary)]'
         )}
         target={nav.isExternalLink ? '_blank' : undefined}
         title={nav.title}

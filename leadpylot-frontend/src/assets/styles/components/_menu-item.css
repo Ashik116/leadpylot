@@ -1,9 +1,11 @@
 @layer components {
   .menu-item {
     @apply text-sand-1 flex w-full cursor-pointer items-center gap-x-2 rounded-lg px-3 font-semibold whitespace-nowrap transition-colors duration-150;
+    .dark & { color: var(--dm-text-primary); }
 
     &.menu-item-hoverable {
       @apply hover:bg-sand-4;
+      .dark & { &:hover { background-color: var(--dm-bg-hover); } }
     }
 
     &.menu-item-active {
@@ -17,9 +19,11 @@
 
   .menu-collapse-item {
     @apply text-sand-1 hover:bg-sand-4 flex cursor-pointer items-center justify-between rounded-lg px-3 font-semibold transition-colors duration-200 select-none;
+    .dark & { color: var(--dm-text-primary); &:hover { background-color: var(--dm-bg-hover); } }
 
     &.menu-collapse-item-active {
       @apply bg-sand-4 text-sand-1;
+      .dark & { background-color: var(--dm-bg-hover); color: var(--dm-text-primary); }
     }
   }
 
