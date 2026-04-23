@@ -57,7 +57,7 @@ const ExcelViewer: React.FC<ExcelViewerProps> = ({ downloadUrl, title }) => {
 
         // Get the blob from the response
         const blob = new Blob([response?.data], {
-          type: response?.headers['content-type'] || 'application/octet-stream',
+          type: String(response?.headers['content-type'] ?? 'application/octet-stream'),
         });
 
         // Read the Excel file using XLSX
