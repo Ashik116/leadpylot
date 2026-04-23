@@ -1142,7 +1142,7 @@ export async function apiDownloadFailedImports(
 
     // Get the blob from the response
     const blob = new Blob([response.data], {
-      type: response.headers['content-type'] || 'application/octet-stream',
+      type: String(response.headers['content-type'] ?? 'application/octet-stream'),
     });
 
     // Try to get filename from Content-Disposition header if not provided
@@ -1212,7 +1212,7 @@ export async function apiDownloadFailedOffersImports(
 
     // Get the blob from the response
     const blob = new Blob([response.data], {
-      type: response.headers['content-type'] || 'application/octet-stream',
+      type: String(response.headers['content-type'] ?? 'application/octet-stream'),
     });
 
     // Try to get filename from Content-Disposition header if not provided
